@@ -2,11 +2,12 @@ import pygame
 from Node import Node
 from config import * 
 
+
 class World:
     def __init__(self,screen_size,background,margin=(0,0)):
         self.screen_size = screen_size
         self.background = background
-        self.win = pygame.display.set_mode((screen_size))
+        self.win = pygame.display.set_mode((screen_size[0],screen_size[1]+BOTTOM_PANEL_HEIGHT))
         self.available_nodes = None
         self.width,self.height = self.screen_size[0],self.screen_size[1]
         self.margin_x,self.margin_y = margin
@@ -47,6 +48,8 @@ class World:
                     node.draw_node(self)
                     if node.isBlock:
                         node.add_color(BLOCK_COLOR)
+                    elif node.isHighlighted:
+                        node.add_color(HIGHLIGHT_COLOR)
     def add_nodes(self,col):
         """
         Method decides whether to add the row or not based on whether we have already added the node or not
@@ -57,3 +60,4 @@ class World:
     def __str__(self):
         details =   "World Details\nScreen Size - "+str(self.width)+"x"+str(self.height)+"\n"+"Total Nodes - "+str(len(self.available_nodes))+"\n"
         return details
+

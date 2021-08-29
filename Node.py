@@ -14,6 +14,7 @@ class Node:
         self.isGoalNode = False
         self.isStartNode = False
         self.isBlock = False
+        self.isHighlighted = False
     def draw_node(self, world):
         self.pgObj = pygame.draw.rect(self._world.win, self.grid_color, pygame.Rect((self.x, self.y, self.size,self.size)), self.grid_width)
     def pos(self):
@@ -25,7 +26,9 @@ class Node:
     def __str__(self):
         return "<Node id="+str(self.id)+">"
     def add_color(self,color:tuple):
-        self.pgObj = pygame.draw.rect(self._world.win,color,self.pgObj)
+        self.pgObj = pygame.draw.rect(self._world.win,color,pygame.Rect((self.x-1, self.y-1, self.size-1,self.size-1)))
+    def highlight(self,val:bool):
+        self.isHighlighted = val
 
 class StartNode:
     def __init__(self,id:tuple,world,color:tuple = (3, 3, 66)):
@@ -78,10 +81,18 @@ class StartNode:
             pos = (self.pos[0]+x,self.pos[1]+y)
             self.pgObj = pygame.draw.circle(self._world.win, self._color, pos,int(self._node.size/2))
             self.pos = pos
-            playGround.drawScenary()
             x_dist,y_dist = new_node_loc[0] - self.pos[0],new_node_loc[1] - self.pos[1]
+            playGround.drawScenary()
             pygame.time.delay(speed)
         self.id = new_location
+    
+    def setStartNode(self,newId):
+        self.id = newId
+        self._node = self._world.available_nodes[self.id[0]][self.id[1]]
+        self.pos = self._node.pos()
+        print("Start Node -> "+str(self.id))
+    def getNode(self)->Node:
+        return self._node
 
 class GoalNode:
     def __init__(self,id,goal_img_src:str,world):
@@ -101,4 +112,19 @@ class GoalNode:
         self._node.isGoalNode = True
     def getPos(self)->tuple:
         return self._node.pos()
+    def setGoalNode(self,newId):
+        """
+        Set a new goal node
+        """
+        self.id = newId
+        print("GoalNode -> "+str(self.id))
+    def testNode(self,node:Node)->bool:
+        """
+        Returns true if the node is goalNode else returns false
+        """
+        return self._node == node
+    def getNode(self)->Node:
+        return self._node
     
+
+        
