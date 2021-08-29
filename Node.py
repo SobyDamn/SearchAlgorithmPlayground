@@ -40,7 +40,7 @@ class StartNode:
             try:
                 self._node = self._world.available_nodes[self.id[0]][self.id[1]]
             except IndexError as e:
-                print(e,id)
+                raise e
         else:
             raise ValueError("No nodes avalaible, available_nodes are not initialised!")
         self.pos = self._node.pos()
@@ -88,6 +88,7 @@ class StartNode:
     
     def setStartNode(self,newId):
         self.id = newId
+        self._node.isStartNode = False
         self._node = self._world.available_nodes[self.id[0]][self.id[1]]
         self.pos = self._node.pos()
         print("Start Node -> "+str(self.id))
@@ -116,13 +117,15 @@ class GoalNode:
         """
         Set a new goal node
         """
+        self._world.available_nodes[self.id[0]][self.id[1]].isGoalNode = False #Old node is no longer goal node
         self.id = newId
         print("GoalNode -> "+str(self.id))
+        self._node = self._world.available_nodes[self.id[0]][self.id[1]]
     def testNode(self,node:Node)->bool:
         """
         Returns true if the node is goalNode else returns false
         """
-        return self._node == node
+        return self.id == node.id
     def getNode(self)->Node:
         return self._node
     

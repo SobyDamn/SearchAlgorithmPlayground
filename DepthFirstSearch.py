@@ -1,8 +1,8 @@
 from Node import *
 from SearchAlgoUtlis import *
 from config import *
-def bfs(sNode:StartNode,gNode:GoalNode,AllNode:list,PG):
-    ALGORITHM_TITLE = "Breadth First Search"
+def dfs(sNode:StartNode,gNode:GoalNode,AllNode:list,PG):
+    ALGORITHM_TITLE = "Depth First Search"
     print("Running",ALGORITHM_TITLE)
     pygame.display.set_caption(TITLE+" "+ALGORITHM_TITLE)
     S = sNode.getNode()
@@ -15,14 +15,16 @@ def bfs(sNode:StartNode,gNode:GoalNode,AllNode:list,PG):
         nodePair = OPEN[0]
         (N,_) = nodePair
         if gNode.testNode(N):
-            return ReconstructPath(nodePair,CLOSED)
+            path = ReconstructPath(nodePair,CLOSED)
+            print("Found Goal",N)
+            return path
         else:
             CLOSED = [nodePair] + CLOSED
             neighbours = MoveGen(N,AllNode)
             newNodes = RemoveSeen(neighbours,OPEN,CLOSED)
             highlighNodes(newNodes,PG)
             newPairs = MakePairs(newNodes,N)
-            OPEN = OPEN[1:] + newPairs
+            OPEN = newPairs + OPEN[1:]
     return []
 
 
@@ -37,4 +39,4 @@ def highlighNodes(nodesList:list,PG):
 
 def moveToGoal(S:StartNode,path:list,PG):
     for node in path[::-1]:
-        S.moveTo(node.id,PG,5)
+        S.moveTo(node.id,PG,2)

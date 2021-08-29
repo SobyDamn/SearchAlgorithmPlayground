@@ -3,6 +3,7 @@ from World import World
 from Node import *
 from config import *
 from BreadthFirstSearch import bfs
+from DepthFirstSearch import dfs
 
 class Button:
     def __init__(self,world,pos,size,bgColor,color,label="Button",labelSize:float=0.5):
@@ -90,7 +91,12 @@ class PlayGround:
         """
         Task to run when clicked on Run
         """
-        bfs(self.startNode,self.goalNode,self.world.available_nodes,self)
+        path = bfs(self.startNode,self.goalNode,self.world.available_nodes,self)
+        self.moveToGoal(self.startNode,path)
+    
+    def moveToGoal(self,S:StartNode,path:list):
+        for node in path[::-1]:
+            S.moveTo(node.id,self,1)
     def selectNode(self,pos):
         node = self.getClickedNode(pos)
         if node is not None:
@@ -136,9 +142,9 @@ pygame.init()
 pygame.display.set_caption(TITLE)
 world = World(SCREEN_SIZE,background,(10,10))
 world.create_grids()
-gNode = GoalNode((5,5),GOAL_IMG,world)
+gNode = GoalNode((2,14),GOAL_IMG,world)
 running = True
-sNode =StartNode((0,15),world,START_NODE_COLOR)
+sNode =StartNode((0,20),world,START_NODE_COLOR)
 PG = PlayGround(world,gNode,sNode)
 #sNode.moveTo((15,0),PG)
 #sNode.moveTo((5,5),PG)
