@@ -17,6 +17,9 @@ class Block:
     def draw_block(self):
         self.pgObj = pygame.draw.rect(self._world.win, self.grid_color, pygame.Rect((self.x, self.y, self.size,self.size)), self.grid_width)
     def pos(self):
+        """
+        Returns Exact coordinates in 2D screen space
+        """
         if self.pgObj is None:
             raise AttributeError("Block is not yet drawn")
         else:
@@ -25,6 +28,9 @@ class Block:
     def __str__(self):
         return "<Block id="+str(self.id)+">"
     def add_color(self,color:tuple):
+        """
+        Changing color of a block
+        """
         self.pgObj = pygame.draw.rect(self._world.win,color,pygame.Rect((self.x-1, self.y-1, self.size-1,self.size-1)))
     def getWorld(self):
         return self._world
@@ -61,11 +67,17 @@ class Node(Block):
         self.pgObj = pygame.draw.circle(self.getWorld().win, self._colorOutline, self.pos,int(self.size/2),self._outlineWidth)
         self.set_label(self._label)
     def set_label(self,label):
-        #labelLength = self._fontSize*len(self._label)
+        """
+        Set the label for the node
+        """
         text = self._font.render(self._label, True, self._colorOutline)
         text_rect = text.get_rect(center = self.pgObj.center)
         self.getWorld().win.blit(text, text_rect)
     def setLocation(self,block:Block):
+        """
+        A location in grid is defined by the block
+        Set location to a particular block position
+        """
         self.pos = block.pos()
         self.id = block.id
     

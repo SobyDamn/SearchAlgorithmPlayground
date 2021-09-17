@@ -44,6 +44,10 @@ class World:
                 self.add_blocks(cols)
         self.blocksGenerated = True
     def redraw_world(self):
+        """
+        Redraws frames of the world
+        all the element on the world must be redrawn
+        """
         if self.available_blocks is None:
             raise ValueError("Block are not available")
         else:
@@ -54,6 +58,9 @@ class World:
             for nodeKeys in self._available_nodes:
                 self._available_nodes[nodeKeys].draw_block()
     def add_node(self,node:Node):
+        """
+        Add nodes to the world
+        """
         if self._available_nodes is None:
             self._available_nodes = {}
         self._available_nodes[node.id] = node
@@ -64,7 +71,7 @@ class World:
     
     def remove_node(self,id:tuple):
         """
-        Deletes node with id as key from available_nodes
+        Deletes node with id as key from world
         """
         try:
             del self._available_nodes[id]
@@ -76,6 +83,10 @@ class World:
         block.setHasNode(False)
 
     def getNodes(self):
+        """
+        Returns available nodes in the world
+        Dictionary of nodes id as key
+        """
         return self._available_nodes
     def getNode(self,key):
         """
@@ -84,6 +95,9 @@ class World:
         """
         return self._available_nodes[key]
     def getBlock(self,id):
+        """
+        Returns block associated with the id in the grid
+        """
         x,y = id
         try:
             return self.available_blocks[x][y]
