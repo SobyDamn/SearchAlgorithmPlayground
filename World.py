@@ -1,17 +1,21 @@
 import pygame
-from Node import Node
+from Blocks import *
 from config import * 
 
 
 class World:
+    """
+    A world with a grid what a nice place to live in!
+    """
     def __init__(self,screen_size,background,margin=(0,0)):
         self.screen_size = screen_size
         self.background = background
         self.win = pygame.display.set_mode((screen_size[0],screen_size[1]+BOTTOM_PANEL_HEIGHT))
-        self.available_nodes = None
+        self.available_blocks = None
         self.width,self.height = self.screen_size[0],self.screen_size[1]
         self.margin_x,self.margin_y = margin
-        self.nodeGenerated = False
+        self.blocksGenerated = False
+        self._available_nodes = None #Type dictionary where block id is a key
     def create_grids(self):
         self.win.fill(background)
         """
@@ -19,45 +23,80 @@ class World:
         Actual margin given is screen_width - totalGrid*NodeSize + margin
         y is positive in downward direction and x in right direction
         """
-        if self.nodeGenerated:
-            self.redraw_nodes()
-            return #if nodes are generated no regenerating required just redraw
+        if self.blocksGenerated:
+            self.redraw_world()
+            return #if blocks are generated no regenerating required just redraw
         
-        total_cols = int((self.width-self.margin_x)/NODE_SIZE)
-        total_rows = int((self.height-self.margin_y)/NODE_SIZE)
-        start_x = int((self.margin_x + (self.width - total_cols*NODE_SIZE))/2)
-        start_y = int((self.margin_y + (self.height - total_rows*NODE_SIZE))/2)
+        total_cols = int((self.width-self.margin_x)/BLOCK_SIZE)
+        total_rows = int((self.height-self.margin_y)/BLOCK_SIZE)
+        start_x = int((self.margin_x + (self.width - total_cols*BLOCK_SIZE))/2)
+        start_y = int((self.margin_y + (self.height - total_rows*BLOCK_SIZE))/2)
         for col in range(0,total_cols):
             cols = []
             for row in range(0,total_rows):
-                x = start_x+NODE_SIZE*col
-                y = start_y+NODE_SIZE*row
+                x = start_x+BLOCK_SIZE*col
+                y = start_y+BLOCK_SIZE*row
                 id = (col,row)
-                node = Node(x,y,NODE_SIZE,id,self,GRID_COLOR,GRID_WIDTH)
-                node.draw_node(self)
-                cols.append(node)
-            if not self.nodeGenerated:
-                self.add_nodes(cols)
-        self.nodeGenerated = True
-    def redraw_nodes(self):
-        if self.available_nodes is None:
-            raise ValueError("Nodes are not available")
+                block = Block(x,y,BLOCK_SIZE,id,self,GRID_COLOR,GRID_WIDTH)
+                block.draw_block()
+                cols.append(block)
+            if not self.blocksGenerated:
+                self.add_blocks(cols)
+        self.blocksGenerated = True
+    def redraw_world(self):
+        if self.available_blocks is None:
+            raise ValueError("Block are not available")
         else:
-            for row in self.available_nodes:
-                for node in row:
-                    node.draw_node(self)
-                    if node.isBlock:
-                        node.add_color(BLOCK_COLOR)
-                    elif node.isHighlighted:
-                        node.add_color(HIGHLIGHT_COLOR)
-    def add_nodes(self,col):
+            for row in self.available_blocks:
+                for block in row:
+                    block.draw_block()
+        if self._available_nodes is not None:
+            for nodeKeys in self._available_nodes:
+                self._available_nodes[nodeKeys].draw_block()
+    def add_node(self,node:Node):
+        if self._available_nodes is None:
+            self._available_nodes = {}
+        self._available_nodes[node.id] = node
+
+        #Now the block contains a node over it
+        block = self.getBlock(node.id)
+        block.setHasNode(True)
+    
+    def remove_node(self,id:tuple):
+        """
+        Deletes node with id as key from available_nodes
+        """
+        try:
+            del self._available_nodes[id]
+        except KeyError:
+            print("Deleting a node which doesn't exists")
+
+        #Now the block doesn't contains a node over it
+        block = self.getBlock(id)
+        block.setHasNode(False)
+
+    def getNodes(self):
+        return self._available_nodes
+    def getNode(self,key):
+        """
+        key is tuple of location in the grid or 2D array
+        Returns the node
+        """
+        return self._available_nodes[key]
+    def getBlock(self,id):
+        x,y = id
+        try:
+            return self.available_blocks[x][y]
+        except IndexError:
+            raise("Provided 'id' doesn't contain any block")
+    def add_blocks(self,col):
         """
         Method decides whether to add the row or not based on whether we have already added the node or not
         """
-        if self.available_nodes is None:
-            self.available_nodes = []
-        self.available_nodes.append(col)
+        if self.available_blocks is None:
+            self.available_blocks = []
+        self.available_blocks.append(col)
     def __str__(self):
-        details =   "World Details\nScreen Size - "+str(self.width)+"x"+str(self.height)+"\n"+"Total Nodes - "+str(len(self.available_nodes))+"\n"
+        details =   "World Details\nScreen Size - "+str(self.width)+"x"+str(self.height)+"\n"+"Total Blocks - "+str(len(self.available_nodes))+"\n"
         return details
 

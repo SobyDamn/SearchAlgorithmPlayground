@@ -1,6 +1,6 @@
 import pygame 
 from World import World
-from Node import *
+from Blocks import *
 from config import *
 from BreadthFirstSearch import bfs
 from DepthFirstSearch import dfs
@@ -26,15 +26,11 @@ class Button:
 
 
 class PlayGround:
-    def __init__(self,world:World,goalNode:GoalNode = None,startNode:StartNode = None):
+    def __init__(self,world:World):
         self.world = world
         self.isClicked = False
-        self.goalNode = goalNode
-        self.startNode = startNode
-        self._createControls()
-        self._selectGoalClick = False
-        self._selectStartClick = False
         self._running = False
+        self._selectedNode = None #This is the node which is selected, will help in moving the nodes around
     def _createControls(self):
         """
         Generates button to control the playground
@@ -55,99 +51,61 @@ class PlayGround:
         self.startButton.draw_node()
         self.selectGoalButton.draw_node()
         self.selectStartButton.draw_node()
-            
-    def getClickedNode(self,pos)->Node:
+
+
+    def getClickedBlock(self,pos)->Block:
         """
         Click Handler, checks if the click is button node or simple node and manages accordingly
         """
-        if self.selectGoalButton.pgObj.collidepoint(pos):
-            self._selectGoalClick = True
-            self._selectStartClick = False
-            print("Select a Goal node")
-            return None
-        elif self.selectStartButton.pgObj.collidepoint(pos):
-            self._selectGoalClick = False
-            self._selectStartClick = True
-            print("Select a Start node")
-            return None
-        elif self.startButton.pgObj.collidepoint(pos):
-            if not self._running:
-                self._running = True
-                self._runTask()
-            return None
-        nodes = self.world.available_nodes
-        if not nodes:
-            raise ValueError("Nodes are not initialised")
+
+        blocks = self.world.available_blocks
+        if not blocks:
+            raise ValueError("Blocks are not initialised")
         else:
-            for row in nodes:
-                for node in row:
-                    if node.pgObj.collidepoint(pos):
-                        return node
-        self._selectGoalClick = False
-        self._selectStartClick = False
-        print("Run or Select Blocks")
+            for row in blocks:
+                for block in row:
+                    if block.pgObj.collidepoint(pos):
+                        return block
+    def _dragNode(self,newBlock):
+        if self.isClicked and self._selectedNode is not None:
+            self.world.remove_node(self._selectedNode.id) #Remove from old position
+            self._selectedNode.setLocation(newBlock)
+            self.world.add_node(self._selectedNode) #Add to new position
+            print("Dragging to {}".format(newBlock))
+    def _handleClicks(self,pos):
+        block = self.getClickedBlock(pos)
+        self._dragNode(block)
+        if block.hasNode() and self.isClicked:
+            self._selectedNode = self.world.getNode(block.id)
 
-    def _runTask(self):
-        """
-        Task to run when clicked on Run
-        """
-        path = bfs(self.startNode,self.goalNode,self.world.available_nodes,self)
-        self.moveToGoal(self.startNode,path)
-    
-    def moveToGoal(self,S:StartNode,path:list):
-        for node in path[::-1]:
-            S.moveTo(node.id,self,1)
-    def selectNode(self,pos):
-        node = self.getClickedNode(pos)
-        if node is not None:
-            if self._selectGoalClick:
-                self._setGoalNode(node)
-            elif self._selectStartClick:
-                self._setStartNode(node)
-            else:
-                self._makeBlockNode(node)
-                
-    def _makeBlockNode(self,node:Node):
-        if not node.isGoalNode and not node.isStartNode:
-            node.add_color(BLOCK_COLOR)
-            node.isBlock = True
+        if block is not None:
+            print(block)
 
-    def _setGoalNode(self,node):
-        self._selectGoalClick = False
-        self.goalNode.setGoalNode(node.id)
-    
-    def _setStartNode(self,node):
-        self._selectStartClick = False
-        self.startNode.setStartNode(node.id)
+
     def eventHandler(self,event):
         if self._running:
             return #If algorithm is working jam the controls
         if event.type == pygame.MOUSEBUTTONDOWN:
             self.isClicked = True
-            self.selectNode(event.pos)
+            self._handleClicks(event.pos)
         elif event.type == pygame.MOUSEBUTTONUP:
             self.isClicked = False
+            self._selectedNode = None
         elif event.type == pygame.MOUSEMOTION:
             if self.isClicked:
-                self.selectNode(event.pos)
+                self._handleClicks(event.pos)
     def drawScenary(self):
         self.world.create_grids()
-        self._drawButtons()
-        if self.goalNode is not None:
-            self.goalNode.draw_node()
-        if self.startNode is not None:
-            self.startNode.draw_node()
         pygame.display.update()
 pygame.init()
 pygame.display.set_caption(TITLE)
 world = World(SCREEN_SIZE,background,(10,10))
 world.create_grids()
-gNode = GoalNode((2,14),GOAL_IMG,world)
+
+node = Node(world.available_blocks[0][0],"A",NODE_BORDER_COLOR,NODE_COLOR)
+print(node)
 running = True
-sNode =StartNode((0,20),world,START_NODE_COLOR)
-PG = PlayGround(world,gNode,sNode)
-#sNode.moveTo((15,0),PG)
-#sNode.moveTo((5,5),PG)
+PG = PlayGround(world)
 clock = pygame.time.Clock()
 while running:
     PG.drawScenary()
