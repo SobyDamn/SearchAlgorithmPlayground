@@ -45,7 +45,7 @@ class Node(Block):
     """
     A node is a type of block that is important to the world
     """
-    def __init__(self, block:Block,label,colorOutline,colorNode):
+    def __init__(self, block:Block,label,colorOutline,colorNode,outlineWidth:int=2):
         self._label = label
         self._colorOutline = colorOutline
         self._colorNode = colorNode
@@ -54,10 +54,11 @@ class Node(Block):
         super().__init__(block.x,block.y,block.size,block.id,block.getWorld(),block.grid_color,block.grid_width)
         self.getWorld().add_node(self)
         self._font = pygame.font.SysFont('Arial', int(self.size*0.5))
+        self._outlineWidth = outlineWidth
     
     def draw_block(self):
         pygame.draw.circle(self.getWorld().win, self._colorNode, self.pos,int(self.size/2))
-        self.pgObj = pygame.draw.circle(self.getWorld().win, self._colorOutline, self.pos,int(self.size/2),2)
+        self.pgObj = pygame.draw.circle(self.getWorld().win, self._colorOutline, self.pos,int(self.size/2),self._outlineWidth)
         self.set_label(self._label)
     def set_label(self,label):
         #labelLength = self._fontSize*len(self._label)

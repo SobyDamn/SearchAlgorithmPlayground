@@ -15,6 +15,7 @@ class Button:
         self._label = label
         self._font = pygame.font.SysFont('Arial', self._fontSize)
         self._bgColor = bgColor
+
     def draw_node(self):
         pos = self._pos+self.size
         self.pgObj = pygame.draw.rect(self._world.win, self._bgColor, pygame.Rect(pos),  100, 3)
@@ -31,6 +32,12 @@ class PlayGround:
         self.isClicked = False
         self._running = False
         self._selectedNode = None #This is the node which is selected, will help in moving the nodes around
+        #A Playground consist of a start node and a goal node always
+        self._startNode = Node(self.world.getBlock((0,0)),'S',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3)
+        self._goalNode = Node(self.world.getBlock((len(self.world.available_blocks)-1,len(self.world.available_blocks[0])-1)),'G',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3)
+        self._labelList = ["S","G"]
+
+    
     def _createControls(self):
         """
         Generates button to control the playground
@@ -52,6 +59,38 @@ class PlayGround:
         self.selectGoalButton.draw_node()
         self.selectStartButton.draw_node()
 
+    def _nextLabel(self,label = ""):
+        """
+        A utility function to genLabel
+        Counting with alphabet system
+        Generates next label 
+        """
+        revL = [char for char in label[::-1]]
+        n = len(revL)
+        if n==0:
+            return 'A'
+        found = False
+        for i in range(0,n):
+            nextChar = chr(ord(revL[i])+1)
+            if(nextChar <= 'Z'):
+                found = True
+                revL[i] = nextChar
+                break
+            else:
+                revL[i] = 'A'
+        if not found:
+            revL.append('A')
+        return ''.join(revL[::-1])
+    def _genLabel(self):
+        """
+        Function generates a label not in current label
+        """
+        label = "A"
+        while label in self._labelList:
+            label = self._nextLabel(label)
+        self._labelList.append(label)
+        return label
+
 
     def getClickedBlock(self,pos)->Block:
         """
@@ -67,18 +106,21 @@ class PlayGround:
                     if block.pgObj.collidepoint(pos):
                         return block
     def _dragNode(self,newBlock):
-        if self.isClicked and self._selectedNode is not None:
+        if self.isClicked and self._selectedNode is not None and not newBlock.hasNode():
             self.world.remove_node(self._selectedNode.id) #Remove from old position
             self._selectedNode.setLocation(newBlock)
             self.world.add_node(self._selectedNode) #Add to new position
             print("Dragging to {}".format(newBlock))
     def _handleClicks(self,pos):
         block = self.getClickedBlock(pos)
-        self._dragNode(block)
-        if block.hasNode() and self.isClicked:
-            self._selectedNode = self.world.getNode(block.id)
-
         if block is not None:
+            self._dragNode(block)
+            if block.hasNode() and self.isClicked:
+                if self._selectedNode is None:
+                    self._selectedNode = self.world.getNode(block.id)
+            else:
+                Node(block,self._genLabel(),NODE_BORDER_COLOR,NODE_COLOR)
+                pass
             print(block)
 
 
@@ -102,8 +144,8 @@ pygame.display.set_caption(TITLE)
 world = World(SCREEN_SIZE,background,(10,10))
 world.create_grids()
 
-node = Node(world.available_blocks[0][0],"A",NODE_BORDER_COLOR,NODE_COLOR)
-print(node)
+#node = Node(world.available_blocks[0][0],"A",NODE_BORDER_COLOR,NODE_COLOR)
+#print(node)
 running = True
 PG = PlayGround(world)
 clock = pygame.time.Clock()
