@@ -38,7 +38,7 @@ class World:
                 y = start_y+BLOCK_SIZE*row
                 id = (col,row)
                 block = Block(x,y,BLOCK_SIZE,id,self,GRID_COLOR,GRID_WIDTH)
-                block.draw_block()
+                block.draw_block(self.win)
                 cols.append(block)
             if not self.blocksGenerated:
                 self.add_blocks(cols)
@@ -53,10 +53,10 @@ class World:
         else:
             for row in self.available_blocks:
                 for block in row:
-                    block.draw_block()
+                    block.draw_block(self.win)
         if self._available_nodes is not None:
             for nodeKeys in self._available_nodes:
-                self._available_nodes[nodeKeys].draw_block()
+                self._available_nodes[nodeKeys].draw_block(self.win)
     def add_node(self,node:Node):
         """
         Add nodes to the world
