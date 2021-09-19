@@ -275,7 +275,7 @@ class Edge:
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the edge rect.
             if self.pgObj.collidepoint(event.pos):
-                print("Use your keyboard to add/edit label to the node")
+                print("Use your keyboard to add/edit weight of the edge")
                 # Toggle the active variable.
                 self._active = not self._active
                 if self._active:
@@ -302,7 +302,7 @@ class Edge:
                 elif event.key == pygame.K_DELETE:
                     #delete the node
                     print("Deleted {}".format(self))
-                    self.getWorld().remove_edge(self)
+                    self._world.remove_edge(self._nodeStart.id,self._nodeEnd.id)
                     return False
                 else:
                     self._weightLabel += event.unicode

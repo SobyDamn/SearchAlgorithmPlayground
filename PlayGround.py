@@ -103,14 +103,16 @@ class PlayGround:
             self.world.update_node_loc(self._selectedNode,newBlock)
             print("Dragging to {}".format(newBlock))
     def _handleClicks(self,event):
-        edge = self._getClickedEdge(event.pos)
-        if edge is not None:
-            self._selectedEdge = edge
-            print(edge)
-            return
-        self._selectedEdge = None
-
         block = self._getClickedBlock(event.pos)
+        if block is not None and not block.hasNode():
+            edge = self._getClickedEdge(event.pos)
+            if edge is not None:
+                self._selectedEdge = edge
+                self._selectedNode = None
+                print(edge)
+                return
+            else:
+                self._selectedEdge = None
         if self._selectedNode is not None:
             self._selectedNode.selected(False)
         if block is not None:
@@ -121,7 +123,6 @@ class PlayGround:
                         #If the nodes are not same then create an edge
                         Edge(self._selectedNode,self.world.getNode(block.id))
                     self._selectedNode = self.world.getNode(block.id)
-                    self._selectedNode.selected(True)
                 elif not block.hasNode():
                     self._selectedNode = Node(block,self._genLabel(),NODE_BORDER_COLOR,NODE_COLOR)
                     self._selectedNode.selected(False)
@@ -137,7 +138,9 @@ class PlayGround:
             if not self._selectedEdge.handle_event(event):
                 self._selectedEdge = None
         if self._selectedNode is not None:
+            self._selectedNode.selected(True)
             if not self._selectedNode.handle_event(event):
+                self._selectedNode.selected(False)
                 self._selectedNode = None
         if event.type == pygame.MOUSEBUTTONDOWN:
             self._handleClicks(event)
