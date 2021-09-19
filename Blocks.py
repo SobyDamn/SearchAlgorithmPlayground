@@ -108,6 +108,7 @@ class Node(Block):
         """
         Function handles the event
         Allows to edit the label of node using keypress
+        Once deleted function returns False
         """
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the input_box rect.
@@ -141,12 +142,14 @@ class Node(Block):
                     if not self._specialNodeStatus:
                         print("Deleted {}".format(self))
                         self.getWorld().remove_node(self.id)
+                        return False
                     else:
                         print("Special node delete Permission Denied!\nNOTE: Special nodes like Start and Goal can't be deleted")
                 else:
                     self._label += event.unicode
                 # Re-render the text.
                 self.txt_surface = self._font.render(self._label, True, self._colorOutline)
+        return True
     def _saveNewLabel(self,oldLabel):
             """
             Function saves the label only if the new label is valid else switch back to old label

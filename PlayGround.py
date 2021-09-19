@@ -120,7 +120,8 @@ class PlayGround:
 
     def eventHandler(self,event):
         if self._selectedNode is not None:
-            self._selectedNode.handle_event(event)
+            if not self._selectedNode.handle_event(event):
+                self._selectedNode = None
         if event.type == pygame.MOUSEBUTTONDOWN:
             self._handleClicks(event)
             self.isClicked = True
