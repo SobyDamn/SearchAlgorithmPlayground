@@ -1,4 +1,5 @@
 import pygame
+from config import NODE_BORDER_COLOR,SELECTED_NODE_COLOR
 class Block:
     """
     Block defines the world tiles
@@ -33,6 +34,9 @@ class Block:
         """
         self.pgObj = pygame.draw.rect(self._world.win,color,pygame.Rect((self.x-1, self.y-1, self.size-1,self.size-1)))
     def getWorld(self):
+        """
+        Returns the world in which the block is created
+        """
         return self._world
 
     def setHasNode(self,val:bool):
@@ -52,23 +56,29 @@ class Node(Block):
     A node is a type of block that is important to the world
     """
     def __init__(self, block:Block,label,colorOutline,colorNode,outlineWidth:int=2,specialNodeStatus:bool = False):
+        super().__init__(block.x,block.y,block.size,block.id,block.getWorld(),block.grid_color,block.grid_width)
+
         self._label = label
         self._colorOutline = colorOutline
         self._colorNode = colorNode
         self._defaultOutlineColor = colorOutline
         self.pos = block.pos()
-        super().__init__(block.x,block.y,block.size,block.id,block.getWorld(),block.grid_color,block.grid_width)
-        #Send information to world about each node created
-        self.getWorld().add_node(self)
         self._font = pygame.font.Font(None, int(self.size*0.80))
         self.txt_surface = self._font.render(label, True, self._colorOutline)
         self._outlineWidth = outlineWidth
         self._oldLabel = None #Label before editing happened
         self._active = False #A node is active when it's selected
         self._specialNodeStatus = specialNodeStatus #Tells whether the node is special or not, Goal and Start nodes must be special
+        self._isSelected = False
+        #Send information to world about each node created
+        self.getWorld().add_node(self)
+
+        self._neighbourNodes = [] #Neighbour nodes that are connected with an edge
+
     def draw_block(self,screen):
         pygame.draw.circle(screen, self._colorNode, self.pos,int(self.size/2))
-        self.pgObj = pygame.draw.circle(screen, self._colorOutline, self.pos,int(self.size/2),self._outlineWidth)
+        outlineColor = SELECTED_NODE_COLOR if self._isSelected else self._colorOutline
+        self.pgObj = pygame.draw.circle(screen, outlineColor, self.pos,int(self.size/2),self._outlineWidth)
         self.set_label(self._label,screen)
     def set_label(self,label,screen):
         """
@@ -78,6 +88,13 @@ class Node(Block):
         text = self._font.render(self._label, True, self._colorOutline)
         text_rect = text.get_rect(center = self.pgObj.center)
         screen.blit(text, text_rect)
+
+    def selected(self,val:bool):
+        """
+        Set the node selected 
+        """
+        self._isSelected = val
+
     def get_label(self):
         return self._label
     def setLocation(self,block:Block):
@@ -114,7 +131,7 @@ class Node(Block):
         if event.type == pygame.KEYDOWN:
             if self._active:
                 if event.key == pygame.K_RETURN:
-                    print("New Label for {}: {}".format(self.id,self._label))
+                    self._saveNewLabel(self._oldLabel) #Discarding if no valid
                     self._active = False
                     self._colorOutline = self._defaultOutlineColor
                 elif event.key == pygame.K_BACKSPACE:
@@ -146,6 +163,24 @@ class Node(Block):
                 self._label = oldLabel
                 return False
             print("Label changed from {} to {}".format(oldLabel,self._label))
+    
+    def add_neighbour(self,node):
+        """
+        Adds a node as neighbour
+        """
+        if node not in self._neighbourNodes:
+            self._neighbourNodes.append(node)
+    def remove_neighbour(self,node):
+        """
+        Remove the node from the neighbour if it exists
+        """
+        if node in self._neighbourNodes:
+            self._neighbourNodes.remove(node)
+    def get_neighbours(self)->list:
+        """
+        Returns list of neighbours in sorted order of the label
+        """
+        return sorted(self._neighbourNodes)
     def __eq__(self, label:str)->bool:
         """
         Equality between label of the node
@@ -160,6 +195,85 @@ class Node(Block):
             return True
         else:
             return False
+    def __lt__(self,value:str)->bool:
+        """
+        Label comparator
+        """
+        if self._label < value:
+            return True
+        else:
+            return False
+    
+    def __gt__(self, value:str)->bool:
+        """
+        Label comparator
+        """
+        if self._label > value:
+            return True
+        else:
+            return False
 
+    def __ge__(self, value:str)->bool:
+        """
+        Label comparator
+        """
+        if self._label >= value:
+            return True
+        else:
+            return False
+
+    def __le__(self, value:str)->bool:
+        """
+        Label comparator
+        """
+        if self._label <= value:
+            return True
+        else:
+            return False
     def __str__(self):
         return "<Node label = "+ self._label+" id = "+str(self.id)+">"
+
+
+
+class Edge:
+    """
+    An edge class represents an edge between 2 nodes
+    """
+    def __init__(self,nodeStart:Node,nodeEnd:Node,weight = 0,edgColor = NODE_BORDER_COLOR,edgeWidth = 3):
+        self._edgeColor = edgColor
+        self._edgeWidth = edgeWidth
+        self._weight = weight
+        self._weightLabel = str(weight)
+        self._nodeStart = nodeStart #Start of the edge
+        self._nodeEnd = nodeEnd #End of the edge
+        self._world = nodeStart.getWorld() #Fix-ME Find alternate for updating the world about the edge created
+
+        ##Inform the world that edge is created
+        self._world.add_edge(self)
+
+        #Inform the nodes that edge is created
+        self._nodeStart.add_neighbour(self._nodeEnd) #Add neighbours
+        self._nodeEnd.add_neighbour(self._nodeStart) #Add neighbour
+
+        self._font = pygame.font.Font(None, int(self._nodeStart.size*0.80))
+        self.txt_surface = self._font.render(self._weightLabel, True, self._edgeColor)
+    def draw_edge(self,screen):
+        self.pgObj = pygame.draw.line(screen,self._edgeColor,self._nodeStart.pos,self._nodeEnd.pos,self._edgeWidth)
+    def set_label(self,label,screen):
+        pass
+    def getNodes(self)->tuple:
+        """
+        Returns the nodes the edge is connecting
+        """
+        return (self._nodeStart,self._nodeEnd)
+    def __del__(self):
+        """
+        Edge is deleted changes will be reflected in the neighbours too
+        """
+        (sNode,eNode) = self.getNodes()
+        sNode.remove_neighbour(eNode)
+        eNode.remove_neighbour(sNode)
+    def __str__(self):
+        pass
+
+    pass

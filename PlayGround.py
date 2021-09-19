@@ -92,24 +92,30 @@ class PlayGround:
                         return block
     def _dragNode(self,newBlock):
         if self.isClicked and self._selectedNode is not None and not newBlock.hasNode():
-            self.world.remove_node(self._selectedNode.id) #Remove from old position
-            self._selectedNode.setLocation(newBlock)
-            self.world.add_node(self._selectedNode) #Add to new position
+            #Update node location
+            self.world.update_node_loc(self._selectedNode,newBlock)
             print("Dragging to {}".format(newBlock))
     def _handleClicks(self,event):
         block = self._getClickedBlock(event.pos)
+        if self._selectedNode is not None:
+            self._selectedNode.selected(False)
         if block is not None:
             self._dragNode(block)
             if not self._isDragging:
                 if block.hasNode():
+                    if self._selectedNode is not None and self._selectedNode != self.world.getNode(block.id):
+                        #If the nodes are not same then create an edge
+                        Edge(self._selectedNode,self.world.getNode(block.id))
                     self._selectedNode = self.world.getNode(block.id)
+                    self._selectedNode.selected(True)
                 elif not block.hasNode():
                     self._selectedNode = Node(block,self._genLabel(),NODE_BORDER_COLOR,NODE_COLOR)
+                    self._selectedNode.selected(False)
+                    self._selectedNode = None
             print(block)
         else:
             #If the click is made somewhere outside a grid
             self._selectedNode = None
-            pass
 
 
     def eventHandler(self,event):
