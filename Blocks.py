@@ -1,5 +1,6 @@
 import pygame
 from config import NODE_BORDER_COLOR,SELECTED_NODE_COLOR
+import math
 class Block:
     """
     Block defines the world tiles
@@ -111,7 +112,7 @@ class Node(Block):
         Once deleted function returns False
         """
         if event.type == pygame.MOUSEBUTTONDOWN:
-            # If the user clicked on the input_box rect.
+            # If the user clicked on the node rect.
             if self.pgObj.collidepoint(event.pos):
                 print("Use your keyboard to add/edit label to the node")
                 # Toggle the active variable.
@@ -242,8 +243,9 @@ class Edge:
     """
     An edge class represents an edge between 2 nodes
     """
-    def __init__(self,nodeStart:Node,nodeEnd:Node,weight = 0,edgColor = NODE_BORDER_COLOR,edgeWidth = 3):
-        self._edgeColor = edgColor
+    def __init__(self,nodeStart:Node,nodeEnd:Node,weight = 0,edgeColor = NODE_BORDER_COLOR,edgeWidth = 3):
+        self._edgeColor = edgeColor
+        self._defaultEdgeColor = edgeColor
         self._edgeWidth = edgeWidth
         self._weight = weight
         self._weightLabel = str(weight)
@@ -260,8 +262,75 @@ class Edge:
 
         self._font = pygame.font.Font(None, int(self._nodeStart.size*0.80))
         self.txt_surface = self._font.render(self._weightLabel, True, self._edgeColor)
+
+        self._active = False #An edge is active if selected
+        self._oldWeight = None
+    
+    def handle_event(self, event):
+        """
+        Function handles the event
+        Allows to set weight or delete an Edge
+        Once an edge deleted function returns False
+        """
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # If the user clicked on the edge rect.
+            if self.pgObj.collidepoint(event.pos):
+                print("Use your keyboard to add/edit label to the node")
+                # Toggle the active variable.
+                self._active = not self._active
+                if self._active:
+                    self._oldWeight = self._weightLabel
+            else:
+                self._active = False
+            
+            #Change the label to new value after checking validity
+            if not self._active and (self._oldWeight is not None and self._oldWeight != self._weightLabel):
+                #Try saving the new label
+                self._saveNewLabel(self._oldWeight) #Discarding if not valid
+                self._oldWeight = None
+            # Change the current color of the input box.
+            self._edgeColor = COLOR_ACTIVE if self._active else self._defaultEdgeColor
+        
+        if event.type == pygame.KEYDOWN:
+            if self._active:
+                if event.key == pygame.K_RETURN:
+                    self._saveNewLabel(self._oldWeight) #Discarding if no valid
+                    self._active = False
+                    self._edgeColor = self._defaultEdgeColor
+                elif event.key == pygame.K_BACKSPACE:
+                    self._weightLabel = self._weightLabel[:-1]
+                elif event.key == pygame.K_DELETE:
+                    #delete the node
+                    print("Deleted {}".format(self))
+                    self.getWorld().remove_edge(self)
+                    return False
+                else:
+                    self._weightLabel += event.unicode
+                # Re-render the text.
+                self.txt_surface = self._font.render(self._weightLabel, True, self._edgeColor)
+        return True
+    def _saveNewLabel(self,oldLabel):
+        """
+        Discard the value if it's invalid else saves the value
+        """
+        #Deal with empty string
+        if len(self._weightLabel)==0:
+            print("Edge must contain a weight")
+            self._weightLabel = oldLabel
+            return False
+        try:
+            weight = int(self._weightLabel)
+            self._weight = weight
+            print("{} new weight - {}".format(self,self._weightLabel))
+            return True
+        except ValueError:
+            print("Edge weight value must be an integer")
+            self._weightLabel = oldLabel
+            return False
+
     def draw_edge(self,screen):
         self.pgObj = pygame.draw.line(screen,self._edgeColor,self._nodeStart.pos,self._nodeEnd.pos,self._edgeWidth)
+        self._set_label(self._weightLabel,screen)
     def set_label(self,label,screen):
         pass
     def getNodes(self)->tuple:
@@ -269,6 +338,25 @@ class Edge:
         Returns the nodes the edge is connecting
         """
         return (self._nodeStart,self._nodeEnd)
+
+    
+    def _set_label(self,label,screen):
+        """
+        Sets the label of weight to the edge
+        """
+        h = self._nodeEnd.size*0.7
+        xc,yc = self.pgObj.center
+        x1,y1 = min(self._nodeStart.pos,self._nodeEnd.pos)
+        dist_sq = (xc-x1)**2 + (yc-y1)**2
+        mid_dist = math.sqrt(dist_sq)
+        phi = math.atan((h)/mid_dist)
+        theta = math.pi/2 if xc-x1==0 else math.atan((yc-y1)/(xc-x1))
+        hyp = math.sqrt((h)**2 + (mid_dist)**2)
+        (x,y) = (x1+int(hyp*math.cos(theta+phi)),y1+int(hyp*math.sin(theta+phi)))
+        text = self._font.render(label, True, self._edgeColor)
+        text_rect = text.get_rect(center = (x,y))
+        screen.blit(text, text_rect)
+
     def __del__(self):
         """
         Edge is deleted changes will be reflected in the neighbours too
@@ -277,6 +365,4 @@ class Edge:
         sNode.remove_neighbour(eNode)
         eNode.remove_neighbour(sNode)
     def __str__(self):
-        pass
-
-    pass
+        return "<Edge {} - {}>".format(self._nodeStart.get_label(),self._nodeEnd.get_label())

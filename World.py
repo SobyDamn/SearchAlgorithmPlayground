@@ -101,6 +101,11 @@ class World:
         self._updateEdges(node,oldLoc) #Update location in dictionary
 
         self.add_node(node) #Add updated location block
+    def getEdges(self):
+        """
+        Returns list of edges
+        """
+        return self._available_edges
     def add_edge(self,e:Edge):
         """
         Add edge between two nodes

@@ -19,8 +19,8 @@ class PlayGround:
         self._startNode = Node(self.world.getBlock((0,0)),'S',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True)
         self._goalNode = Node(self.world.getBlock((len(self.world.available_blocks)-1,len(self.world.available_blocks[0])-1)),'G',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True)
         self._isDragging = False #True when clicked and mouse is dragging
+        self._selectedEdge = None
 
-    
     def _createControls(self):
         """
         Generates button to control the playground
@@ -76,7 +76,14 @@ class PlayGround:
             label = _nextLabel(label)
         return label
 
-
+    def _getClickedEdge(self,pos)->Edge:
+        edges = self.world.getEdges()
+        if edges:
+            for edge in edges.values():
+                if edge.pgObj.collidepoint(pos):
+                    return edge
+        
+        return None
     def _getClickedBlock(self,pos)->Block:
         """
         Click Handler, checks if the click is button node or simple node and manages accordingly
@@ -96,6 +103,13 @@ class PlayGround:
             self.world.update_node_loc(self._selectedNode,newBlock)
             print("Dragging to {}".format(newBlock))
     def _handleClicks(self,event):
+        edge = self._getClickedEdge(event.pos)
+        if edge is not None:
+            self._selectedEdge = edge
+            print(edge)
+            return
+        self._selectedEdge = None
+
         block = self._getClickedBlock(event.pos)
         if self._selectedNode is not None:
             self._selectedNode.selected(False)
@@ -119,6 +133,9 @@ class PlayGround:
 
 
     def eventHandler(self,event):
+        if self._selectedEdge is not None:
+            if not self._selectedEdge.handle_event(event):
+                self._selectedEdge = None
         if self._selectedNode is not None:
             if not self._selectedNode.handle_event(event):
                 self._selectedNode = None
