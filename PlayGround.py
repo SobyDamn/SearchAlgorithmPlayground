@@ -1,3 +1,6 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+
 import pygame 
 from World import World
 from Blocks import *
@@ -5,11 +8,17 @@ from config import *
 from UI import *
 
 
-
-
 class PlayGround:
-    def __init__(self,world:World):
-        self.world = world
+    def __init__(self,blocks_dimension = BLOCKS_DIMENSION,block_size = BLOCK_SIZE,world:World=None):
+        """
+        Creates a playground with the given world if no parameter given creates a default world
+        blocks_dimension: Total blocks that will be shown on the screen as (rows,cols)
+        block_size: size of each block
+        NOTE: Parameters can be modified in config file as well
+        """
+        pygame.init() #Initialise the pygame
+        pygame.display.set_caption(TITLE) #set the title
+        self.world = World(blocks_dimension,block_size,BOTTOM_PANEL_HEIGHT,GRID_WIDTH,BACKGROUND_COLOR,GRID_COLOR,MARGIN) if world is None else world
         self._isClicked = False
         self._running = False
         self._selectedNode = None #This is the node which is selected, will help in moving the nodes around
@@ -221,23 +230,23 @@ class PlayGround:
         Returns start node in the world
         """
         return self._startNode
+    def run(self):
+        """
+        Start the playground to play with
+        """
+        clock = pygame.time.Clock()
+        running = True
+        print("Search Algorithm PlayGround Tool created by Sritabh Priyadarshi using pygame.\nVisit https://github.com/SobyDamn/SearchAlgorithmVisualisation for more info.")
+        while running:
+            self.drawScenary()
+            for event in pygame.event.get():  
+                if event.type == pygame.QUIT:  
+                    running = False
+                else:
+                    PG.eventHandler(event)
+            clock.tick(60)
+        pygame.quit()
 
 
-pygame.init()
-pygame.display.set_caption(TITLE)
-world = World(margin = 15)
-world.create_grids()
-world._testVal = "What?"
-print(world._testVal)
-running = True
-PG = PlayGround(world)
-clock = pygame.time.Clock()
-while running:
-    PG.drawScenary()
-    for event in pygame.event.get():  
-        if event.type == pygame.QUIT:  
-            running = False
-        else:
-            PG.eventHandler(event)
-    clock.tick(60)
-pygame.quit()
+PG = PlayGround()
+PG.run()

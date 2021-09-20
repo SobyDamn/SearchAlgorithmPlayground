@@ -6,6 +6,7 @@ TITLE = "Algo PlayGround"
 ALGORITHM_TITLE = ""
 MOVEMENT_SPEED = 10
 BOTTOM_PANEL_HEIGHT = 200 #Size of bottom panel for control
+MARGIN = 15 #Margin between sides and the grid
 
 
 ###Colors###
@@ -19,7 +20,7 @@ BLUE = (14, 113, 143)
 BLACK = (0,0,0)
 GREEN = (151, 240, 175)
 RED = (255, 120, 120)
-background = WHITE
+BACKGROUND_COLOR = WHITE
 GRID_COLOR = GRAY
 BLOCK_COLOR = BROWN
 START_NODE_COLOR = DARK_PURPLE

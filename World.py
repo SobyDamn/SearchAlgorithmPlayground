@@ -1,29 +1,39 @@
 import pygame
 from Blocks import *
-from config import * 
 
 
 class World:
-    """
-    A world with a grid what a nice place to live in!
-    """
-    def __init__(self,margin=10):
-        self._rows,self._cols = BLOCKS_DIMENSION
-        self._background = background
+    def __init__(self,blocks_dimension:tuple,block_size:int,bottom_panel_size:int,grid_width:int = 1,background_color:tuple=(255,255,255),gird_color:tuple = ((232, 232, 232)),margin=10):
+        """
+        A world with a grid what a nice place to live in!
+        blocks_dimension: dimension of the grid as (row,col)
+        bottom_panel_size: size of the bottom pannel containing controls(min value allowed is 180)
+        grid_width: width of the grid lines (default 1)
+        background_color: Color of the background on which the world is drawn default as white
+        block_size: size of each blocks (square)
+        grid_color: color of the grid, default gray
+        margin: margin between grid and corners(min value allowed is 10)
+        """
+        self._rows,self._cols = blocks_dimension
+        self._background = background_color
         self.available_blocks = None
         self._margin = max(margin,10)
-        self._screen_size = self._calc_screen_size(BLOCKS_DIMENSION,BLOCK_SIZE)
+        self._screen_size = self._calc_screen_size(blocks_dimension,block_size,bottom_panel_size)
         self._width,self._height = self._screen_size[0],self._screen_size[1]
         self.win = pygame.display.set_mode((self._width,self._height))
+        self._grid_width = grid_width
+        self._block_size = block_size
+        self._grid_color = gird_color
         self._blocksGenerated = False
         self._available_nodes = None #Type dictionary where block id is a key
         self._available_edges = None
-    def _calc_screen_size(self,blocks_dimension,block_size):
+        self.create_grids() #Initialise grid always as soon as world is created
+    def _calc_screen_size(self,blocks_dimension,block_size,bottom_panel_size):
         """
         Returns size of the screen
         """
         screen_width = block_size*self._cols + 2*self._margin
-        screen_height = block_size*self._rows + self._margin + max(BOTTOM_PANEL_HEIGHT,180)
+        screen_height = block_size*self._rows + self._margin + max(bottom_panel_size,180)
         return (screen_width,screen_height)
     def create_grids(self):
         self.win.fill(self._background)
@@ -41,10 +51,10 @@ class World:
         for col in range(0,total_cols):
             cols = []
             for row in range(0,total_rows):
-                x = start_x+BLOCK_SIZE*col
-                y = start_y+BLOCK_SIZE*row
+                x = start_x+self._block_size*col
+                y = start_y+self._block_size*row
                 id = (col,row)
-                block = Block(x,y,BLOCK_SIZE,id,self,GRID_COLOR,GRID_WIDTH)
+                block = Block(x,y,self._block_size,id,self,self._grid_color,self._grid_width)
                 block.draw_block(self.win)
                 cols.append(block)
             if not self._blocksGenerated:
