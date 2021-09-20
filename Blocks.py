@@ -251,10 +251,14 @@ class Node(Block):
 
 
 class Edge:
-    """
-    An edge class represents an edge between 2 nodes
-    """
-    def __init__(self,nodeStart:Node,nodeEnd:Node,weight = 0,edgeColor = NODE_BORDER_COLOR,edgeWidth = 3):
+    def __init__(self,nodeStart:Node,nodeEnd:Node,isWeighted:bool = False,weight = 0,edgeColor = NODE_BORDER_COLOR,edgeWidth = 3):
+        """
+        An edge class represents an edge between 2 nodes
+        nodeStart and nodeEnd are the two nodes between which the edge will be generated
+        isWeighted: whether the edge is weighted or not
+        A weighted edge is allowed to have weight which can be edited
+        weight: weight of the edge
+        """
         self._edgeColor = edgeColor
         self._defaultEdgeColor = edgeColor
         self._edgeWidth = edgeWidth
@@ -263,6 +267,7 @@ class Edge:
         self._nodeStart = nodeStart #Start of the edge
         self._nodeEnd = nodeEnd #End of the edge
         self._world = nodeStart.getWorld() #Fix-ME Find alternate for updating the world about the edge created
+        self._isWeighted = isWeighted
 
         ##Inform the world that edge is created
         self._world.add_edge(self)
@@ -361,7 +366,9 @@ class Edge:
 
     def draw_edge(self,screen):
         self.pgObj = pygame.draw.line(screen,self._edgeColor,self._nodeStart.pos,self._nodeEnd.pos,self._edgeWidth)
-        self._set_label(self._weightLabel,screen)
+        if self._isWeighted:
+            #A weighted edge will have a label representing it's weight
+            self._set_label(self._weightLabel,screen)
 
     def getNodes(self)->tuple:
         """
