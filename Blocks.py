@@ -16,8 +16,17 @@ class Block:
         self._world = world
         self._hasNode = False #Tells whether there is a node over the block
         self.pyObj = None #pyGame object
+        self._isHighlighted = False #Highlighting the blocks
     def draw_block(self,screen):
         self.pgObj = pygame.draw.rect(screen, self.grid_color, pygame.Rect((self.x, self.y, self.size,self.size)), self.grid_width)
+        if self._isHighlighted:
+            pygame.draw.rect(screen,self.grid_color,pygame.Rect((self.x+2, self.y+2, self.size-4,self.size-4)))
+    def highlight(self,val:bool):
+        """
+        Highlight the block
+        Useful to show which block is selected
+        """
+        self._isHighlighted = val
     def pos(self):
         """
         Returns Exact coordinates in 2D screen space
@@ -302,7 +311,7 @@ class Edge:
                 elif event.key == pygame.K_DELETE:
                     #delete the node
                     print("Deleted {}".format(self))
-                    self._world.remove_edge(self._nodeStart.id,self._nodeEnd.id)
+                    self._world.remove_edge(self)
                     return False
                 else:
                     self._weightLabel += event.unicode
@@ -320,6 +329,7 @@ class Edge:
             return False
         try:
             weight = int(self._weightLabel)
+            self._weightLabel = str(weight)
             self._weight = weight
             print("{} new weight - {}".format(self,self._weightLabel))
             return True
@@ -350,8 +360,7 @@ class Edge:
     def draw_edge(self,screen):
         self.pgObj = pygame.draw.line(screen,self._edgeColor,self._nodeStart.pos,self._nodeEnd.pos,self._edgeWidth)
         self._set_label(self._weightLabel,screen)
-    def set_label(self,label,screen):
-        pass
+
     def getNodes(self)->tuple:
         """
         Returns the nodes the edge is connecting
@@ -359,11 +368,12 @@ class Edge:
         return (self._nodeStart,self._nodeEnd)
 
     
-    def _set_label(self,label,screen):
+    def _set_label(self,label,screen,offset = 0.4):
         """
         Sets the label of weight to the edge
+        height above the edge the label is placed is offset*nodeSize
         """
-        h = self._nodeEnd.size*0.7
+        h = self._nodeEnd.size*offset
         xc,yc = self.pgObj.center
         x1,y1 = min(self._nodeStart.pos,self._nodeEnd.pos)
         dist_sq = (xc-x1)**2 + (yc-y1)**2
@@ -376,12 +386,6 @@ class Edge:
         text_rect = text.get_rect(center = (x,y))
         screen.blit(text, text_rect)
 
-    def __del__(self):
-        """
-        Edge is deleted changes will be reflected in the neighbours too
-        """
-        (sNode,eNode) = self.getNodes()
-        sNode.remove_neighbour(eNode)
-        eNode.remove_neighbour(sNode)
+        
     def __str__(self):
         return "<Edge {} - {}>".format(self._nodeStart.get_label(),self._nodeEnd.get_label())

@@ -70,7 +70,11 @@ class World:
         #Dictionary is updated each time the node is moved in the grid
         if self._available_nodes is None:
             self._available_nodes = {}
-        self._available_nodes[node.id] = node
+        if not node.id in self._available_nodes:
+            self._available_nodes[node.id] = node
+        else:
+            #print("{} already exists at thAT block location".format(node))
+            pass
 
         #Now the block contains a node over it
         block = self.getBlock(node.id)
@@ -85,7 +89,7 @@ class World:
                 self._removeEdges(self._available_nodes[id])
             del self._available_nodes[id]
         except KeyError:
-            print("Deleting a node which doesn't exists")
+            print("World: Deleting a node which doesn't exists")
 
         #Now the block doesn't contains a node over it
         block = self.getBlock(id)
@@ -115,31 +119,41 @@ class World:
         key = tuple(sorted((node1_id,node2_id)))#The key of the edge is nodes in sorted ascending order
         if self._available_edges is None:
             self._available_edges = {}
-        self._available_edges[key] = e
-    def remove_edge(self,nodeStartID:tuple,nodeEndID:tuple):
+        if not key in self._available_edges:
+            self._available_edges[key] = e
+        else:
+            print("World: Edge between the nodes {} - {} already exists".format(e.getNodes()[0],e.getNodes()[1]))
+            pass
+    def remove_edge(self,edge:Edge):
         """
-        Removes the edge between nodeStartID and nodeEndID
-        ID is node if i.e. location in 2D grid
+        Removes the edge
         """
-        key = tuple(sorted((nodeStartID,nodeEndID)))#The key of the edge is nodes in sorted ascending order
         try:
-            del self._available_edges[key] #Will also trigger destructor
+            (sNode,eNode) = edge.getNodes()
+            key = tuple(sorted((sNode.id,eNode.id)))#The key of the edge is nodes in sorted ascending order
+            sNode.remove_neighbour(eNode)
+            eNode.remove_neighbour(sNode)
+            del self._available_edges[key] 
         except KeyError:
-            print("Edge to be deleted Doesn't exists")
+            print("World: Edge to be deleted Doesn't exists {}".format(key))
     def _removeEdges(self,node:Node):
         """
-        Function removes all the edges containing the given node
+        Function removes all the edges from the given node
         """
         for endNode in node.get_neighbours():
-            self.remove_edge(node.id,endNode.id)
+            self.remove_edge(self.getEdge(node.id,endNode.id))
     def _updateEdges(self,node:Node,oldLoc:tuple):
         """
         Updates the edge for avaialable_edges
         """
         for endNode in node.get_neighbours():
             edge = self.getEdge(oldLoc,endNode.id)
-            self.remove_edge(oldLoc,endNode.id) #Remove the edge from the dict
-            self.add_edge(edge)
+            key = tuple(sorted((oldLoc,endNode.id)))#The key of the edge is nodes in sorted ascending order
+            try:
+                del self._available_edges[key]
+                self.add_edge(edge)
+            except KeyError:
+                print("World: Error in updating the edge to world")
     
     def getEdge(self,startNodeID:tuple,endNodeID:tuple)->Edge:
         key = tuple(sorted((startNodeID,endNodeID)))

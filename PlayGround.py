@@ -3,8 +3,6 @@ from World import World
 from Blocks import *
 from config import *
 from UI import *
-from BreadthFirstSearch import bfs
-from DepthFirstSearch import dfs
 
 
 
@@ -20,6 +18,7 @@ class PlayGround:
         self._goalNode = Node(self.world.getBlock((len(self.world.available_blocks)-1,len(self.world.available_blocks[0])-1)),'G',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True)
         self._isDragging = False #True when clicked and mouse is dragging
         self._selectedEdge = None
+        self._selectedBlock = None
 
     def _createControls(self):
         """
@@ -101,48 +100,75 @@ class PlayGround:
         if self.isClicked and self._selectedNode is not None and not newBlock.hasNode():
             #Update node location
             self.world.update_node_loc(self._selectedNode,newBlock)
-            print("Dragging to {}".format(newBlock))
+            #print("Dragging to {}".format(newBlock))
     def _handleClicks(self,event):
         block = self._getClickedBlock(event.pos)
         if block is not None and not block.hasNode() and not self._isDragging:
+            #No selected node
+            if self._selectedNode is not None:
+                self._selectedNode.selected(False)
+                self._selectedNode = None
+
             edge = self._getClickedEdge(event.pos)
             if edge is not None:
                 self._selectedEdge = edge
-                self._selectedNode = None
-                print(edge)
+                print(self.world.getEdges())
                 return
-            else:
-                self._selectedEdge = None
-        if self._selectedNode is not None:
-            self._selectedNode.selected(False)
         if block is not None:
             self._dragNode(block)
             if not self._isDragging:
                 if block.hasNode():
+                    if self._selectedBlock is not None:
+                        self._selectedBlock.highlight(False)
+                        self._selectedBlock = None
+                        
                     if self._selectedNode is not None and self._selectedNode != self.world.getNode(block.id):
+                        self._selectedNode.selected(False) #Remove any selected node, probably help in creating no further edges without knowing
                         #If the nodes are not same then create an edge
-                        Edge(self._selectedNode,self.world.getNode(block.id))
-                    self._selectedNode = self.world.getNode(block.id)
-                elif not block.hasNode():
-                    self._selectedNode = Node(block,self._genLabel(),NODE_BORDER_COLOR,NODE_COLOR)
-                    self._selectedNode.selected(False)
+                        if self.world.getNode(block.id) not in self._selectedNode.get_neighbours():
+                            Edge(self._selectedNode,self.world.getNode(block.id))
+                        self._selectedNode = None
+
+                    elif self._selectedNode is not None:
+                        self._selectedNode.selected(False)
+                    else:
+                        self._selectedNode = self.world.getNode(block.id)
+                        self._selectedNode.selected(True)
+
+                else:
+                    if self._selectedBlock is not None:
+                        self._selectedBlock.highlight(False) #Remove previous highlighted block
+                        if block == self._selectedBlock:
+                            self._selectedNode = Node(block,self._genLabel(),NODE_BORDER_COLOR,NODE_COLOR)
+                            self._selectedNode.selected(False)
+                            self._selectedBlock = None
+                        else:
+                            self._selectedBlock = block
+                            self._selectedBlock.highlight(True)
+                    else:
+                        self._selectedBlock = block
+                        self._selectedBlock.highlight(True)
                     self._selectedNode = None
             if not self._isDragging:
                 print(block)
         else:
             #If the click is made somewhere outside a grid
-            self._selectedNode = None
+            if self._selectedBlock is not None:
+                self._selectedBlock.highlight(False)
+                self._selectedBlock = None
+            if self._selectedNode is not None:
+                self._selectedNode.selected(False)
+                self._selectedNode = None
 
 
     def eventHandler(self,event):
-        if self._selectedEdge is not None:
-            if not self._selectedEdge.handle_event(event):
-                self._selectedEdge = None
         if self._selectedNode is not None:
-            self._selectedNode.selected(True)
             if not self._selectedNode.handle_event(event):
                 self._selectedNode.selected(False)
                 self._selectedNode = None
+        elif self._selectedEdge is not None:
+            if not self._selectedEdge.handle_event(event):
+                self._selectedEdge = None
         if event.type == pygame.MOUSEBUTTONDOWN:
             self._handleClicks(event)
             self.isClicked = True
