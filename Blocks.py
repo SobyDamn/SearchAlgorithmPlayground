@@ -274,7 +274,7 @@ class Edge:
         """
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the edge rect.
-            if self.pgObj.collidepoint(event.pos):
+            if self.collidePoint(event.pos):
                 print("Use your keyboard to add/edit weight of the edge")
                 # Toggle the active variable.
                 self._active = not self._active
@@ -327,6 +327,25 @@ class Edge:
             print("Edge weight value must be an integer")
             self._weightLabel = oldLabel
             return False
+    
+    def collidePoint(self,clickPoint,offset=5):
+        """
+        Returns true if the click point is inside offset limit of the edge
+        """
+        if self.pgObj.collidepoint(clickPoint) and self._distance_point_line(clickPoint) < offset:
+            return True
+        else:
+            return False
+    def _distance_point_line(self,pt):
+        """
+        Returns normal distance at which the point pt is clicked from the line
+        """
+        l1 = self._nodeStart.pos
+        l2 = self._nodeEnd.pos
+        NV = pygame.math.Vector2(l1[1] - l2[1], l2[0] - l1[0])
+        LP = pygame.math.Vector2(l1)
+        P = pygame.math.Vector2(pt)
+        return abs(NV.normalize().dot(P -LP))
 
     def draw_edge(self,screen):
         self.pgObj = pygame.draw.line(screen,self._edgeColor,self._nodeStart.pos,self._nodeEnd.pos,self._edgeWidth)

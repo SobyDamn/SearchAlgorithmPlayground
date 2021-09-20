@@ -80,7 +80,7 @@ class PlayGround:
         edges = self.world.getEdges()
         if edges:
             for edge in edges.values():
-                if edge.pgObj.collidepoint(pos):
+                if edge.collidePoint(pos):
                     return edge
         
         return None
@@ -104,7 +104,7 @@ class PlayGround:
             print("Dragging to {}".format(newBlock))
     def _handleClicks(self,event):
         block = self._getClickedBlock(event.pos)
-        if block is not None and not block.hasNode():
+        if block is not None and not block.hasNode() and not self._isDragging:
             edge = self._getClickedEdge(event.pos)
             if edge is not None:
                 self._selectedEdge = edge
@@ -127,7 +127,8 @@ class PlayGround:
                     self._selectedNode = Node(block,self._genLabel(),NODE_BORDER_COLOR,NODE_COLOR)
                     self._selectedNode.selected(False)
                     self._selectedNode = None
-            print(block)
+            if not self._isDragging:
+                print(block)
         else:
             #If the click is made somewhere outside a grid
             self._selectedNode = None
