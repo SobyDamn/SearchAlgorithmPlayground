@@ -7,31 +7,37 @@ class World:
     """
     A world with a grid what a nice place to live in!
     """
-    def __init__(self,screen_size,background,margin=(0,0)):
-        self.screen_size = screen_size
-        self.background = background
-        self.win = pygame.display.set_mode((screen_size[0],screen_size[1]+BOTTOM_PANEL_HEIGHT))
+    def __init__(self,margin=10):
+        self._rows,self._cols = BLOCKS_DIMENSION
+        self._background = background
         self.available_blocks = None
-        self.width,self.height = self.screen_size[0],self.screen_size[1]
-        self.margin_x,self.margin_y = margin
-        self.blocksGenerated = False
+        self._margin = max(margin,10)
+        self._screen_size = self._calc_screen_size(BLOCKS_DIMENSION,BLOCK_SIZE)
+        self._width,self._height = self._screen_size[0],self._screen_size[1]
+        self.win = pygame.display.set_mode((self._width,self._height))
+        self._blocksGenerated = False
         self._available_nodes = None #Type dictionary where block id is a key
         self._available_edges = None
+    def _calc_screen_size(self,blocks_dimension,block_size):
+        """
+        Returns size of the screen
+        """
+        screen_width = block_size*self._cols + 2*self._margin
+        screen_height = block_size*self._rows + self._margin + max(BOTTOM_PANEL_HEIGHT,180)
+        return (screen_width,screen_height)
     def create_grids(self):
-        self.win.fill(background)
+        self.win.fill(self._background)
         """
-        Creating grids with margin
-        Actual margin given is screen_width - totalGrid*NodeSize + margin
-        y is positive in downward direction and x in right direction
+        Create grid of blocks
         """
-        if self.blocksGenerated:
+        if self._blocksGenerated:
             self.redraw_world()
             return #if blocks are generated no regenerating required just redraw
         
-        total_cols = int((self.width-self.margin_x)/BLOCK_SIZE)
-        total_rows = int((self.height-self.margin_y)/BLOCK_SIZE)
-        start_x = int((self.margin_x + (self.width - total_cols*BLOCK_SIZE))/2)
-        start_y = int((self.margin_y + (self.height - total_rows*BLOCK_SIZE))/2)
+        total_cols = self._cols
+        total_rows = self._rows
+        start_x = self._margin
+        start_y = self._margin
         for col in range(0,total_cols):
             cols = []
             for row in range(0,total_rows):
@@ -41,9 +47,9 @@ class World:
                 block = Block(x,y,BLOCK_SIZE,id,self,GRID_COLOR,GRID_WIDTH)
                 block.draw_block(self.win)
                 cols.append(block)
-            if not self.blocksGenerated:
+            if not self._blocksGenerated:
                 self.add_blocks(cols)
-        self.blocksGenerated = True
+        self._blocksGenerated = True
     def redraw_world(self):
         """
         Redraws frames of the world
@@ -187,6 +193,6 @@ class World:
             self.available_blocks = []
         self.available_blocks.append(col)
     def __str__(self):
-        details =   "World Details\nScreen Size - "+str(self.width)+"x"+str(self.height)+"\n"+"Total Blocks - "+str(len(self.available_nodes))+"\n"
+        details =   "World Details\nScreen Size - "+str(self._width)+"x"+str(self._height)+"\n"+"Total Blocks - "+str(len(self.available_nodes))+"\n"
         return details
 

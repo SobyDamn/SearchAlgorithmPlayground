@@ -38,11 +38,7 @@ class Block:
     
     def __str__(self):
         return "<Block id="+str(self.id)+">"
-    def add_color(self,color:tuple):
-        """
-        Changing color of a block
-        """
-        self.pgObj = pygame.draw.rect(self._world.win,color,pygame.Rect((self.x-1, self.y-1, self.size-1,self.size-1)))
+
     def getWorld(self):
         """
         Returns the world in which the block is created
@@ -104,7 +100,13 @@ class Node(Block):
         Set the node selected 
         """
         self._isSelected = val
-
+    
+    def set_color(self,color:tuple):
+        """
+        Set the color for the node
+        NOTE: Color is triplet of rgb i.e. (255,255,255)
+        """
+        self._colorNode = color
     def get_label(self):
         return self._label
     def setLocation(self,block:Block):
@@ -123,7 +125,7 @@ class Node(Block):
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the node rect.
             if self.pgObj.collidepoint(event.pos):
-                print("Use your keyboard to add/edit label to the node")
+                print("Use your keyboard to add/edit label to the node\n Press DELETE to remove the node")
                 # Toggle the active variable.
                 self._active = not self._active
                 if self._active:
@@ -179,7 +181,7 @@ class Node(Block):
     
     def add_neighbour(self,node):
         """
-        Adds a node as neighbour
+        Adds a node as neighbour if it doesn't exists already
         """
         if node not in self._neighbourNodes:
             self._neighbourNodes.append(node)
@@ -284,7 +286,7 @@ class Edge:
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the edge rect.
             if self.collidePoint(event.pos):
-                print("Use your keyboard to add/edit weight of the edge")
+                print("Use your keyboard to add/edit weight of the edge\nPress DELETE to remove the edge")
                 # Toggle the active variable.
                 self._active = not self._active
                 if self._active:
@@ -367,7 +369,12 @@ class Edge:
         """
         return (self._nodeStart,self._nodeEnd)
 
-    
+    def get_weight(self)->int:
+        """
+        Returns the weight of the edge
+        """
+        return self._weight
+
     def _set_label(self,label,screen,offset = 0.4):
         """
         Sets the label of weight to the edge

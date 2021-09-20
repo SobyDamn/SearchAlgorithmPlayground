@@ -10,7 +10,7 @@ from UI import *
 class PlayGround:
     def __init__(self,world:World):
         self.world = world
-        self.isClicked = False
+        self._isClicked = False
         self._running = False
         self._selectedNode = None #This is the node which is selected, will help in moving the nodes around
         #A Playground consist of a start node and a goal node always
@@ -26,15 +26,15 @@ class PlayGround:
         """
         height = int(BOTTOM_PANEL_HEIGHT/3)
         width = int(height*2)
-        pos_x = int((SCREEN_WIDTH-width)/2)
-        pos_y = (SCREEN_HEIGHT+int((BOTTOM_PANEL_HEIGHT-height)/2))
+        pos_x = int((self.world.win.get_size()[0]-width)/2)
+        pos_y = (self.world.win.get_size()[1]+int((BOTTOM_PANEL_HEIGHT-height)/2))
         self.startButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_PRIMARY,GRAY,"Run")
         ##Secondary buttons
         height = int(BOTTOM_PANEL_HEIGHT/3.5)
         width = int(height*1.8)
         pos_x = int((width)/2)
         self.selectStartButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Select Start",0.3)
-        pos_x = int(SCREEN_WIDTH - (width)/2) - width
+        pos_x = int(self.world.win.get_size()[0] - (width)/2) - width
         self.selectGoalButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Select Goal",0.3)
 
 
@@ -97,11 +97,17 @@ class PlayGround:
                     if block.pgObj.collidepoint(pos):
                         return block
     def _dragNode(self,newBlock):
-        if self.isClicked and self._selectedNode is not None and not newBlock.hasNode():
+        """
+        Drags node to newBlock location
+        """
+        if self._isClicked and self._selectedNode is not None and not newBlock.hasNode():
             #Update node location
             self.world.update_node_loc(self._selectedNode,newBlock)
             #print("Dragging to {}".format(newBlock))
     def _handleClicks(self,event):
+        """
+        Handles any click made on the screen
+        """
         block = self._getClickedBlock(event.pos)
         if block is not None and not block.hasNode() and not self._isDragging:
             #No selected node
@@ -112,7 +118,7 @@ class PlayGround:
             edge = self._getClickedEdge(event.pos)
             if edge is not None:
                 self._selectedEdge = edge
-                print(self.world.getEdges())
+                #print(self.world.getEdges())
                 return
         if block is not None:
             self._dragNode(block)
@@ -121,7 +127,7 @@ class PlayGround:
                     if self._selectedBlock is not None:
                         self._selectedBlock.highlight(False)
                         self._selectedBlock = None
-                        
+
                     if self._selectedNode is not None and self._selectedNode != self.world.getNode(block.id):
                         self._selectedNode.selected(False) #Remove any selected node, probably help in creating no further edges without knowing
                         #If the nodes are not same then create an edge
@@ -171,26 +177,58 @@ class PlayGround:
                 self._selectedEdge = None
         if event.type == pygame.MOUSEBUTTONDOWN:
             self._handleClicks(event)
-            self.isClicked = True
+            self._isClicked = True
         elif event.type == pygame.MOUSEBUTTONUP:
-            self.isClicked = False
+            self._isClicked = False
         elif event.type == pygame.MOUSEMOTION:
-            if self.isClicked:
+            if self._isClicked:
                 self._isDragging = True
                 self._handleClicks(event)
             else:
                 self._isDragging = False
+    def delay(self,millisecond:int):
+        """
+        Delays the playground and the program
+        """
+        pygame.time.delay(millisecond)
+        self.drawScenary() #Draw scenary even if the program is being paused
     def drawScenary(self):
+        """
+        Draw the elements of the world and world along with it
+        NOTE: If the control is taken away for a while, make sure to drawScenary to reflect the changes in the world
+        """
         self.world.create_grids()
-
         pygame.display.update()
+
+    def MoveGen(self,node:Node)->list:
+        """
+        Returns a list of neighbouring nodes in sorted order of their label
+        """
+        return node.get_neighbours()
+    def get_edge(self,nodeStart:Node,nodeEnd:Node)->Edge:
+        """
+        Returns an edge between the two nodes if it exists
+        """
+        return self.world.getEdge(nodeStart.id,nodeEnd.id)
+    def getGoalNode(self)->Node:
+        """
+        Returns goal node in the world
+        """
+        return self._goalNode
+    
+    def getStartNode(self)->Node:
+        """
+        Returns start node in the world
+        """
+        return self._startNode
+
+
 pygame.init()
 pygame.display.set_caption(TITLE)
-world = World(SCREEN_SIZE,background,(10,10))
+world = World(margin = 15)
 world.create_grids()
-
-#node = Node(world.available_blocks[0][0],"A",NODE_BORDER_COLOR,NODE_COLOR)
-#print(node)
+world._testVal = "What?"
+print(world._testVal)
 running = True
 PG = PlayGround(world)
 clock = pygame.time.Clock()
