@@ -25,8 +25,8 @@ class World:
         self._block_size = block_size
         self._grid_color = gird_color
         self._blocksGenerated = False
-        self._available_nodes = None #Type dictionary where block id is a key
-        self._available_edges = None
+        self._available_nodes = {} #Type dictionary where block id is a key
+        self._available_edges = {}
         self.create_grids() #Initialise grid always as soon as world is created
     def _calc_screen_size(self,blocks_dimension,block_size,bottom_panel_size):
         """
@@ -202,6 +202,28 @@ class World:
         if self.available_blocks is None:
             self.available_blocks = []
         self.available_blocks.append(col)
+    def to_dict(self)->dict:
+        """
+        Returns world information as dictionary
+        """
+        world = {
+            "blocks_dimension":str((self._rows,self._cols)),
+            "background_color":str(self._background),
+            "available_blocks":{},
+            "margin":self._margin,
+            "screen_size":str(self._screen_size),
+            "block_size":self._block_size,
+            "grid_color":str(self._grid_color),
+            "available_nodes":{},
+            "available_edges":{},
+        }
+        """for blockKey in self.available_blocks:
+            world["available_blocks"][blockKey] = self.available_blocks[blockKey].to_dict()"""
+        for edgeKey in self._available_edges:
+            world["available_edges"][str(edgeKey)] = self._available_edges[edgeKey].to_dict()
+        for nodeKey in self._available_nodes:
+            world["available_nodes"][str(nodeKey)] = self._available_nodes[nodeKey].to_dict()
+        return world
     def __str__(self):
         details =   "World Details\nScreen Size - "+str(self._width)+"x"+str(self._height)+"\n"+"Total Blocks - "+str(len(self.available_nodes))+"\n"
         return details

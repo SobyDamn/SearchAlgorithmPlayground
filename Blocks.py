@@ -48,6 +48,20 @@ class Block:
         Returns true if the block has a node over it
         """
         return self._hasNode
+    def to_dict(self)->dict:
+        """
+        Returns the attributes and values as dictionary
+        """
+        block = {
+            "x": self.x,
+            "y":self.y,
+            "id":self.id,
+            "size":self.size,
+            "gird_color":str(self.grid_color),
+            "grid_width": self.grid_width,
+            "hasNode": self._hasNode
+        }
+        return block
 
 COLOR_ACTIVE = pygame.Color('dodgerblue2')
 class Node(Block):
@@ -187,11 +201,21 @@ class Node(Block):
         Returns list of neighbours in sorted order of the label
         """
         return sorted(self._neighbourNodes)
-    def to_dict(self):
+    def to_dict(self)->dict:
         """
-        Returns the edge parameters in dictionary format
+        Returns the node parameters in dictionary format
         """
-        pass
+        node = {
+            "block_id":str(self.id), #To initalise the parent
+            "label":self._label,
+            "colorOutline":str(self._defaultOutlineColor),
+            "colorNode":str(self._colorNode),
+            "pos":str(self.pos),
+            "outlineWidth":self._outlineWidth,
+            "specialNodeStatus":self._specialNodeStatus,
+            #Edge updates the neighbour for the node need not to be included
+        }
+        return node
     def __eq__(self, label:str)->bool:
         """
         Equality between label of the node
@@ -395,6 +419,18 @@ class Edge:
         text_rect = text.get_rect(center = (x,y))
         screen.blit(text, text_rect)
 
-        
+    def to_dict(self)->dict:
+        """
+        Returns edge parameter and it's value as dictionary
+        """
+        edge = {
+            "nodeStart":str(self._nodeStart.id),
+            "nodeEnd":str(self._nodeEnd.id),
+            "edgeColor":str(self._edgeColor),
+            "edgeWidth":self._edgeWidth,
+            "weight":self._weight,
+            "isWeighted":self._isWeighted
+        }
+        return edge
     def __str__(self):
         return "<Edge {} - {}>".format(self._nodeStart.get_label(),self._nodeEnd.get_label())

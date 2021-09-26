@@ -2,10 +2,35 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 import pygame 
+import json
 from World import World
 from Blocks import *
 from config import *
-from UI import *
+
+class Button:
+    def __init__(self,world,pos,size,bgColor,color,label="Button",labelSize:float=0.5):
+        self._world = world
+        self._pos = pos
+        self.size = size
+        self._color = color
+        self._fontSize = int(size[1]*labelSize)
+        self._label = label
+        self._font = pygame.font.SysFont('Arial', self._fontSize)
+        self._bgColor = bgColor
+        
+
+    def draw_node(self):
+        pos = self._pos+self.size
+        self.pgObj = pygame.draw.rect(self._world.win, self._bgColor, pygame.Rect(pos),  100, 3)
+        labelLength = self._fontSize*len(self._label)
+        text = self._font.render(self._label, True, self._color)
+        text_rect = text.get_rect(center = self.pgObj.center)
+        self._world.win.blit(text, text_rect)
+    def isClicked(self,collidePos):
+        if self.pgObj.collidepoint(collidePos):
+            return True
+        else:
+            return False
 
 
 class PlayGround:
@@ -31,30 +56,34 @@ class PlayGround:
         self._isDragging = False #True when clicked and mouse is dragging
         self._selectedEdge = None
         self._selectedBlock = None
+        self.startButton = None
+        self._createControls()
 
     def _createControls(self):
         """
         Generates button to control the playground
         """
+        print("Button created")
         height = int(BOTTOM_PANEL_HEIGHT/3)
         width = int(height*2)
         pos_x = int((self.world.win.get_size()[0]-width)/2)
-        pos_y = (self.world.win.get_size()[1]+int((BOTTOM_PANEL_HEIGHT-height)/2))
+        pos_y = (self.world.win.get_size()[1]-int((BOTTOM_PANEL_HEIGHT)/2))
+        print(pos_x,pos_y)
         self.startButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_PRIMARY,GRAY,"Run")
         ##Secondary buttons
-        height = int(BOTTOM_PANEL_HEIGHT/3.5)
+        """height = int(BOTTOM_PANEL_HEIGHT/3.5)
         width = int(height*1.8)
         pos_x = int((width)/2)
         self.selectStartButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Select Start",0.3)
         pos_x = int(self.world.win.get_size()[0] - (width)/2) - width
-        self.selectGoalButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Select Goal",0.3)
+        self.selectGoalButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Select Goal",0.3)"""
 
 
 
     def _drawButtons(self):
         self.startButton.draw_node()
-        self.selectGoalButton.draw_node()
-        self.selectStartButton.draw_node()
+        """self.selectGoalButton.draw_node()
+        self.selectStartButton.draw_node()"""
 
     def _genLabel(self):
         def _nextLabel(label = ""):
@@ -120,6 +149,14 @@ class PlayGround:
         """
         Handles any click made on the screen
         """
+        if self.startButton.isClicked(event.pos):
+            f = open("myGraph.json",'w')
+            val = str(self.to_dict())
+            #val = val.replace("'","\"")
+            f.write(json.dumps(self.to_dict(), indent=4))
+            f.close()
+            print("File Generated")
+            return
         block = self._getClickedBlock(event.pos)
         if block is not None and not block.hasNode() and not self._isDragging:
             #No selected node
@@ -216,6 +253,8 @@ class PlayGround:
         NOTE: If the control is taken away for a while, make sure to drawScenary to reflect the changes in the world
         """
         self.world.create_grids()
+        if self.startButton is not None:
+            self._drawButtons()
         pygame.display.update()
 
     def MoveGen(self,node:Node)->list:
@@ -239,6 +278,16 @@ class PlayGround:
         Returns start node in the world
         """
         return self._startNode
+    def to_dict(self)->dict:
+        """
+        Returns parameters and value as dictionary
+        """
+        playground = {
+            'world':self.world.to_dict(),
+            'startNode':str(self._startNode.id),
+            'goalNode':str(self._goalNode.id)
+        }
+        return playground
     def run(self):
         """
         Start the playground to play with
