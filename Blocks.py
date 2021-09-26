@@ -6,14 +6,13 @@ class Block:
     Block defines the world tiles
     id of the Block is it's index in a 2D grid array starting from (0,0)
     """
-    def __init__(self,x,y,size,id:tuple,world,grid_color = (163, 175, 204),grid_width = 1):
+    def __init__(self,x,y,size,id:tuple,grid_color = (163, 175, 204),grid_width = 1):
         self.x = x
         self.y = y
         self.size = size
         self.grid_color = grid_color
         self.grid_width = grid_width
         self.id = id
-        self._world = world
         self._hasNode = False #Tells whether there is a node over the block
         self.pyObj = None #pyGame object
         self._isHighlighted = False #Highlighting the blocks
@@ -39,12 +38,6 @@ class Block:
     def __str__(self):
         return "<Block id="+str(self.id)+">"
 
-    def getWorld(self):
-        """
-        Returns the world in which the block is created
-        """
-        return self._world
-
     def setHasNode(self,val:bool):
         """
         Function sets the value whether the block has node or not
@@ -62,7 +55,7 @@ class Node(Block):
     A node is a type of block that is important to the world
     """
     def __init__(self, block:Block,label,colorOutline,colorNode,outlineWidth:int=2,specialNodeStatus:bool = False):
-        super().__init__(block.x,block.y,block.size,block.id,block.getWorld(),block.grid_color,block.grid_width)
+        super().__init__(block.x,block.y,block.size,block.id,block.grid_color,block.grid_width)
 
         self._label = label
         self._colorOutline = colorOutline
@@ -76,8 +69,6 @@ class Node(Block):
         self._active = False #A node is active when it's selected
         self._specialNodeStatus = specialNodeStatus #Tells whether the node is special or not, Goal and Start nodes must be special
         self._isSelected = False
-        #Send information to world about each node created
-        self.getWorld().add_node(self)
 
         self._neighbourNodes = [] #Neighbour nodes that are connected with an edge
 
@@ -116,9 +107,9 @@ class Node(Block):
         """
         self.pos = block.pos()
         self.id = block.id
-    def handle_event(self, event):
+    def handle_event(self,world, event):
         """
-        Function handles the event
+        Function handles the event happening in the world
         Allows to edit the label of node using keypress
         Once deleted function returns False
         """
@@ -136,7 +127,7 @@ class Node(Block):
             #Change the label to new value after checking validity
             if not self._active and (self._oldLabel is not None and self._oldLabel != self._label):
                 #Try saving the new label
-                self._saveNewLabel(self._oldLabel) #Discarding if no valid
+                self._saveNewLabel(self._oldLabel,world) #Discarding if no valid
                 self._oldLabel = None
             # Change the current color of the input box.
             self._colorOutline = COLOR_ACTIVE if self._active else self._defaultOutlineColor
@@ -144,7 +135,7 @@ class Node(Block):
         if event.type == pygame.KEYDOWN:
             if self._active:
                 if event.key == pygame.K_RETURN:
-                    self._saveNewLabel(self._oldLabel) #Discarding if no valid
+                    self._saveNewLabel(self._oldLabel,world) #Discarding if no valid
                     self._active = False
                     self._colorOutline = self._defaultOutlineColor
                 elif event.key == pygame.K_BACKSPACE:
@@ -153,7 +144,7 @@ class Node(Block):
                     #delete the node
                     if not self._specialNodeStatus:
                         print("Deleted {}".format(self))
-                        self.getWorld().remove_node(self.id)
+                        world.remove_node(self.id)
                         return False
                     else:
                         print("Special node delete Permission Denied!\nNOTE: Special nodes like Start and Goal can't be deleted")
@@ -162,7 +153,7 @@ class Node(Block):
                 # Re-render the text.
                 self.txt_surface = self._font.render(self._label, True, self._colorOutline)
         return True
-    def _saveNewLabel(self,oldLabel):
+    def _saveNewLabel(self,oldLabel,world):
             """
             Function saves the label only if the new label is valid else switch back to old label
             """
@@ -173,7 +164,7 @@ class Node(Block):
                 self._label = oldLabel
                 return False
             #Deal with duplicate labels
-            if self._label in self.getWorld().getNodes().values():
+            if self._label in world.getNodes().values():
                 print("Duplicate labels are not allowed!")
                 self._label = oldLabel
                 return False
@@ -196,6 +187,11 @@ class Node(Block):
         Returns list of neighbours in sorted order of the label
         """
         return sorted(self._neighbourNodes)
+    def to_dict(self):
+        """
+        Returns the edge parameters in dictionary format
+        """
+        pass
     def __eq__(self, label:str)->bool:
         """
         Equality between label of the node
@@ -258,6 +254,7 @@ class Edge:
         isWeighted: whether the edge is weighted or not
         A weighted edge is allowed to have weight which can be edited
         weight: weight of the edge
+        NOTE: Make sure world is informed if an edge is created
         """
         self._edgeColor = edgeColor
         self._defaultEdgeColor = edgeColor
@@ -266,11 +263,7 @@ class Edge:
         self._weightLabel = str(weight)
         self._nodeStart = nodeStart #Start of the edge
         self._nodeEnd = nodeEnd #End of the edge
-        self._world = nodeStart.getWorld() #Fix-ME Find alternate for updating the world about the edge created
         self._isWeighted = isWeighted
-
-        ##Inform the world that edge is created
-        self._world.add_edge(self)
 
         #Inform the nodes that edge is created
         self._nodeStart.add_neighbour(self._nodeEnd) #Add neighbours
@@ -282,16 +275,18 @@ class Edge:
         self._active = False #An edge is active if selected
         self._oldWeight = None
     
-    def handle_event(self, event):
+    def handle_event(self, world,event):
         """
-        Function handles the event
+        Function handles the event happening in the world with the node
         Allows to set weight or delete an Edge
         Once an edge deleted function returns False
         """
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the edge rect.
             if self.collidePoint(event.pos):
-                print("Use your keyboard to add/edit weight of the edge\nPress DELETE to remove the edge")
+                if self._isWeighted:
+                    print("Use your keyboard to add/edit weight of the edge")
+                print("Press DELETE to remove the edge")
                 # Toggle the active variable.
                 self._active = not self._active
                 if self._active:
@@ -318,7 +313,7 @@ class Edge:
                 elif event.key == pygame.K_DELETE:
                     #delete the node
                     print("Deleted {}".format(self))
-                    self._world.remove_edge(self)
+                    world.remove_edge(self)
                     return False
                 else:
                     self._weightLabel += event.unicode

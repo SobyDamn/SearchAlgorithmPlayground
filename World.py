@@ -54,7 +54,7 @@ class World:
                 x = start_x+self._block_size*col
                 y = start_y+self._block_size*row
                 id = (col,row)
-                block = Block(x,y,self._block_size,id,self,self._grid_color,self._grid_width)
+                block = Block(x,y,self._block_size,id,self._grid_color,self._grid_width)
                 block.draw_block(self.win)
                 cols.append(block)
             if not self._blocksGenerated:

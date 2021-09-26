@@ -25,6 +25,9 @@ class PlayGround:
         #A Playground consist of a start node and a goal node always
         self._startNode = Node(self.world.getBlock((0,0)),'S',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True)
         self._goalNode = Node(self.world.getBlock((len(self.world.available_blocks)-1,len(self.world.available_blocks[0])-1)),'G',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True)
+        #Add the nodes in the world
+        self.world.add_node(self._startNode)
+        self.world.add_node(self._goalNode)
         self._isDragging = False #True when clicked and mouse is dragging
         self._selectedEdge = None
         self._selectedBlock = None
@@ -141,7 +144,9 @@ class PlayGround:
                         self._selectedNode.selected(False) #Remove any selected node, probably help in creating no further edges without knowing
                         #If the nodes are not same then create an edge
                         if self.world.getNode(block.id) not in self._selectedNode.get_neighbours():
-                            Edge(self._selectedNode,self.world.getNode(block.id))
+                            edge = Edge(self._selectedNode,self.world.getNode(block.id))
+                            ##Add new edge to the world
+                            self.world.add_edge(edge)
                         self._selectedNode = None
 
                     elif self._selectedNode is not None:
@@ -155,6 +160,7 @@ class PlayGround:
                         self._selectedBlock.highlight(False) #Remove previous highlighted block
                         if block == self._selectedBlock:
                             self._selectedNode = Node(block,self._genLabel(),NODE_BORDER_COLOR,NODE_COLOR)
+                            self.world.add_node(self._selectedNode) #Add the new node to world
                             self._selectedNode.selected(False)
                             self._selectedBlock = None
                         else:
@@ -177,12 +183,15 @@ class PlayGround:
 
 
     def eventHandler(self,event):
+        """
+        Handles all the events
+        """
         if self._selectedNode is not None:
-            if not self._selectedNode.handle_event(event):
+            if not self._selectedNode.handle_event(self.world,event):
                 self._selectedNode.selected(False)
                 self._selectedNode = None
         elif self._selectedEdge is not None:
-            if not self._selectedEdge.handle_event(event):
+            if not self._selectedEdge.handle_event(self.world,event):
                 self._selectedEdge = None
         if event.type == pygame.MOUSEBUTTONDOWN:
             self._handleClicks(event)
@@ -235,6 +244,8 @@ class PlayGround:
         Start the playground to play with
         """
         clock = pygame.time.Clock()
+        icon = pygame.image.load('img/icon.png')
+        pygame.display.set_icon(icon)
         running = True
         print("Search Algorithm PlayGround Tool created by Sritabh Priyadarshi using pygame.\nVisit https://github.com/SobyDamn/SearchAlgorithmVisualisation for more info.")
         while running:
@@ -243,7 +254,7 @@ class PlayGround:
                 if event.type == pygame.QUIT:  
                     running = False
                 else:
-                    PG.eventHandler(event)
+                    self.eventHandler(event)
             clock.tick(60)
         pygame.quit()
 
