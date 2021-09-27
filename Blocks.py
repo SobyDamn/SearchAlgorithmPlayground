@@ -121,7 +121,7 @@ class Node(Block):
         """
         self.pos = block.pos()
         self.id = block.id
-    def handle_event(self,world, event):
+    def handle_event(self,world, event,infoLabel):
         """
         Function handles the event happening in the world
         Allows to edit the label of node using keypress
@@ -130,7 +130,9 @@ class Node(Block):
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the node rect.
             if self.pgObj.collidepoint(event.pos):
-                print("Use your keyboard to add/edit label to the node\n Press DELETE to remove the node")
+                helpText = "Use your keyboard to add/edit label to the node. Press DELETE to remove the node"
+                print(helpText)
+                infoLabel.setValue(helpText)
                 # Toggle the active variable.
                 self._active = not self._active
                 if self._active:
@@ -157,32 +159,41 @@ class Node(Block):
                 elif event.key == pygame.K_DELETE:
                     #delete the node
                     if not self._specialNodeStatus:
-                        print("Deleted {}".format(self))
+                        helpText = "Deleted {}".format(self)
+                        print(helpText)
+                        infoLabel.setValue(helpText)
                         world.remove_node(self.id)
                         return False
                     else:
-                        print("Special node delete Permission Denied!\nNOTE: Special nodes like Start and Goal can't be deleted")
+                        helpText = "Special node delete Permission Denied! NOTE: Special nodes like Start and Goal can't be deleted"
+                        print(helpText)
+                        infoLabel.setValue(helpText)
                 else:
                     self._label += event.unicode
                 # Re-render the text.
                 self.txt_surface = self._font.render(self._label, True, self._colorOutline)
         return True
-    def _saveNewLabel(self,oldLabel,world):
+    def _saveNewLabel(self,oldLabel,world,infoLabel):
             """
             Function saves the label only if the new label is valid else switch back to old label
             """
             #Label is already saved check whether we want to discard it or not
             #Deal with empty label
             if len(self._label)==0:
-                print("Node must have a label to identify!")
+                helpText = "Node must have a label to identify!"
+                print(helpText)
+                infoLabel.setValue(helpText)
                 self._label = oldLabel
                 return False
             #Deal with duplicate labels
             if self._label in world.getNodes().values():
-                print("Duplicate labels are not allowed!")
+                print(helpText)
+                infoLabel.setValue(helpText)
                 self._label = oldLabel
                 return False
-            print("Label changed from {} to {}".format(oldLabel,self._label))
+            helpText = "Label changed from {} to {}".format(oldLabel,self._label)
+            print(helpText)
+            infoLabel.setValue(helpText)
     
     def add_neighbour(self,node):
         """
@@ -299,7 +310,7 @@ class Edge:
         self._active = False #An edge is active if selected
         self._oldWeight = None
     
-    def handle_event(self, world,event):
+    def handle_event(self, world,event,infoLabel):
         """
         Function handles the event happening in the world with the node
         Allows to set weight or delete an Edge
@@ -308,9 +319,13 @@ class Edge:
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the edge rect.
             if self.collidePoint(event.pos):
+                helpText = ""
                 if self._isWeighted:
-                    print("Use your keyboard to add/edit weight of the edge")
-                print("Press DELETE to remove the edge")
+                    helpText +="Use your keyboard to add/edit weight of the edge"
+                    print(helpText)
+                helpText += "Press DELETE to remove the edge"
+                infoLabel.setValue(helpText)
+                print(helpText)
                 # Toggle the active variable.
                 self._active = not self._active
                 if self._active:
@@ -336,7 +351,9 @@ class Edge:
                     self._weightLabel = self._weightLabel[:-1]
                 elif event.key == pygame.K_DELETE:
                     #delete the node
-                    print("Deleted {}".format(self))
+                    helpText = "Deleted {}".format(self)
+                    infoLabel.setValue(helpText)
+                    print(helpText)
                     world.remove_edge(self)
                     return False
                 else:
@@ -344,23 +361,29 @@ class Edge:
                 # Re-render the text.
                 self.txt_surface = self._font.render(self._weightLabel, True, self._edgeColor)
         return True
-    def _saveNewLabel(self,oldLabel):
+    def _saveNewLabel(self,oldLabel,infoLabel):
         """
         Discard the value if it's invalid else saves the value
         """
         #Deal with empty string
         if len(self._weightLabel)==0:
-            print("Edge must contain a weight")
+            helpText = "Edge must contain a weight"
+            infoLabel.setValue(helpText)
+            print(helpText)
             self._weightLabel = oldLabel
             return False
         try:
             weight = int(self._weightLabel)
             self._weightLabel = str(weight)
             self._weight = weight
-            print("{} new weight - {}".format(self,self._weightLabel))
+            helpText = "{} new weight - {}".format(self,self._weightLabel)
+            infoLabel.setValue(helpText)
+            print(helpText)
             return True
         except ValueError:
-            print("Edge weight value must be an integer")
+            helpText = "Edge weight value must be an integer"
+            infoLabel.setValue(helpText)
+            print(helpText)
             self._weightLabel = oldLabel
             return False
     

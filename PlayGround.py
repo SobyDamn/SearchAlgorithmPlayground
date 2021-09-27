@@ -7,25 +7,41 @@ from World import World
 from Blocks import *
 from config import *
 
+class Label:
+    def __init__(self,color,size,pos):
+        self._color = color
+        self._size = size
+        self._font = pygame.font.SysFont("Arial", self._size)
+        self._pos = pos
+        self._text = ""
+    def draw_label(self,screen):
+        text = self._font.render(self._text,True, self._color)
+        text_rect = text.get_rect(center = self._pos)
+        screen.blit(text, text_rect)
+    def setValue(self,text):
+        """
+        Set the value for label
+        """
+        self._text = text
 class Button:
-    def __init__(self,world,pos,size,bgColor,color,label="Button",labelSize:float=0.5):
-        self._world = world
+    def __init__(self,pos,size,bgColor,color,label="Button",labelSize:float=0.5,fill_value = 100):
         self._pos = pos
         self.size = size
         self._color = color
         self._fontSize = int(size[1]*labelSize)
         self._label = label
-        self._font = pygame.font.SysFont('Arial', self._fontSize)
+        self._font = pygame.font.SysFont(None, self._fontSize)
         self._bgColor = bgColor
+        self._fill_value = fill_value
         
 
-    def draw_node(self):
+    def draw_button(self,screen):
         pos = self._pos+self.size
-        self.pgObj = pygame.draw.rect(self._world.win, self._bgColor, pygame.Rect(pos),  100, 3)
+        self.pgObj = pygame.draw.rect(screen, self._bgColor, pygame.Rect(pos),self._fill_value, 3)
         labelLength = self._fontSize*len(self._label)
         text = self._font.render(self._label, True, self._color)
         text_rect = text.get_rect(center = self.pgObj.center)
-        self._world.win.blit(text, text_rect)
+        screen.blit(text, text_rect)
     def isClicked(self,collidePos):
         if self.pgObj.collidepoint(collidePos):
             return True
@@ -34,9 +50,11 @@ class Button:
 
 
 class PlayGround:
-    def __init__(self,world:World=None,startNodeID:tuple=None,goalNodeIDs=None,blocks_dimension = BLOCKS_DIMENSION,block_size = BLOCK_SIZE):
+    def __init__(self,world:World=None,saveToFile:str=None,startNodeID:tuple=None,goalNodeIDs=None,blocks_dimension = BLOCKS_DIMENSION,block_size = BLOCK_SIZE):
         """
         Creates a playground with the given world if no parameter given creates a default world
+        saveToFile: filename where the work will be saved when save work button is clicked
+        startNodeID and goalNodeIDs are id of the block where start and goal node is placed
         blocks_dimension: Total blocks that will be shown on the screen as (rows,cols)
         block_size: size of each block
         NOTE: Parameters can be modified in config file as well
@@ -57,7 +75,11 @@ class PlayGround:
         self._selectedEdge = None
         self._selectedBlock = None
         self.startButton = None
-        self._createControls()
+        self._saveWorkButton = None
+        self._infoLabel = None #A label showing helpful texts
+        self._onStartMethod = None #Method to be executed when start button is clicked
+        self._saveToFile = saveToFile
+        self._createControlUI()
     
     @classmethod
     def fromfilename(cls,filename:str):
@@ -77,32 +99,33 @@ class PlayGround:
         except FileNotFoundError:
             msg = "Unable to locate the file '{}' at '{}'\nMake sure the given filename is present at the given location".format(filename,file)
             raise FileNotFoundError(msg)
-        return cls(world,startNodeID,goalNodeID)
-    def _createControls(self):
+        return cls(world,filename,startNodeID,goalNodeID)
+    def _createControlUI(self):
         """
-        Generates button to control the playground
+        Generates UI elements
         """
-        print("Button created")
         height = int(BOTTOM_PANEL_HEIGHT/3)
         width = int(height*2)
         pos_x = int((self.world.win.get_size()[0]-width)/2)
         pos_y = (self.world.win.get_size()[1]-int((BOTTOM_PANEL_HEIGHT)/2))
-        print(pos_x,pos_y)
-        self.startButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_PRIMARY,GRAY,"Run")
+        self.startButton = Button((pos_x,pos_y),(width,height),BUTTON_COLOR_PRIMARY,GRAY,"Run")
+        label_size = 15
+        pos_x += int(width/2)
+        self._infoLabel = Label(INFO_LABEL_COLOR,label_size,(pos_x,int(pos_y-label_size*1.5)))
         ##Secondary buttons
-        """height = int(BOTTOM_PANEL_HEIGHT/3.5)
-        width = int(height*1.8)
+        height = int(BOTTOM_PANEL_HEIGHT/5.5)
+        width = int(height*3)
         pos_x = int((width)/2)
-        self.selectStartButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Select Start",0.3)
-        pos_x = int(self.world.win.get_size()[0] - (width)/2) - width
-        self.selectGoalButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Select Goal",0.3)"""
+        self._saveWorkButton = Button((pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Save work",0.7,0)
+        #pos_x = int(self.world.win.get_size()[0] - (width)/2) - width
+        #self.selectGoalButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Select Goal",0.3)
 
 
 
-    def _drawButtons(self):
-        self.startButton.draw_node()
-        """self.selectGoalButton.draw_node()
-        self.selectStartButton.draw_node()"""
+    def _drawUIElements(self):
+        self.startButton.draw_button(self.world.win)
+        self._saveWorkButton.draw_button(self.world.win)
+        self._infoLabel.draw_label(self.world.win)
 
     def _genLabel(self):
         def _nextLabel(label = ""):
@@ -169,11 +192,13 @@ class PlayGround:
         Handles any click made on the screen
         """
         if self.startButton.isClicked(event.pos):
+            self.start()
+            return
+        if self._saveWorkButton.isClicked(event.pos):
             self.saveWork("TestGraph.json")
             return
         block = self._getClickedBlock(event.pos)
         if block is not None and not block.hasNode() and not self._isDragging:
-            print(block.hasNode())
             #No selected node
             if self._selectedNode is not None:
                 self._selectedNode.selected(False)
@@ -181,13 +206,23 @@ class PlayGround:
 
             edge = self._getClickedEdge(event.pos)
             if edge is not None:
+                if self._selectedEdge != edge:
+                    #Show only different edge selected
+                    self._infoLabel.setValue(str(edge))
                 self._selectedEdge = edge
-                #print(self.world.getEdges())
+                if self._selectedBlock is not None:
+                    self._selectedBlock.highlight(False)
+                    self._selectedBlock = None
                 return
         if block is not None:
             self._dragNode(block)
             if not self._isDragging:
                 if block.hasNode():
+                    if self._selectedNode is None:
+                        #Display infoText
+                        print(self.world.getNode(block.id))
+                        self._infoLabel.setValue(str(self.world.getNode(block.id)))
+
                     if self._selectedBlock is not None:
                         self._selectedBlock.highlight(False)
                         self._selectedBlock = None
@@ -208,6 +243,8 @@ class PlayGround:
                         self._selectedNode.selected(True)
 
                 else:
+                    self._infoLabel.setValue(str(block))
+                    print(block)
                     if self._selectedBlock is not None:
                         self._selectedBlock.highlight(False) #Remove previous highlighted block
                         if block == self._selectedBlock:
@@ -222,8 +259,6 @@ class PlayGround:
                         self._selectedBlock = block
                         self._selectedBlock.highlight(True)
                     self._selectedNode = None
-            if not self._isDragging:
-                print(block)
         else:
             #If the click is made somewhere outside a grid
             if self._selectedBlock is not None:
@@ -232,6 +267,7 @@ class PlayGround:
             if self._selectedNode is not None:
                 self._selectedNode.selected(False)
                 self._selectedNode = None
+            self._infoLabel.setValue("") #Blank info text
 
 
     def eventHandler(self,event):
@@ -239,11 +275,11 @@ class PlayGround:
         Handles all the events
         """
         if self._selectedNode is not None:
-            if not self._selectedNode.handle_event(self.world,event):
+            if not self._selectedNode.handle_event(self.world,event,self._infoLabel):
                 self._selectedNode.selected(False)
                 self._selectedNode = None
         elif self._selectedEdge is not None:
-            if not self._selectedEdge.handle_event(self.world,event):
+            if not self._selectedEdge.handle_event(self.world,event,self._infoLabel):
                 self._selectedEdge = None
         if event.type == pygame.MOUSEBUTTONDOWN:
             self._handleClicks(event)
@@ -256,6 +292,19 @@ class PlayGround:
                 self._handleClicks(event)
             else:
                 self._isDragging = False
+    
+    def onStart(self,func):
+        """
+        Sets function to be executed when the start button is clicked
+        func: function which will be executed when start is pressed
+        """
+        self._onStartMethod = func
+    def start(self):
+        if self._onStartMethod is not None:
+            self._infoLabel.setValue("Running Algorithm...") #Blank info text
+            self._onStartMethod()
+        else:
+            self._infoLabel.setValue("No start function is set")
     def delay(self,millisecond:int):
         """
         Delays the playground and the program
@@ -268,8 +317,7 @@ class PlayGround:
         NOTE: If the control is taken away for a while, make sure to drawScenary to reflect the changes in the world
         """
         self.world.create_grids()
-        if self.startButton is not None:
-            self._drawButtons()
+        self._drawUIElements()
         pygame.display.update()
 
     def MoveGen(self,node:Node)->list:
@@ -302,21 +350,29 @@ class PlayGround:
         from datetime import datetime as dt
         # Getting current date and time
         now = dt.now()
-        if filename is None:
+        if filename is None and self._saveToFile is None:
             filename = "Graph "+now.strftime("%d-%m-%Y %H:%M:%S")+".json" #Save data with current date and time
+        elif filename is None:
+            filename = self._saveToFile
         location = os.path.join(os.getcwd(),MY_WORK_DIR)
         file = os.path.join(location, filename)
         try:
             with open(file,'w') as f:
                 val = str(self.to_dict())
                 f.write(json.dumps(self.to_dict(), indent=4))
-                print("Work saved at: {}".format(file))
+                infoText = "Work saved at: {}".format(file)
+                self._infoLabel.setValue(infoText)
+                print(infoText)
         except FileNotFoundError:
             #Directory not found
             os.mkdir(location) #Create the directory
             self.saveWork(filename)
 
-
+    def showInfoText(self,text:str):
+        """
+        Display the given text at info panel
+        """
+        self._infoLabel.setValue(text)
     def to_dict(self)->dict:
         """
         Returns parameters and value as dictionary
@@ -348,5 +404,8 @@ class PlayGround:
         pygame.quit()
 
 
+
 PG = PlayGround.fromfilename("TestGraph.json")
 PG.run()
+
+
