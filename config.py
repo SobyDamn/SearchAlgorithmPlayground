@@ -46,4 +46,6 @@ INPUT_WIDTH = 150
 
 
 ###FILE RESOURCES###
-GOAL_IMG = "img/goal_flag.png"
+MY_WORK_DIR = "MyGraph/" #Directory in which the work is saved
+
+

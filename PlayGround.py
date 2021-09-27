@@ -34,7 +34,7 @@ class Button:
 
 
 class PlayGround:
-    def __init__(self,blocks_dimension = BLOCKS_DIMENSION,block_size = BLOCK_SIZE,world:World=None):
+    def __init__(self,world:World=None,startNodeID:tuple=None,goalNodeIDs=None,blocks_dimension = BLOCKS_DIMENSION,block_size = BLOCK_SIZE):
         """
         Creates a playground with the given world if no parameter given creates a default world
         blocks_dimension: Total blocks that will be shown on the screen as (rows,cols)
@@ -48,8 +48,8 @@ class PlayGround:
         self._running = False
         self._selectedNode = None #This is the node which is selected, will help in moving the nodes around
         #A Playground consist of a start node and a goal node always
-        self._startNode = Node(self.world.getBlock((0,0)),'S',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True)
-        self._goalNode = Node(self.world.getBlock((len(self.world.available_blocks)-1,len(self.world.available_blocks[0])-1)),'G',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True)
+        self._startNode = Node(self.world.getBlock((0,0)),'S',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True) if startNodeID is None else world.getNode(startNodeID)
+        self._goalNode = Node(self.world.getBlock((len(self.world.available_blocks)-1,len(self.world.available_blocks[0])-1)),'G',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True) if goalNodeIDs is None else world.getNode(goalNodeIDs) 
         #Add the nodes in the world
         self.world.add_node(self._startNode)
         self.world.add_node(self._goalNode)
@@ -58,7 +58,26 @@ class PlayGround:
         self._selectedBlock = None
         self.startButton = None
         self._createControls()
-
+    
+    @classmethod
+    def fromfilename(cls,filename:str):
+        """
+        Returns a playground object initialised from the values given in filename
+        """
+        file = MY_WORK_DIR+filename
+        pygame.init()
+        try:
+            with open(file,'r') as f:
+                playGroundData = json.load(f)
+                #Create world
+                world = World.fromdict(dict(playGroundData['world']))
+                startNodeID = tuple(eval(playGroundData['startNode']))
+                goalNodeID = tuple(eval(playGroundData['goalNode']))
+                #Create special nodes
+        except FileNotFoundError:
+            msg = "Unable to locate the file '{}' at '{}'\nMake sure the given filename is present at the given location".format(filename,file)
+            raise FileNotFoundError(msg)
+        return cls(world,startNodeID,goalNodeID)
     def _createControls(self):
         """
         Generates button to control the playground
@@ -150,15 +169,11 @@ class PlayGround:
         Handles any click made on the screen
         """
         if self.startButton.isClicked(event.pos):
-            f = open("myGraph.json",'w')
-            val = str(self.to_dict())
-            #val = val.replace("'","\"")
-            f.write(json.dumps(self.to_dict(), indent=4))
-            f.close()
-            print("File Generated")
+            self.saveWork("TestGraph.json")
             return
         block = self._getClickedBlock(event.pos)
         if block is not None and not block.hasNode() and not self._isDragging:
+            print(block.hasNode())
             #No selected node
             if self._selectedNode is not None:
                 self._selectedNode.selected(False)
@@ -278,6 +293,30 @@ class PlayGround:
         Returns start node in the world
         """
         return self._startNode
+    
+    def saveWork(self,filename:str=None):
+        """
+        Saves the current graph to a file with given filename
+        If no filename is provided files are saved with some meaningful name
+        """
+        from datetime import datetime as dt
+        # Getting current date and time
+        now = dt.now()
+        if filename is None:
+            filename = "Graph "+now.strftime("%d-%m-%Y %H:%M:%S")+".json" #Save data with current date and time
+        location = os.path.join(os.getcwd(),MY_WORK_DIR)
+        file = os.path.join(location, filename)
+        try:
+            with open(file,'w') as f:
+                val = str(self.to_dict())
+                f.write(json.dumps(self.to_dict(), indent=4))
+                print("Work saved at: {}".format(file))
+        except FileNotFoundError:
+            #Directory not found
+            os.mkdir(location) #Create the directory
+            self.saveWork(filename)
+
+
     def to_dict(self)->dict:
         """
         Returns parameters and value as dictionary
@@ -288,6 +327,7 @@ class PlayGround:
             'goalNode':str(self._goalNode.id)
         }
         return playground
+    
     def run(self):
         """
         Start the playground to play with
@@ -308,5 +348,5 @@ class PlayGround:
         pygame.quit()
 
 
-PG = PlayGround()
+PG = PlayGround.fromfilename("TestGraph.json")
 PG.run()

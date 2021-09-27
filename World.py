@@ -18,7 +18,8 @@ class World:
         self._background = background_color
         self.available_blocks = None
         self._margin = max(margin,10)
-        self._screen_size = self._calc_screen_size(blocks_dimension,block_size,bottom_panel_size)
+        self._bottom_panel_size = bottom_panel_size
+        self._screen_size = self._calc_screen_size(blocks_dimension,block_size,self._bottom_panel_size)
         self._width,self._height = self._screen_size[0],self._screen_size[1]
         self.win = pygame.display.set_mode((self._width,self._height))
         self._grid_width = grid_width
@@ -28,6 +29,31 @@ class World:
         self._available_nodes = {} #Type dictionary where block id is a key
         self._available_edges = {}
         self.create_grids() #Initialise grid always as soon as world is created
+    @classmethod
+    def fromdict(cls,datadict:dict):
+        """
+        Returns a world object with initialised with values given in dictionary
+        """
+        world = cls(tuple(eval(datadict['blocks_dimension'])),int(datadict['block_size']),int(datadict['bottom_panel_size']),int(datadict['grid_width']),tuple(eval(datadict['background_color'])),eval(datadict['grid_color']),int(datadict['margin']))
+        world.create_grids() #Initialise the blocks
+        #Create nodes
+        available_nodes = datadict['available_nodes']
+        for nodeKey in available_nodes:
+            node_dict = available_nodes[nodeKey]
+            #Get block
+            block = world.getBlock(eval(nodeKey))
+            node = Node(block,node_dict['label'],tuple(eval(node_dict['colorOutline'])),tuple(eval(node_dict['colorNode'])),node_dict['outlineWidth'],node_dict['specialNodeStatus'])
+            world.add_node(node)
+        available_edges = datadict['available_edges']
+        for edgeKey in available_edges:
+            edge_dict = available_edges[edgeKey]
+            nodeStart = world.getNode(tuple(eval(edge_dict['nodeStart'])))
+            nodeEnd = world.getNode(tuple(eval(edge_dict['nodeEnd'])))
+            edge = Edge(nodeStart,nodeEnd,edge_dict['isWeighted'],edge_dict['weight'],tuple(eval(edge_dict['edgeColor'])),int(edge_dict['edgeWidth']))
+            world.add_edge(edge)
+        return world
+    
+
     def _calc_screen_size(self,blocks_dimension,block_size,bottom_panel_size):
         """
         Returns size of the screen
@@ -194,7 +220,7 @@ class World:
         try:
             return self.available_blocks[x][y]
         except IndexError:
-            raise("Provided 'id' doesn't contain any block")
+            raise IndexError("Provided id '{}' doesn't contain any block".format(id))
     def add_blocks(self,col):
         """
         Method decides whether to add the row or not based on whether we have already added the node or not
@@ -209,11 +235,13 @@ class World:
         world = {
             "blocks_dimension":str((self._rows,self._cols)),
             "background_color":str(self._background),
+            "bottom_panel_size":self._bottom_panel_size,
             "available_blocks":{},
             "margin":self._margin,
             "screen_size":str(self._screen_size),
             "block_size":self._block_size,
             "grid_color":str(self._grid_color),
+            "grid_width":self._grid_width,
             "available_nodes":{},
             "available_edges":{},
         }
@@ -225,6 +253,6 @@ class World:
             world["available_nodes"][str(nodeKey)] = self._available_nodes[nodeKey].to_dict()
         return world
     def __str__(self):
-        details =   "World Details\nScreen Size - "+str(self._width)+"x"+str(self._height)+"\n"+"Total Blocks - "+str(len(self.available_nodes))+"\n"
+        details =   "World Details\nScreen Size - "+str(self._width)+"x"+str(self._height)+"\n"+"Total Blocks - "+str(self._rows)+"x"+str(self._cols)+"\n"
         return details
 
