@@ -111,7 +111,8 @@ class Node(Block):
         Set the color for the node
         NOTE: Color is triplet of rgb i.e. (255,255,255)
         """
-        self._colorNode = color
+        if not self._specialNodeStatus:
+            self._colorNode = color
     def get_label(self):
         return self._label
     def setLocation(self,block:Block):
@@ -137,13 +138,15 @@ class Node(Block):
                 self._active = not self._active
                 if self._active:
                     self._oldLabel = self._label
+                else:
+                    infoLabel.setValue("")
             else:
                 self._active = False
             
             #Change the label to new value after checking validity
             if not self._active and (self._oldLabel is not None and self._oldLabel != self._label):
                 #Try saving the new label
-                self._saveNewLabel(self._oldLabel,world) #Discarding if no valid
+                self._saveNewLabel(self._oldLabel,world,infoLabel) #Discarding if no valid
                 self._oldLabel = None
             # Change the current color of the input box.
             self._colorOutline = COLOR_ACTIVE if self._active else self._defaultOutlineColor
@@ -151,7 +154,7 @@ class Node(Block):
         if event.type == pygame.KEYDOWN:
             if self._active:
                 if event.key == pygame.K_RETURN:
-                    self._saveNewLabel(self._oldLabel,world) #Discarding if no valid
+                    self._saveNewLabel(self._oldLabel,world,infoLabel) #Discarding if no valid
                     self._active = False
                     self._colorOutline = self._defaultOutlineColor
                 elif event.key == pygame.K_BACKSPACE:
@@ -304,7 +307,7 @@ class Edge:
         self._nodeStart.add_neighbour(self._nodeEnd) #Add neighbours
         self._nodeEnd.add_neighbour(self._nodeStart) #Add neighbour
 
-        self._font = pygame.font.Font(None, int(self._nodeStart.size*0.80))
+        self._font = pygame.font.Font(None, int(min(30,self._nodeStart.size*0.80)))
         self.txt_surface = self._font.render(self._weightLabel, True, self._edgeColor)
 
         self._active = False #An edge is active if selected
@@ -330,13 +333,15 @@ class Edge:
                 self._active = not self._active
                 if self._active:
                     self._oldWeight = self._weightLabel
+                else:
+                    infoLabel.setValue("")
             else:
                 self._active = False
             
             #Change the label to new value after checking validity
             if not self._active and (self._oldWeight is not None and self._oldWeight != self._weightLabel):
                 #Try saving the new label
-                self._saveNewLabel(self._oldWeight) #Discarding if not valid
+                self._saveNewLabel(self._oldWeight,infoLabel) #Discarding if not valid
                 self._oldWeight = None
             # Change the current color of the input box.
             self._edgeColor = COLOR_ACTIVE if self._active else self._defaultEdgeColor
@@ -344,7 +349,7 @@ class Edge:
         if event.type == pygame.KEYDOWN:
             if self._active:
                 if event.key == pygame.K_RETURN:
-                    self._saveNewLabel(self._oldWeight) #Discarding if no valid
+                    self._saveNewLabel(self._oldWeight,infoLabel) #Discarding if no valid
                     self._active = False
                     self._edgeColor = self._defaultEdgeColor
                 elif event.key == pygame.K_BACKSPACE:
@@ -386,7 +391,11 @@ class Edge:
             print(helpText)
             self._weightLabel = oldLabel
             return False
-    
+    def set_color(self,color:tuple):
+        """
+        Sets the color of the edge
+        """
+        self._edgeColor = color
     def collidePoint(self,clickPoint,offset=5):
         """
         Returns true if the click point is inside offset limit of the edge

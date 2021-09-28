@@ -6,51 +6,11 @@ import json
 from World import World
 from Blocks import *
 from config import *
-
-class Label:
-    def __init__(self,color,size,pos):
-        self._color = color
-        self._size = size
-        self._font = pygame.font.SysFont("Arial", self._size)
-        self._pos = pos
-        self._text = ""
-    def draw_label(self,screen):
-        text = self._font.render(self._text,True, self._color)
-        text_rect = text.get_rect(center = self._pos)
-        screen.blit(text, text_rect)
-    def setValue(self,text):
-        """
-        Set the value for label
-        """
-        self._text = text
-class Button:
-    def __init__(self,pos,size,bgColor,color,label="Button",labelSize:float=0.5,fill_value = 100):
-        self._pos = pos
-        self.size = size
-        self._color = color
-        self._fontSize = int(size[1]*labelSize)
-        self._label = label
-        self._font = pygame.font.SysFont(None, self._fontSize)
-        self._bgColor = bgColor
-        self._fill_value = fill_value
-        
-
-    def draw_button(self,screen):
-        pos = self._pos+self.size
-        self.pgObj = pygame.draw.rect(screen, self._bgColor, pygame.Rect(pos),self._fill_value, 3)
-        labelLength = self._fontSize*len(self._label)
-        text = self._font.render(self._label, True, self._color)
-        text_rect = text.get_rect(center = self.pgObj.center)
-        screen.blit(text, text_rect)
-    def isClicked(self,collidePos):
-        if self.pgObj.collidepoint(collidePos):
-            return True
-        else:
-            return False
+from UI import *
 
 
 class PlayGround:
-    def __init__(self,world:World=None,saveToFile:str=None,startNodeID:tuple=None,goalNodeIDs=None,blocks_dimension = BLOCKS_DIMENSION,block_size = BLOCK_SIZE):
+    def __init__(self,world:World=None,saveToFile:str=None,weighted = False,startNodeID:tuple=None,goalNodeIDs=None,blocks_dimension = BLOCKS_DIMENSION,block_size = BLOCK_SIZE):
         """
         Creates a playground with the given world if no parameter given creates a default world
         saveToFile: filename where the work will be saved when save work button is clicked
@@ -78,6 +38,7 @@ class PlayGround:
         self._saveWorkButton = None
         self._infoLabel = None #A label showing helpful texts
         self._onStartMethod = None #Method to be executed when start button is clicked
+        self._isWeighted = weighted #Tells whether the playground will have weighted edge or not
         self._saveToFile = saveToFile
         self._createControlUI()
     
@@ -95,11 +56,12 @@ class PlayGround:
                 world = World.fromdict(dict(playGroundData['world']))
                 startNodeID = tuple(eval(playGroundData['startNode']))
                 goalNodeID = tuple(eval(playGroundData['goalNode']))
+                isWeighted = playGroundData['isWeighted']
                 #Create special nodes
         except FileNotFoundError:
             msg = "Unable to locate the file '{}' at '{}'\nMake sure the given filename is present at the given location".format(filename,file)
             raise FileNotFoundError(msg)
-        return cls(world,filename,startNodeID,goalNodeID)
+        return cls(world,filename,isWeighted,startNodeID,goalNodeID)
     def _createControlUI(self):
         """
         Generates UI elements
@@ -195,7 +157,7 @@ class PlayGround:
             self.start()
             return
         if self._saveWorkButton.isClicked(event.pos):
-            self.saveWork("TestGraph.json")
+            self.saveWork(self._saveToFile)
             return
         block = self._getClickedBlock(event.pos)
         if block is not None and not block.hasNode() and not self._isDragging:
@@ -231,7 +193,7 @@ class PlayGround:
                         self._selectedNode.selected(False) #Remove any selected node, probably help in creating no further edges without knowing
                         #If the nodes are not same then create an edge
                         if self.world.getNode(block.id) not in self._selectedNode.get_neighbours():
-                            edge = Edge(self._selectedNode,self.world.getNode(block.id))
+                            edge = Edge(self._selectedNode,self.world.getNode(block.id),isWeighted=self._isWeighted)
                             ##Add new edge to the world
                             self.world.add_edge(edge)
                         self._selectedNode = None
@@ -264,7 +226,7 @@ class PlayGround:
             if self._selectedBlock is not None:
                 self._selectedBlock.highlight(False)
                 self._selectedBlock = None
-            if self._selectedNode is not None:
+            if self._selectedNode is not None and not self._isDragging:
                 self._selectedNode.selected(False)
                 self._selectedNode = None
             self._infoLabel.setValue("") #Blank info text
@@ -301,8 +263,10 @@ class PlayGround:
         self._onStartMethod = func
     def start(self):
         if self._onStartMethod is not None:
-            self._infoLabel.setValue("Running Algorithm...") #Blank info text
+            self.saveWork("cached.json")
+            self._infoLabel.setValue("Running Algorithm...") # info text
             self._onStartMethod()
+            self._infoLabel.setValue("FInished Running") # info text
         else:
             self._infoLabel.setValue("No start function is set")
     def delay(self,millisecond:int):
@@ -380,10 +344,15 @@ class PlayGround:
         playground = {
             'world':self.world.to_dict(),
             'startNode':str(self._startNode.id),
-            'goalNode':str(self._goalNode.id)
+            'goalNode':str(self._goalNode.id),
+            'isWeighted':self._isWeighted
         }
         return playground
-    
+    def setTitle(self,title:str):
+        """
+        Sets title of the playground window
+        """
+        pygame.display.set_caption(title)
     def run(self):
         """
         Start the playground to play with
@@ -402,10 +371,3 @@ class PlayGround:
                     self.eventHandler(event)
             clock.tick(60)
         pygame.quit()
-
-
-
-PG = PlayGround.fromfilename("TestGraph.json")
-PG.run()
-
-
