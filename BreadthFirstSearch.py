@@ -1,7 +1,7 @@
 from PlayGround import PlayGround
 from SearchAlgoUtlis import *
 from config import CYAN,YELLOW,PURPLE
-PG:PlayGround = PlayGround.fromfilename(filename="Graph1.json")
+PG:PlayGround = PlayGround(saveToFile="TestGraph.json")
 def bfs():
     ALGORITHM_TITLE = "Breadth First Search Algorithm"
     PG.setTitle(ALGORITHM_TITLE)

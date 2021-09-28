@@ -159,6 +159,8 @@ class PlayGround:
         if self._saveWorkButton.isClicked(event.pos):
             self.saveWork(self._saveToFile)
             return
+        
+
         block = self._getClickedBlock(event.pos)
         if block is not None and not block.hasNode() and not self._isDragging:
             #No selected node
@@ -199,7 +201,7 @@ class PlayGround:
                         self._selectedNode = None
 
                     elif self._selectedNode is not None:
-                        self._selectedNode.selected(False)
+                        pass
                     else:
                         self._selectedNode = self.world.getNode(block.id)
                         self._selectedNode.selected(True)
@@ -248,6 +250,7 @@ class PlayGround:
             self._isClicked = True
         elif event.type == pygame.MOUSEBUTTONUP:
             self._isClicked = False
+            self._isDragging = False
         elif event.type == pygame.MOUSEMOTION:
             if self._isClicked:
                 self._isDragging = True
@@ -371,3 +374,5 @@ class PlayGround:
                     self.eventHandler(event)
             clock.tick(60)
         pygame.quit()
+
+PlayGround().run()

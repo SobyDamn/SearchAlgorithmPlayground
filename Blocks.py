@@ -88,7 +88,7 @@ class Node(Block):
 
     def draw_block(self,screen):
         pygame.draw.circle(screen, self._colorNode, self.pos,int(self.size/2))
-        outlineColor = SELECTED_NODE_COLOR if self._isSelected else self._colorOutline
+        outlineColor = SELECTED_NODE_COLOR if self._isSelected and not self._active else self._colorOutline
         self.pgObj = pygame.draw.circle(screen, outlineColor, self.pos,int(self.size/2),self._outlineWidth)
         self.set_label(self._label,screen)
     def set_label(self,label,screen):
@@ -132,17 +132,17 @@ class Node(Block):
             # If the user clicked on the node rect.
             if self.pgObj.collidepoint(event.pos):
                 helpText = "Use your keyboard to add/edit label to the node. Press DELETE to remove the node"
-                print(helpText)
+                #print(helpText)
                 infoLabel.setValue(helpText)
                 # Toggle the active variable.
                 self._active = not self._active
                 if self._active:
                     self._oldLabel = self._label
                 else:
-                    infoLabel.setValue("")
+                    infoLabel.setValue(str(self))
+                    self._isSelected = True
             else:
                 self._active = False
-            
             #Change the label to new value after checking validity
             if not self._active and (self._oldLabel is not None and self._oldLabel != self._label):
                 #Try saving the new label
@@ -163,13 +163,13 @@ class Node(Block):
                     #delete the node
                     if not self._specialNodeStatus:
                         helpText = "Deleted {}".format(self)
-                        print(helpText)
+                        #print(helpText)
                         infoLabel.setValue(helpText)
                         world.remove_node(self.id)
                         return False
                     else:
                         helpText = "Special node delete Permission Denied! NOTE: Special nodes like Start and Goal can't be deleted"
-                        print(helpText)
+                        #print(helpText)
                         infoLabel.setValue(helpText)
                 else:
                     self._label += event.unicode
@@ -184,18 +184,18 @@ class Node(Block):
             #Deal with empty label
             if len(self._label)==0:
                 helpText = "Node must have a label to identify!"
-                print(helpText)
+                #print(helpText)
                 infoLabel.setValue(helpText)
                 self._label = oldLabel
                 return False
             #Deal with duplicate labels
             if self._label in world.getNodes().values():
-                print(helpText)
+                #print(helpText)
                 infoLabel.setValue(helpText)
                 self._label = oldLabel
                 return False
             helpText = "Label changed from {} to {}".format(oldLabel,self._label)
-            print(helpText)
+            #print(helpText)
             infoLabel.setValue(helpText)
     
     def add_neighbour(self,node):
@@ -325,10 +325,10 @@ class Edge:
                 helpText = ""
                 if self._isWeighted:
                     helpText +="Use your keyboard to add/edit weight of the edge"
-                    print(helpText)
+                    #print(helpText)
                 helpText += "Press DELETE to remove the edge"
                 infoLabel.setValue(helpText)
-                print(helpText)
+                #print(helpText)
                 # Toggle the active variable.
                 self._active = not self._active
                 if self._active:
@@ -358,7 +358,7 @@ class Edge:
                     #delete the node
                     helpText = "Deleted {}".format(self)
                     infoLabel.setValue(helpText)
-                    print(helpText)
+                    #print(helpText)
                     world.remove_edge(self)
                     return False
                 else:
@@ -374,7 +374,7 @@ class Edge:
         if len(self._weightLabel)==0:
             helpText = "Edge must contain a weight"
             infoLabel.setValue(helpText)
-            print(helpText)
+            #print(helpText)
             self._weightLabel = oldLabel
             return False
         try:
@@ -383,12 +383,12 @@ class Edge:
             self._weight = weight
             helpText = "{} new weight - {}".format(self,self._weightLabel)
             infoLabel.setValue(helpText)
-            print(helpText)
+            #print(helpText)
             return True
         except ValueError:
             helpText = "Edge weight value must be an integer"
             infoLabel.setValue(helpText)
-            print(helpText)
+            #print(helpText)
             self._weightLabel = oldLabel
             return False
     def set_color(self,color:tuple):
