@@ -10,7 +10,7 @@ from UI import *
 
 
 class PlayGround:
-    def __init__(self,world:World=None,saveToFile:str=None,weighted = False,startNodeID:tuple=None,goalNodeIDs=None,blocks_dimension = BLOCKS_DIMENSION,block_size = BLOCK_SIZE):
+    def __init__(self,world:World=None,saveToFile:str=None,weighted = False,startNode:Node=None,goalNode:Node=None,blocks_dimension = BLOCKS_DIMENSION,block_size = BLOCK_SIZE):
         """
         Creates a playground with the given world if no parameter given creates a default world
         saveToFile: filename where the work will be saved when save work button is clicked
@@ -26,8 +26,11 @@ class PlayGround:
         self._running = False
         self._selectedNode = None #This is the node which is selected, will help in moving the nodes around
         #A Playground consist of a start node and a goal node always
-        self._startNode = Node(self.world.getBlock((0,0)),'S',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True) if startNodeID is None else world.getNode(startNodeID)
-        self._goalNode = Node(self.world.getBlock((len(self.world.available_blocks)-1,len(self.world.available_blocks[0])-1)),'G',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True) if goalNodeIDs is None else world.getNode(goalNodeIDs) 
+        self._startNode = Node(self.world.getBlock((0,0)),'S',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True) if startNode is None else startNode
+        self._goalNode = Node(self.world.getBlock((len(self.world.available_blocks)-1,len(self.world.available_blocks[0])-1)),'G',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True) if goalNode is None else goalNode
+        #Start and goal nodes are special nodes
+        self._startNode._specialNodeStatus = True
+        self._goalNode._specialNodeStatus = True
         #Add the nodes in the world
         self.world.add_node(self._startNode)
         self.world.add_node(self._goalNode)
@@ -61,7 +64,7 @@ class PlayGround:
         except FileNotFoundError:
             msg = "Unable to locate the file '{}' at '{}'\nMake sure the given filename is present at the given location".format(filename,file)
             raise FileNotFoundError(msg)
-        return cls(world,filename,isWeighted,startNodeID,goalNodeID)
+        return cls(world,filename,isWeighted,world.getNode(startNodeID),world.getNode(goalNodeID))
     def _createControlUI(self):
         """
         Generates UI elements
@@ -79,8 +82,6 @@ class PlayGround:
         width = int(height*3)
         pos_x = int((width)/2)
         self._saveWorkButton = Button((pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Save work",0.7,0)
-        #pos_x = int(self.world.win.get_size()[0] - (width)/2) - width
-        #self.selectGoalButton = Button(self.world,(pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Select Goal",0.3)
 
 
 
@@ -275,9 +276,15 @@ class PlayGround:
     def delay(self,millisecond:int):
         """
         Delays the playground and the program
+        NOTE: If the controls are taken away then controls will not work except QUIT which is also delayed
         """
         pygame.time.delay(millisecond)
         self.drawScenary() #Draw scenary even if the program is being paused
+        for event in pygame.event.get():  
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                print("Killed")
+                exit()
     def drawScenary(self):
         """
         Draw the elements of the world and world along with it
@@ -286,6 +293,7 @@ class PlayGround:
         self.world.create_grids()
         self._drawUIElements()
         pygame.display.update()
+        
 
     def MoveGen(self,node:Node)->list:
         """
@@ -308,7 +316,21 @@ class PlayGround:
         Returns start node in the world
         """
         return self._startNode
-    
+    def getScreen(self):
+        """
+        Returns pygame window on which frames can be generated
+        """
+        return self.world.win
+    def add_node(self,node:Node):
+        """
+        Adds node to the world
+        """
+        self.world.add_node(node)
+    def add_edge(self,e:Edge):
+        """
+        Add edge to the world
+        """
+        self.world.add_edge(e)
     def saveWork(self,filename:str=None):
         """
         Saves the current graph to a file with given filename
@@ -363,16 +385,14 @@ class PlayGround:
         clock = pygame.time.Clock()
         icon = pygame.image.load('img/icon.png')
         pygame.display.set_icon(icon)
-        running = True
+        self.__running = True
         print("Search Algorithm PlayGround Tool created by Sritabh Priyadarshi using pygame.\nVisit https://github.com/SobyDamn/SearchAlgorithmVisualisation for more info.")
-        while running:
+        while self.__running:
             self.drawScenary()
             for event in pygame.event.get():  
                 if event.type == pygame.QUIT:  
-                    running = False
+                    self.__running = False
                 else:
                     self.eventHandler(event)
             clock.tick(60)
         pygame.quit()
-
-PlayGround().run()

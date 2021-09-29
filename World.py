@@ -154,7 +154,7 @@ class World:
         return self._available_edges
     def add_edge(self,e:Edge):
         """
-        Add edge between two nodes
+        Add edge to the world
         """
         #FIX-ME Make it work for directed graph as well
         (node1_id,node2_id) = (e.getNodes()[0].id,e.getNodes()[1].id)

@@ -1,7 +1,7 @@
 from PlayGround import PlayGround
 from SearchAlgoUtlis import *
 from config import CYAN,YELLOW,PURPLE
-PG:PlayGround = PlayGround(saveToFile="TestGraph.json")
+PG:PlayGround = PlayGround.fromfilename("TestGraph.json")
 def bfs():
     ALGORITHM_TITLE = "Breadth First Search Algorithm"
     PG.setTitle(ALGORITHM_TITLE)
@@ -25,9 +25,6 @@ def bfs():
             neighbours = PG.MoveGen(N)
             newNodes = RemoveSeen(neighbours,OPEN,CLOSED)
             for node in newNodes:
-                #edge = PG.get_edge(N,node)
-                #edge.set_color(YELLOW)
-                #PG.delay(10)
                 node.set_color(YELLOW)
                 PG.delay(200)
             newPairs = MakePairs(newNodes,N)

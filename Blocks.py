@@ -431,7 +431,7 @@ class Edge:
         """
         Returns the weight of the edge
         """
-        return self._weight
+        return self._weight if self._isWeighted else 0
 
     def _set_label(self,label,screen,offset = 0.4):
         """

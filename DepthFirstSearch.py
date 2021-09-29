@@ -1,12 +1,12 @@
-from Node import *
+from PlayGround import PlayGround
 from SearchAlgoUtlis import *
-from config import *
-def dfs(sNode:StartNode,gNode:GoalNode,AllNode:list,PG):
-    ALGORITHM_TITLE = "Depth First Search"
-    print("Running",ALGORITHM_TITLE)
-    pygame.display.set_caption(TITLE+" "+ALGORITHM_TITLE)
-    S = sNode.getNode()
-    G = gNode.getNode()
+from config import CYAN,YELLOW,PURPLE
+PG:PlayGround = PlayGround.fromfilename("TestGraph.json")
+def dfs():
+    ALGORITHM_TITLE = "Depth First Search Algorithm"
+    PG.setTitle(ALGORITHM_TITLE)
+    S = PG.getStartNode()
+    G = PG.getGoalNode()
     OPEN = [(S,None)] #Starting with S and it's parent as None
     CLOSED = [] #Empty
 
@@ -14,29 +14,35 @@ def dfs(sNode:StartNode,gNode:GoalNode,AllNode:list,PG):
     while OPEN:
         nodePair = OPEN[0]
         (N,_) = nodePair
-        if gNode.testNode(N):
-            path = ReconstructPath(nodePair,CLOSED)
-            print("Found Goal",N)
-            return path
+        if N==G:
+            nodes = ReconstructPath(nodePair,CLOSED)
+            highlightPath(nodes)
+            return
         else:
+            N.set_color(CYAN)
+            PG.delay(1000)
             CLOSED = [nodePair] + CLOSED
-            neighbours = MoveGen(N,AllNode)
+            neighbours = PG.MoveGen(N)
             newNodes = RemoveSeen(neighbours,OPEN,CLOSED)
-            highlighNodes(newNodes,PG)
+            for node in newNodes:
+                node.set_color(YELLOW)
+                PG.delay(200)
             newPairs = MakePairs(newNodes,N)
             OPEN = newPairs + OPEN[1:]
+            PG.delay(10)
+            N.set_color(YELLOW)
     return []
 
 
-def highlighNodes(nodesList:list,PG):
-    """
-    Highlighting the nodes
-    """
-    for node in nodesList:
-        pygame.time.delay(10)
-        PG.drawScenary()
-        node.highlight(True)
+def highlightPath(nodes):
+    for i in range(len(nodes)-1,0,-1):
+        nodeS = nodes[i]
+        nodeE = nodes[i-1]
+        edge = PG.get_edge(nodeS,nodeE)
+        nodeS.set_color(PURPLE)
+        edge.set_color(PURPLE)
+        PG.delay(1000)
+    nodes[0].set_color(PURPLE)
 
-def moveToGoal(S:StartNode,path:list,PG):
-    for node in path[::-1]:
-        S.moveTo(node.id,PG,2)
+PG.onStart(dfs)
+PG.run()
