@@ -1,3 +1,18 @@
+"""
+Search Algorithm Playground
+===========================
+
+Developer - Sritabh Priyadarshi(sobydanny@gmail.com)
+
+About
+Search Algorithm Playground is a python library to work with graph related algorithm, mainly dealing with different Artificial Intelligence Search alorithms.
+The tool provides an user interface to work with the graphs and visualise the effect of algorithm on the graph while giving the freedom to programmer to make adjustments in the way they wants.
+It also provides a way to save the graph in json format hence enabling the programmers to share the files and use different algorithm on same graph with ease.
+
+Current Support - Only undirected graphs
+"""
+
+
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
@@ -10,14 +25,117 @@ from UI import *
 
 
 class PlayGround:
+    """
+    PlayGround class represents the ground which which consists of the world of blocks on which the graph is displayed or modified. 
+    PlayGround class provide controls on the elements in the world like Edge and Nodes.
+    
+    ...
+
+    Attribute
+    ---------
+    world: World
+        World class object on which playground is available
+
+    Methods
+    -------
+    fromfilename(filename:str)
+        a classmethod which returns PlayGround class object initialised from values given in filename and returns the object
+        filename: a json file name to which previously a playround is saved into
+
+    onStart(func)
+        Sets function to be executed when the start button is clicked
+        func: function which will be executed when start is pressed
+    
+    delay(millisecond:int)
+        Delays the program for given milliseconds
+        Uses pygame.time.delay method
+        Once the controls are taken away no other control would work on playground except exit
+        NOTE: Using this delay function would allow to reflect changes on playground in delay mode better than instantaneous
+
+    MoveGen(node:Node)
+        Returns all the neighbours(in sorted order according to the label) of a node i.e. all the nodes which has edge between the given node
+        node: A Node class object
+
+    get_edge(nodeStart:Node,nodeEnd:Node)->Edge
+        Returns an Edge class object between the node nodeStart and nodeEnd, if no edge exists returns None
+        nodeStart: A Node class object
+        nodeEnd: A Node class object
+
+    getGoalNode()->Node
+        Returns Node class object which is currenty set as a goal node for the playground
+
+    getSartNode()->Node
+        Returns Node class object which is currenty set as a start node for the playground
+
+    setGoalNode(node:Node)
+        Sets the given node as goal node for the PlayGround
+        node: A Node class object
+
+    setStartNode(node:Node)
+        Sets the given node as goal node for the PlayGround
+        node: A Node class object
+    
+    getScreen()
+        Returns a pygame window object which is the surface on which the elements are being drawn
+        Useful in case more extra elements are needed to be drawn on the playground
+    
+    add_node(node: Node)
+        Adds node to the world
+        NOTE: node available in the world will be displayed on the playground screen
+
+    add_edge(edge: Edge)
+        Adds edge to the world
+        NOTE: edge available in the world will be displayed on the playground screen
+
+    saveWork(filename:str=None)
+        Saves the playground with the given filename
+        if no filename is provided, then playground will be saved with arbitrary filename
+
+    showInfoText(text:str)
+        To display informational texts on the playground right above the start button
+        text: text to be displayed on the playground infoText area
+
+    to_dict()->dict
+        Returns Playrgound attributes as dictionary
+    setTitle(title:str)
+        Sets the title of the playground window
+    
+    run()
+        runs the playground as an active window on which the frames are drawn
+    
+
+
+    """
     def __init__(self,world:World=None,saveToFile:str=None,weighted = False,startNode:Node=None,goalNode:Node=None,blocks_dimension = BLOCKS_DIMENSION,block_size = BLOCK_SIZE):
         """
-        Creates a playground with the given world if no parameter given creates a default world
-        saveToFile: filename where the work will be saved when save work button is clicked
-        startNodeID and goalNodeIDs are id of the block where start and goal node is placed
-        blocks_dimension: Total blocks that will be shown on the screen as (rows,cols)
-        block_size: size of each block
-        NOTE: Parameters can be modified in config file as well
+        Parameter
+        ---------
+        world : World
+            a World class object on which the nodes/edges are drawn
+            The screen size of the world determines the screensize of the playground window (default None).
+
+        saveToFile : str
+            name of the file with which the world(or graph) will be saved(file will be saved in json format) when the 'Save Work' button is pressed (default None).
+
+        weighted : bool
+            whether the edges that will be drawn on playround is weighted or not (default False).
+
+        startNode : Node
+            a node object of Node class which will be set as start node for the graph.
+            NOTE: startNode is a special node which cannot be deleted from the playground(default None)
+            if no value is provided then top left block contains the start node 'S'
+
+        goalNode : Node
+            a node object of Node class which will be set as start node for the graph.
+            NOTE: goalNode is a special node which cannot be deleted from the playground(default None)
+            if no value is provided then bottom right block contains the goal node 'G'
+
+        blocks_dimension : tuple
+            blocks_dimension represents number of blocks that will be generated in the world if world object is given as None(default (23,21))
+            e.g (23,21) represents 23 rows and 21 columns
+
+        block_size : int
+            size of each block i.e. one side of the squared block (default 30)
         """
         pygame.init() #Initialise the pygame
         pygame.display.set_caption(TITLE) #set the title
@@ -48,6 +166,11 @@ class PlayGround:
     @classmethod
     def fromfilename(cls,filename:str):
         """
+        Parameter
+        ---------
+        filename : str
+            a json file name to which previously a playround is saved into
+
         Returns a playground object initialised from the values given in filename
         """
         file = MY_WORK_DIR+filename
@@ -67,7 +190,7 @@ class PlayGround:
         return cls(world,filename,isWeighted,world.getNode(startNodeID),world.getNode(goalNodeID))
     def _createControlUI(self):
         """
-        Generates UI elements
+        Generates UI elements for the controlls and info
         """
         height = int(BOTTOM_PANEL_HEIGHT/3)
         width = int(height*2)
@@ -86,11 +209,17 @@ class PlayGround:
 
 
     def _drawUIElements(self):
+        """
+        Draws the frame for UI elements
+        """
         self.startButton.draw_button(self.world.win)
         self._saveWorkButton.draw_button(self.world.win)
         self._infoLabel.draw_label(self.world.win)
 
     def _genLabel(self):
+        """
+        Function generates a label for a node which is not already there in the grid
+        """
         def _nextLabel(label = ""):
             """
             A utility function to genLabel
@@ -113,15 +242,15 @@ class PlayGround:
             if not found:
                 revL.append('A')
             return ''.join(revL[::-1])
-        """
-        Function generates a label for a node which is not already there in the grid
-        """
         label = "A"
         while label in self.world.getNodes().values():
             label = _nextLabel(label)
         return label
 
     def _getClickedEdge(self,pos)->Edge:
+        """
+        Returns an edge if the click position pos collides with any edge in the world
+        """
         edges = self.world.getEdges()
         if edges:
             for edge in edges.values():
@@ -131,7 +260,7 @@ class PlayGround:
         return None
     def _getClickedBlock(self,pos)->Block:
         """
-        Click Handler, checks if the click is button node or simple node and manages accordingly
+        Returns a Block class object if the click position pos collides with any block in the world
         """
 
         blocks = self.world.available_blocks
@@ -142,9 +271,15 @@ class PlayGround:
                 for block in row:
                     if block.pgObj.collidepoint(pos):
                         return block
-    def _dragNode(self,newBlock):
+    def _dragNode(self,newBlock:Block):
         """
         Drags node to newBlock location
+
+        Parameter
+        ---------
+        newBlock:Block
+            A block in the world to which the selected node will be shifted
+            NOTE: Selected node is the one which is selected after click on is made on it
         """
         if self._isClicked and self._selectedNode is not None and not newBlock.hasNode():
             #Update node location
@@ -155,7 +290,7 @@ class PlayGround:
         Handles any click made on the screen
         """
         if self.startButton.isClicked(event.pos):
-            self.start()
+            self._start()
             return
         if self._saveWorkButton.isClicked(event.pos):
             self.saveWork(self._saveToFile)
@@ -180,6 +315,8 @@ class PlayGround:
                     self._selectedBlock = None
                 return
         if block is not None:
+            #Click is made on some block area
+
             self._dragNode(block)
             if not self._isDragging:
                 if block.hasNode():
@@ -235,7 +372,7 @@ class PlayGround:
             self._infoLabel.setValue("") #Blank info text
 
 
-    def eventHandler(self,event):
+    def _eventHandler(self,event):
         """
         Handles all the events
         """
@@ -262,30 +399,38 @@ class PlayGround:
     def onStart(self,func):
         """
         Sets function to be executed when the start button is clicked
+
+        Parameter
+        ---------
         func: function which will be executed when start is pressed
         """
         self._onStartMethod = func
-    def start(self):
+    def _start(self):
+        """
+        Function executes the method which is set as onStart
+        """
         if self._onStartMethod is not None:
             self.saveWork("cached.json")
             self._infoLabel.setValue("Running Algorithm...") # info text
             self._onStartMethod()
-            self._infoLabel.setValue("FInished Running") # info text
+            self._infoLabel.setValue("Finished Running") # info text
         else:
             self._infoLabel.setValue("No start function is set")
     def delay(self,millisecond:int):
         """
-        Delays the playground and the program
-        NOTE: If the controls are taken away then controls will not work except QUIT which is also delayed
+        Delays the program for given milliseconds
+        Uses pygame.time.delay method
+        Once the controls are taken away no other control would work on playground except exit
+        NOTE: Using this delay function would allow to reflect changes on playground in delay mode better than instantaneous
         """
         pygame.time.delay(millisecond)
-        self.drawScenary() #Draw scenary even if the program is being paused
+        self._drawScenary() #Draw scenary even if the program is being paused
         for event in pygame.event.get():  
             if event.type == pygame.QUIT:
                 pygame.quit()
                 print("Killed")
                 exit()
-    def drawScenary(self):
+    def _drawScenary(self):
         """
         Draw the elements of the world and world along with it
         NOTE: If the control is taken away for a while, make sure to drawScenary to reflect the changes in the world
@@ -298,37 +443,79 @@ class PlayGround:
     def MoveGen(self,node:Node)->list:
         """
         Returns a list of neighbouring nodes in sorted order of their label
+
+        Parameter
+        ---------
+        node:Node
+            A Node class object
         """
         return node.get_neighbours()
     def get_edge(self,nodeStart:Node,nodeEnd:Node)->Edge:
         """
         Returns an edge between the two nodes if it exists
+
+        Parameter
+        ---------
+        nodeStart:Node
+            A Node class object
+
+        nodeEnd:Node
+            A Node class object
         """
         return self.world.getEdge(nodeStart.id,nodeEnd.id)
     def getGoalNode(self)->Node:
         """
-        Returns goal node in the world
+        Returns Node class object which is currenty set as a goal node for the playground
         """
         return self._goalNode
     
     def getStartNode(self)->Node:
         """
-        Returns start node in the world
+        Returns Node class object which is currenty set as a start node for the playground
         """
         return self._startNode
+    def setGoalNode(self,node:Node):
+        """
+        Sets the given node as goal node for the PlayGround
+        NOTE: At any moment playground supports only on goal node
+
+        Parameter
+        ---------
+        node:Node
+            A Node class object
+        """
+        self._goalNode._specialNodeStatus = False
+        self._goalNode = node
+        self._goalNode._specialNodeStatus = True
+    def setStartNode(self,node:Node):
+        """
+        Sets the given node as goal node for the PlayGround
+        NOTE: At any time only one start node can be present
+
+        node:Node
+            A Node class object
+        """
+        self._startNode._specialNodeStatus = False #Remove the previous node from special category
+        self._startNode = node
+        self._startNode._specialNodeStatus = True #Set the new node as special
+
+
     def getScreen(self):
         """
-        Returns pygame window on which frames can be generated
+        Returns a pygame window object which is the surface on which the elements are being drawn
+        Useful in case more extra elements are needed to be drawn on the playground
         """
         return self.world.win
     def add_node(self,node:Node):
         """
         Adds node to the world
+        NOTE: node available in the world will be displayed on the playground screen
         """
         self.world.add_node(node)
     def add_edge(self,e:Edge):
         """
-        Add edge to the world
+        Adds edge to the world
+        NOTE: edge available in the world will be displayed on the playground screen
         """
         self.world.add_edge(e)
     def saveWork(self,filename:str=None):
@@ -359,12 +546,17 @@ class PlayGround:
 
     def showInfoText(self,text:str):
         """
-        Display the given text at info panel
+        To display informational texts on the playground right above the start button
+        
+        Parameter
+        ---------
+        text : str
+            text to be displayed on the playground infoText area
         """
         self._infoLabel.setValue(text)
     def to_dict(self)->dict:
         """
-        Returns parameters and value as dictionary
+        Returns attributes and values as dictionary
         """
         playground = {
             'world':self.world.to_dict(),
@@ -386,13 +578,13 @@ class PlayGround:
         icon = pygame.image.load('img/icon.png')
         pygame.display.set_icon(icon)
         self.__running = True
-        print("Search Algorithm PlayGround Tool created by Sritabh Priyadarshi using pygame.\nVisit https://github.com/SobyDamn/SearchAlgorithmVisualisation for more info.")
+        print("Search Algorithm PlayGround Tool created by Sritabh Priyadarshi using pygame.\nVisit https://github.com/SobyDamn/SearchAlgorithmPlayground for more info.")
         while self.__running:
-            self.drawScenary()
+            self._drawScenary()
             for event in pygame.event.get():  
                 if event.type == pygame.QUIT:  
                     self.__running = False
                 else:
-                    self.eventHandler(event)
+                    self._eventHandler(event)
             clock.tick(60)
         pygame.quit()
