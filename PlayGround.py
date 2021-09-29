@@ -196,7 +196,7 @@ class PlayGround:
         width = int(height*2)
         pos_x = int((self.world.win.get_size()[0]-width)/2)
         pos_y = (self.world.win.get_size()[1]-int((BOTTOM_PANEL_HEIGHT)/2))
-        self.startButton = Button((pos_x,pos_y),(width,height),BUTTON_COLOR_PRIMARY,GRAY,"Run")
+        self.startButton = Button((pos_x,pos_y),(width,height),BUTTON_COLOR_PRIMARY,GRAY,"Start")
         label_size = 15
         pos_x += int(width/2)
         self._infoLabel = Label(INFO_LABEL_COLOR,label_size,(pos_x,int(pos_y-label_size*1.5)))
