@@ -86,7 +86,13 @@ class PlayGround:
     add_edge(edge: Edge)
         Adds edge to the world
         NOTE: edge available in the world will be displayed on the playground screen
-
+    
+    remove_edge(edge:Edge)
+        Removes edge from the world
+    
+    remove_node(node:Node)
+        Removed node from the world
+        
     saveWork(filename:str=None)
         Saves the playground with the given filename
         if no filename is provided, then playground will be saved with arbitrary filename
@@ -463,6 +469,27 @@ class PlayGround:
             A Node class object
         """
         return self.world.getEdge(nodeStart.id,nodeEnd.id)
+    def remove_edge(self, edge:Edge):
+        """
+        Remove edge from the world
+
+        Parameter
+        ---------
+        edge:Edge
+            An Edge class object to be removed from world
+        """
+        self.world.remove_edge(edge)
+
+    def remove_node(self, node:Node):
+        """
+        Remove node from the world
+
+        Parameter
+        ---------
+        node:Node
+            A node class object to be removed from the world
+        """
+        self.world.remove_node(node.id)
     def getGoalNode(self)->Node:
         """
         Returns Node class object which is currenty set as a goal node for the playground
