@@ -3,20 +3,96 @@ from Blocks import *
 
 
 class World:
+    """
+    A World class represents the world for the playground which is responsible for Maintaining Node,Edge and Block of the playground
+
+    Methods
+    -------
+    fromdict(datadict:dict)
+        A classmethod to create World class object from a dictionary
+        NOTE:The dictionary must be of the same form returned by to_dict() method of the class
+
+    create_grids()
+        Generates grids if not generated in the world, if the gird is already availbale then it redraws them
+
+    add_node(node:Node)
+        Adds nodes to the world
+        NOTE: To make the node visible on playground window it must be include in the world
+
+    remove_node(node:Node)
+        Removes nodes from the world
+        NOTE: If nodes are not available in the world it will no longer visible on playground window
+
+    update_node_loc(node:Node,newBlock:Block)
+        Updates the location of the node to newBlock location and removes it from previous block
+        node:Node - A Node class object which needs to be updated
+        newBlock:Block - A Block class object to which the node is require to move to
+
+    getEdges()->dict
+        Returns all the available edges in the world as dictionary with key as the node pairs ids
+        e.g ((1,1),(1,5)) is the key for an edge between the node with id (1,1) and (1,5)
+        NOTE: The id represents position in the 2D matrix of the block
+
+    add_edge(e:Edge)
+        Adds edge to the world, edge added to the world will be visible on Playground window
+        NOTE: Edges are added with the key of the end node ids e.g. ((1,1),(1,5)) is the key for an edge between the node with id (1,1) and (1,5)
+
+    remove_edge(e:Edge)
+        Removes the edge from the world. The edge removed from the world will no longer be visible on the Playground window
+
+    getEdge(startNodeID:tuple,endNodeID:tuple)->Edge
+        Returns edge between startNodeID and endNodeID if there exists an edge else returns None
+        startNodeID:tuple - id of the node which has edge with the other node we're looking for
+        endNodeID:tuple - id of the node which has edge with the other node we're looking for
+    
+    getNodes()->dict
+        Returns the dictionary of all the nodes available in the world
+        Key of is the id of the node
+    
+    getNode(key:tuple)->Node
+        Returns node with given key, returns None if the node doesn't exists
+        key:tuple - id of the node we are looking for,  location in the grid or 2D array.
+
+    getBlock(id)->Block
+        Returns block at the given id.
+        id:tuple - Index Location in 2D matrix
+
+    to_dict()->dict
+        returns the object details with all attribute and values as dictionary
+
+
+    """
     def __init__(self,blocks_dimension:tuple,block_size:int,bottom_panel_size:int,grid_width:int = 1,background_color:tuple=(255,255,255),gird_color:tuple = ((232, 232, 232)),margin=10):
         """
-        A world with a grid what a nice place to live in!
-        blocks_dimension: dimension of the grid as (row,col)
-        bottom_panel_size: size of the bottom pannel containing controls(min value allowed is 180)
-        grid_width: width of the grid lines (default 1)
-        background_color: Color of the background on which the world is drawn default as white
-        block_size: size of each blocks (square)
-        grid_color: color of the grid, default gray
-        margin: margin between grid and corners(min value allowed is 10)
+        Parameters
+        ----------
+        blocks_dimension : tuple
+            blocks_dimension represents number of blocks that will be generated in the world
+            e.g (23,21) represents 23 rows and 21 columns
+
+        block_size : int
+            size of each block i.e. one side of the squared block
+        
+        bottom_panel_size:int
+            height of the bottom panel on which buttons and other UI element will be drawn
+            min allowed 180
+
+        grid_width:int
+            Width of the grids
+
+        background_color:tuple
+            A rgb value type of the form (r,g,b) to set color for the background of the world default (255,255,255)
+            
+        gird_color:tuple
+            A rgb value type of the form (r,g,b) to set color for the blocks border of the world default (232, 232, 232)
+
+        margin:int
+            Margin from the edges of the playground window, minimum value allowed is 10, default 10
+        
         """
         self._rows,self._cols = blocks_dimension
         self._background = background_color
-        self.available_blocks = None
+        self._available_blocks = None
         self._margin = max(margin,10)
         self._bottom_panel_size = bottom_panel_size
         self._screen_size = self._calc_screen_size(blocks_dimension,block_size,self._bottom_panel_size)
@@ -67,7 +143,7 @@ class World:
         Create grid of blocks
         """
         if self._blocksGenerated:
-            self.redraw_world()
+            self._redraw_world()
             return #if blocks are generated no regenerating required just redraw
         
         total_cols = self._cols
@@ -84,17 +160,17 @@ class World:
                 block.draw_block(self.win)
                 cols.append(block)
             if not self._blocksGenerated:
-                self.add_blocks(cols)
+                self._add_blocks(cols)
         self._blocksGenerated = True
-    def redraw_world(self):
+    def _redraw_world(self):
         """
         Redraws frames of the world
         all the element on the world must be redrawn
         """
-        if self.available_blocks is None:
+        if self._available_blocks is None:
             raise ValueError("Block are not available")
         else:
-            for row in self.available_blocks:
+            for row in self._available_blocks:
                 for block in row:
                     block.draw_block(self.win)
         #Draw edges
@@ -198,36 +274,51 @@ class World:
                 print("World: Error in updating the edge to world")
     
     def getEdge(self,startNodeID:tuple,endNodeID:tuple)->Edge:
+        """
+        Returns edge between startNodeID and endNodeID if there exists an edge else returns None
+        """
         key = tuple(sorted((startNodeID,endNodeID)))
-        return self._available_edges[key]
+        if key in self._available_edges:
+            return self._available_edges[key]
+        else:
+            return None
     def getNodes(self):
         """
         Returns available nodes in the world
         Dictionary of nodes id as key
         """
         return self._available_nodes
-    def getNode(self,key):
+    def getNode(self,key:tuple):
         """
         key is tuple of location in the grid or 2D array
         Returns the node
         """
-        return self._available_nodes[key]
-    def getBlock(self,id):
+        if key in self._available_nodes:
+            return self._available_nodes[key]
+        else:
+            return None
+    def getBlock(self,id:tuple):
         """
         Returns block associated with the id in the grid
+        id - location in 2D matrix
         """
         x,y = id
         try:
-            return self.available_blocks[x][y]
+            return self._available_blocks[x][y]
         except IndexError:
             raise IndexError("Provided id '{}' doesn't contain any block".format(id))
-    def add_blocks(self,col):
+    def getBlocks(self)->dict:
+        """
+        Returns all the available blocks in the world as dict
+        """
+        return self._available_blocks
+    def _add_blocks(self,col):
         """
         Method decides whether to add the row or not based on whether we have already added the node or not
         """
-        if self.available_blocks is None:
-            self.available_blocks = []
-        self.available_blocks.append(col)
+        if self._available_blocks is None:
+            self._available_blocks = []
+        self._available_blocks.append(col)
     def to_dict(self)->dict:
         """
         Returns world information as dictionary
@@ -245,8 +336,6 @@ class World:
             "available_nodes":{},
             "available_edges":{},
         }
-        """for blockKey in self.available_blocks:
-            world["available_blocks"][blockKey] = self.available_blocks[blockKey].to_dict()"""
         for edgeKey in self._available_edges:
             world["available_edges"][str(edgeKey)] = self._available_edges[edgeKey].to_dict()
         for nodeKey in self._available_nodes:
