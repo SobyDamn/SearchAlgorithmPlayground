@@ -151,7 +151,7 @@ class PlayGround:
         self._selectedNode = None #This is the node which is selected, will help in moving the nodes around
         #A Playground consist of a start node and a goal node always
         self._startNode = Node(self.world.getBlock((0,0)),'S',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True) if startNode is None else startNode
-        self._goalNode = Node(self.world.getBlock((len(self.world.available_blocks)-1,len(self.world.available_blocks[0])-1)),'G',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True) if goalNode is None else goalNode
+        self._goalNode = Node(self.world.getBlock((len(self.world.getBlocks())-1,len(self.world.getBlocks()[0])-1)),'G',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True) if goalNode is None else goalNode
         #Start and goal nodes are special nodes
         self._startNode._specialNodeStatus = True
         self._goalNode._specialNodeStatus = True
@@ -269,7 +269,7 @@ class PlayGround:
         Returns a Block class object if the click position pos collides with any block in the world
         """
 
-        blocks = self.world.available_blocks
+        blocks = self.world.getBlocks()
         if not blocks:
             raise ValueError("Blocks are not initialised")
         else:
@@ -328,7 +328,7 @@ class PlayGround:
                 if block.hasNode():
                     if self._selectedNode is None:
                         #Display infoText
-                        print(self.world.getNode(block.id))
+                        #print(self.world.getNode(block.id))
                         self._infoLabel.setValue(str(self.world.getNode(block.id)))
 
                     if self._selectedBlock is not None:
@@ -352,7 +352,7 @@ class PlayGround:
 
                 else:
                     self._infoLabel.setValue(str(block))
-                    print(block)
+                    #print(block)
                     if self._selectedBlock is not None:
                         self._selectedBlock.highlight(False) #Remove previous highlighted block
                         if block == self._selectedBlock:
@@ -565,7 +565,7 @@ class PlayGround:
                 f.write(json.dumps(self.to_dict(), indent=4))
                 infoText = "Work saved at: {}".format(file)
                 self._infoLabel.setValue(infoText)
-                print(infoText)
+                #print(infoText)
         except FileNotFoundError:
             #Directory not found
             os.mkdir(location) #Create the directory
