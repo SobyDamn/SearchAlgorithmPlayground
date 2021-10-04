@@ -4,22 +4,88 @@ import math
 class Block:
     """
     Block defines the world tiles
-    id of the Block is it's index in a 2D grid array starting from (0,0)
+    ...
+
+    Attribute
+    ---------
+    x:int
+        x coordinate in the window plane of the block
+
+    y:int
+        y coordinate in the window plane of the block
+
+    size:int
+        size of the block, denotes one side of the square block
+    
+    id:tuple
+        id represents position in the 2D matrix of the block
+        (x,y) where x is the row and y is the column
+    
+    pyObj
+        pygame rect object
+    
+    Methods
+    -------
+    draw_block(screen)
+        draws the block on pygame window
+        screen: pygame window
+
+    highlight(val:bool)
+        highlights block with highlist color
+        val:bool - true to enable highlight
+    
+    pos() -> tuple
+        returns the coordinate of the centre of the block on the pygame window
+    
+    setHasNode(val:bool)
+        sets the value for the flag _hasNode to represent that a block contains a node
+    
+    hasNode()->bool
+        returns true if block has node over it
+
+    to_dict()->dict
+        returns the object details with all attribute and values as dictionary
+
     """
-    def __init__(self,x,y,size,id:tuple,grid_color = (163, 175, 204),grid_width = 1):
+    def __init__(self,x:int,y:int,size:int,id:tuple,grid_color:tuple = (163, 175, 204),grid_width:int = 1):
+        """
+        Parameters
+        ---------
+        x:int
+            x coordinate in the window plane of the block
+
+        y:int
+            y coordinate in the window plane of the block
+
+        size:int
+            size of the block, denotes one side of the square block
+
+        id:tuple
+            id represents position in the 2D matrix of the block
+            (x,y) where x is the row and y is the column
+
+        gird_color:tuple
+            rgb color (r,g,b) value for the block boundary default ((163, 175, 204))
+
+        grid_width:int
+            width of the boundary default 1
+        """
         self.x = x
         self.y = y
         self.size = size
-        self.grid_color = grid_color
-        self.grid_width = grid_width
+        self._grid_color = grid_color
+        self._grid_width = grid_width
         self.id = id
         self._hasNode = False #Tells whether there is a node over the block
         self.pyObj = None #pyGame object
         self._isHighlighted = False #Highlighting the blocks
     def draw_block(self,screen):
-        self.pgObj = pygame.draw.rect(screen, self.grid_color, pygame.Rect((self.x, self.y, self.size,self.size)), self.grid_width)
+        """
+        Draws the block on the screen
+        """
+        self.pgObj = pygame.draw.rect(screen, self._grid_color, pygame.Rect((self.x, self.y, self.size,self.size)), self._grid_width)
         if self._isHighlighted:
-            pygame.draw.rect(screen,self.grid_color,pygame.Rect((self.x+2, self.y+2, self.size-4,self.size-4)))
+            pygame.draw.rect(screen,self._grid_color,pygame.Rect((self.x+2, self.y+2, self.size-4,self.size-4)))
     def highlight(self,val:bool):
         """
         Highlight the block
@@ -57,8 +123,8 @@ class Block:
             "y":self.y,
             "id":self.id,
             "size":self.size,
-            "gird_color":str(self.grid_color),
-            "grid_width": self.grid_width,
+            "gird_color":str(self._grid_color),
+            "grid_width": self._grid_width,
             "hasNode": self._hasNode
         }
         return block
@@ -66,18 +132,121 @@ class Block:
 COLOR_ACTIVE = pygame.Color('dodgerblue2')
 class Node(Block):
     """
-    A node is a type of block that is important to the world
-    """
-    def __init__(self, block:Block,label,colorOutline,colorNode,outlineWidth:int=2,specialNodeStatus:bool = False):
-        super().__init__(block.x,block.y,block.size,block.id,block.grid_color,block.grid_width)
+    A node is a type of block that is important to the world 
+    Node class inherits the Block class
+    ...
 
+    Attributes
+    ----------
+    x:int
+        x coordinate in the window plane of the block
+
+    y:int
+        y coordinate in the window plane of the block
+
+    size:int
+        size of the block, denotes one side of the square block
+    
+    id:tuple
+        id represents position in the 2D matrix of the block
+        (x,y) where x is the row and y is the column
+    
+    pyObj
+        pygame rect object
+    
+    pos:tuple
+        coordinate in pygame window for center of the node
+
+    Methods
+    -------
+    draw_block(screen)
+        draws the node on pygame window
+        screen: pygame window
+
+    highlight(val:bool)
+        highlights block with highlist color
+        val:bool - true to enable highlight
+    
+    pos() -> tuple
+        returns the coordinate of the centre of the block on the pygame window
+    
+    setHasNode(val:bool)
+        sets the value for the flag _hasNode to represent that a block contains a node
+    
+    hasNode()->bool
+        returns true if block has node over it
+
+    to_dict()->dict
+        returns the object details with all attribute and values as dictionary
+    
+    set_label(label:str,screen)
+        sets the label on the node
+        screen - a pygame window
+        label:str - a string value that'll be displayed on node
+
+    selected(val:bool)
+        sets isSelected flag value
+
+    set_color(color:tuple)
+        sets the color of the node
+        color:tuple - A rgb value in the form (r,g,b)
+    
+    get_label()->str
+        returns value of label of the node
+
+    setLocation(block:Block)
+        sets the location to the new block
+        block:Block - A Block class object
+        NOTE: Location for nodes are defined by the block they resides on
+
+    handle_event(world:World,event,infoLabel)
+        Internal method to handle the pygame events
+    
+    add_neighbour(node:Node)
+        Adds the given node as neighbouring node if it's not already a neighbouring node, should be used when it has an edge with the given node
+        node:Node - A Node class object
+
+    remove_neighbour(node:Node)
+        Removes the given node from neighbouring node if it's in neighbouring node
+        node:Node - A Node class object
+    
+    get_neighbour()->list
+        Returns list of neighbouring nodes(Node class objects) which is sorted in order with their label
+    
+
+    """
+    def __init__(self, block:Block,label:str,colorOutline:tuple,colorNode:tuple,outlineWidth:int=2,specialNodeStatus:bool = False):
+        super().__init__(block.x,block.y,block.size,block.id,block.grid_color,block.grid_width)
+        """
+        Parameters
+        -----------
+        block:Block
+            A Block class object on which the node will be drawn
+
+        label:str
+            Label of the node
+        
+        colorOutline:tuple
+            A rgb value of the form (r,g,b) represents outline color of the node
+
+        colorNode:tuple
+            A rgb value of the form (r,g,b) represents color of the node
+
+        outlineWidth:int
+            Width of the outline of the node default 2
+
+        specialNodeStatus:bool
+            sets whether the node is special default is False
+            NOTE: A special node must be present on playground all time, i.e. delete is not allowed
+
+        """
         self._label = label
         self._colorOutline = colorOutline
         self._colorNode = colorNode
         self._defaultOutlineColor = colorOutline
         self.pos = block.pos()
         self._font = pygame.font.Font(None, int(self.size*0.80))
-        self.txt_surface = self._font.render(label, True, self._colorOutline)
+        self._txt_surface = self._font.render(label, True, self._colorOutline)
         self._outlineWidth = outlineWidth
         self._oldLabel = None #Label before editing happened
         self._active = False #A node is active when it's selected
@@ -87,11 +256,14 @@ class Node(Block):
         self._neighbourNodes = [] #Neighbour nodes that are connected with an edge
 
     def draw_block(self,screen):
+        """
+        Draws the node on the screen
+        """
         pygame.draw.circle(screen, self._colorNode, self.pos,int(self.size/2))
         outlineColor = SELECTED_NODE_COLOR if self._isSelected and not self._active else self._colorOutline
         self.pgObj = pygame.draw.circle(screen, outlineColor, self.pos,int(self.size/2),self._outlineWidth)
         self.set_label(self._label,screen)
-    def set_label(self,label,screen):
+    def set_label(self,label:str,screen):
         """
         Set the label for the node
         """
@@ -113,7 +285,7 @@ class Node(Block):
         """
         if not self._specialNodeStatus:
             self._colorNode = color
-    def get_label(self):
+    def get_label(self)->str:
         return self._label
     def setLocation(self,block:Block):
         """
@@ -174,7 +346,7 @@ class Node(Block):
                 else:
                     self._label += event.unicode
                 # Re-render the text.
-                self.txt_surface = self._font.render(self._label, True, self._colorOutline)
+                self._txt_surface = self._font.render(self._label, True, self._colorOutline)
         return True
     def _saveNewLabel(self,oldLabel,world,infoLabel):
             """
@@ -285,14 +457,56 @@ class Node(Block):
 
 
 class Edge:
+    """
+    An edge class represents an edge between 2 nodes
+    
+    Methods
+    -------
+    handle_event(world:World,event,infoLabel)
+        Internal method to handle the pygame events
+
+    set_color(color:tuple)
+        Sets color of the edge
+        color:tuple - A rgb value of the form (r,g,b)
+    
+    collidePoint(clickPoint,offeset=5)
+        Returns true if the given click point is inside the offset value on edge
+
+    draw_edge(screen)
+        Draws edge on the screen
+        screen - A pygame window
+
+    getNodes()->tuple
+        Returns the pair of node which the edge is connecting
+
+    get_weight()->int
+        Returns the weight of the edge
+
+    to_dict()->dict
+        Returns the object details its attributes and value as dictionary
+
+    """
     def __init__(self,nodeStart:Node,nodeEnd:Node,isWeighted:bool = False,weight = 0,edgeColor = NODE_BORDER_COLOR,edgeWidth = 3):
         """
-        An edge class represents an edge between 2 nodes
-        nodeStart and nodeEnd are the two nodes between which the edge will be generated
-        isWeighted: whether the edge is weighted or not
-        A weighted edge is allowed to have weight which can be edited
-        weight: weight of the edge
-        NOTE: Make sure world is informed if an edge is created
+        Parameters
+        ----------
+        nodeStart:Node
+            A Node class object which represents the starting node of the edge
+
+        nodeEnd:Node
+            A Node class object which represents the ending node of the edge
+
+        isWeighted:bool
+            Whether the edge drawn between the node has weight or not, default False
+
+        weight:int
+            Wieght of the edge, default 0
+
+        edgeColor:tuple
+            A rgb value of the form (r,g,b) which represents the color of the edge, default value _NODE_BORDER_COLOR_
+        
+        edgeWidth:int
+            Width of the edge, default 3
         """
         self._edgeColor = edgeColor
         self._defaultEdgeColor = edgeColor
@@ -308,7 +522,7 @@ class Edge:
         self._nodeEnd.add_neighbour(self._nodeStart) #Add neighbour
 
         self._font = pygame.font.Font(None, int(min(30,self._nodeStart.size*0.80)))
-        self.txt_surface = self._font.render(self._weightLabel, True, self._edgeColor)
+        self._txt_surface = self._font.render(self._weightLabel, True, self._edgeColor)
 
         self._active = False #An edge is active if selected
         self._oldWeight = None
@@ -364,7 +578,7 @@ class Edge:
                 else:
                     self._weightLabel += event.unicode
                 # Re-render the text.
-                self.txt_surface = self._font.render(self._weightLabel, True, self._edgeColor)
+                self._txt_surface = self._font.render(self._weightLabel, True, self._edgeColor)
         return True
     def _saveNewLabel(self,oldLabel,infoLabel):
         """
