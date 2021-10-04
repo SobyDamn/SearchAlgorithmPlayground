@@ -21,7 +21,7 @@ class Block:
         id represents position in the 2D matrix of the block
         (x,y) where x is the row and y is the column
     
-    pyObj
+    pgObj
         pygame rect object
     
     Methods
@@ -77,7 +77,7 @@ class Block:
         self._grid_width = grid_width
         self.id = id
         self._hasNode = False #Tells whether there is a node over the block
-        self.pyObj = None #pyGame object
+        self.pgObj = None #pyGame object
         self._isHighlighted = False #Highlighting the blocks
     def draw_block(self,screen):
         """
@@ -151,7 +151,7 @@ class Node(Block):
         id represents position in the 2D matrix of the block
         (x,y) where x is the row and y is the column
     
-    pyObj
+    pgObj
         pygame rect object
     
     pos:tuple
@@ -216,7 +216,7 @@ class Node(Block):
 
     """
     def __init__(self, block:Block,label:str,colorOutline:tuple,colorNode:tuple,outlineWidth:int=2,specialNodeStatus:bool = False):
-        super().__init__(block.x,block.y,block.size,block.id,block.grid_color,block.grid_width)
+        super().__init__(block.x,block.y,block.size,block.id,block._grid_color,block._grid_width)
         """
         Parameters
         -----------
@@ -459,6 +459,12 @@ class Node(Block):
 class Edge:
     """
     An edge class represents an edge between 2 nodes
+    ...
+
+    Attribute
+    ---------
+    pgObj
+        A pygame rect object
     
     Methods
     -------
@@ -526,6 +532,7 @@ class Edge:
 
         self._active = False #An edge is active if selected
         self._oldWeight = None
+        self.pgObj = None
     
     def handle_event(self, world,event,infoLabel):
         """
