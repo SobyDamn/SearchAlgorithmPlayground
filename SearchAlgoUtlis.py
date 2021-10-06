@@ -1,4 +1,4 @@
-from Blocks import Node
+from Node import *
 
 def MoveGen(N:Node,AvailableNodes:list)->list:
     """

@@ -20,6 +20,8 @@ import pygame
 import json
 from World import World
 from Blocks import *
+from Node import *
+from Edge import *
 from config import *
 from UI import *
 
@@ -103,7 +105,7 @@ class PlayGround:
 
     to_dict()->dict
         Returns Playrgound attributes as dictionary
-        
+
     setTitle(title:str)
         Sets the title of the playground window
     

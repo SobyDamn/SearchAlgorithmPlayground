@@ -23,7 +23,7 @@
                 "block_id": "(4, 7)",
                 "label": "A",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(150, 240)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
@@ -32,8 +32,17 @@
                 "block_id": "(5, 13)",
                 "label": "B",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(180, 420)",
+                "outlineWidth": 2,
+                "specialNodeStatus": false
+            },
+            "(10, 8)": {
+                "block_id": "(10, 8)",
+                "label": "C",
+                "colorOutline": "(0, 0, 0)",
+                "colorNode": "(232, 232, 232)",
+                "pos": "(330, 270)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
             },
@@ -41,8 +50,17 @@
                 "block_id": "(9, 11)",
                 "label": "D",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(300, 360)",
+                "outlineWidth": 2,
+                "specialNodeStatus": false
+            },
+            "(7, 6)": {
+                "block_id": "(7, 6)",
+                "label": "E",
+                "colorOutline": "(0, 0, 0)",
+                "colorNode": "(232, 232, 232)",
+                "pos": "(240, 210)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
             },
@@ -50,7 +68,7 @@
                 "block_id": "(20, 12)",
                 "label": "F",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(630, 390)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
@@ -59,7 +77,7 @@
                 "block_id": "(16, 10)",
                 "label": "H",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(510, 330)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
@@ -77,7 +95,7 @@
                 "block_id": "(12, 11)",
                 "label": "K",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(390, 360)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
@@ -86,7 +104,7 @@
                 "block_id": "(7, 11)",
                 "label": "L",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(240, 360)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
@@ -95,7 +113,7 @@
                 "block_id": "(12, 16)",
                 "label": "M",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(390, 510)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
@@ -104,7 +122,7 @@
                 "block_id": "(8, 17)",
                 "label": "N",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(270, 540)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
@@ -113,7 +131,7 @@
                 "block_id": "(18, 3)",
                 "label": "O",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(570, 120)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
@@ -122,7 +140,7 @@
                 "block_id": "(15, 13)",
                 "label": "P",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(480, 420)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
@@ -131,7 +149,7 @@
                 "block_id": "(20, 5)",
                 "label": "Q",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(630, 180)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
@@ -140,7 +158,7 @@
                 "block_id": "(1, 15)",
                 "label": "R",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(60, 480)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
@@ -158,80 +176,8 @@
                 "block_id": "(16, 6)",
                 "label": "J",
                 "colorOutline": "(0, 0, 0)",
-                "colorNode": "(136, 137, 219)",
+                "colorNode": "(232, 232, 232)",
                 "pos": "(510, 210)",
-                "outlineWidth": 2,
-                "specialNodeStatus": false
-            },
-            "(7, 6)": {
-                "block_id": "(7, 6)",
-                "label": "E",
-                "colorOutline": "(0, 0, 0)",
-                "colorNode": "(217, 210, 74)",
-                "pos": "(240, 210)",
-                "outlineWidth": 2,
-                "specialNodeStatus": false
-            },
-            "(10, 8)": {
-                "block_id": "(10, 8)",
-                "label": "C",
-                "colorOutline": "(0, 0, 0)",
-                "colorNode": "(136, 137, 219)",
-                "pos": "(330, 270)",
-                "outlineWidth": 2,
-                "specialNodeStatus": false
-            },
-            "(14, 19)": {
-                "block_id": "(14, 19)",
-                "label": "T",
-                "colorOutline": "(0, 0, 0)",
-                "colorNode": "(232, 232, 232)",
-                "pos": "(450, 600)",
-                "outlineWidth": 2,
-                "specialNodeStatus": false
-            },
-            "(18, 18)": {
-                "block_id": "(18, 18)",
-                "label": "U",
-                "colorOutline": "(0, 0, 0)",
-                "colorNode": "(232, 232, 232)",
-                "pos": "(570, 570)",
-                "outlineWidth": 2,
-                "specialNodeStatus": false
-            },
-            "(20, 17)": {
-                "block_id": "(20, 17)",
-                "label": "V",
-                "colorOutline": "(0, 0, 0)",
-                "colorNode": "(232, 232, 232)",
-                "pos": "(630, 540)",
-                "outlineWidth": 2,
-                "specialNodeStatus": false
-            },
-            "(19, 16)": {
-                "block_id": "(19, 16)",
-                "label": "W",
-                "colorOutline": "(0, 0, 0)",
-                "colorNode": "(232, 232, 232)",
-                "pos": "(600, 510)",
-                "outlineWidth": 2,
-                "specialNodeStatus": false
-            },
-            "(21, 15)": {
-                "block_id": "(21, 15)",
-                "label": "X",
-                "colorOutline": "(0, 0, 0)",
-                "colorNode": "(232, 232, 232)",
-                "pos": "(660, 480)",
-                "outlineWidth": 2,
-                "specialNodeStatus": false
-            },
-            "(16, 15)": {
-                "block_id": "(16, 15)",
-                "label": "Y",
-                "colorOutline": "(0, 0, 0)",
-                "colorNode": "(232, 232, 232)",
-                "pos": "(510, 480)",
                 "outlineWidth": 2,
                 "specialNodeStatus": false
             }
@@ -240,6 +186,14 @@
             "((16, 10), (20, 12))": {
                 "nodeStart": "(16, 10)",
                 "nodeEnd": "(20, 12)",
+                "edgeColor": "(0, 0, 0)",
+                "edgeWidth": 3,
+                "weight": 0,
+                "isWeighted": false
+            },
+            "((7, 6), (10, 8))": {
+                "nodeStart": "(7, 6)",
+                "nodeEnd": "(10, 8)",
                 "edgeColor": "(0, 0, 0)",
                 "edgeWidth": 3,
                 "weight": 0,
@@ -309,6 +263,22 @@
                 "weight": 0,
                 "isWeighted": false
             },
+            "((4, 7), (7, 6))": {
+                "nodeStart": "(4, 7)",
+                "nodeEnd": "(7, 6)",
+                "edgeColor": "(0, 0, 0)",
+                "edgeWidth": 3,
+                "weight": 0,
+                "isWeighted": false
+            },
+            "((1, 11), (10, 8))": {
+                "nodeStart": "(1, 11)",
+                "nodeEnd": "(10, 8)",
+                "edgeColor": "(0, 0, 0)",
+                "edgeWidth": 3,
+                "weight": 0,
+                "isWeighted": false
+            },
             "((1, 11), (5, 13))": {
                 "nodeStart": "(1, 11)",
                 "nodeEnd": "(5, 13)",
@@ -320,6 +290,14 @@
             "((1, 11), (7, 11))": {
                 "nodeStart": "(1, 11)",
                 "nodeEnd": "(7, 11)",
+                "edgeColor": "(0, 0, 0)",
+                "edgeWidth": 3,
+                "weight": 0,
+                "isWeighted": false
+            },
+            "((10, 8), (18, 3))": {
+                "nodeStart": "(18, 3)",
+                "nodeEnd": "(10, 8)",
                 "edgeColor": "(0, 0, 0)",
                 "edgeWidth": 3,
                 "weight": 0,
@@ -373,6 +351,22 @@
                 "weight": 0,
                 "isWeighted": false
             },
+            "((7, 6), (18, 3))": {
+                "nodeStart": "(7, 6)",
+                "nodeEnd": "(18, 3)",
+                "edgeColor": "(0, 0, 0)",
+                "edgeWidth": 3,
+                "weight": 0,
+                "isWeighted": false
+            },
+            "((1, 15), (8, 17))": {
+                "nodeStart": "(1, 15)",
+                "nodeEnd": "(8, 17)",
+                "edgeColor": "(0, 0, 0)",
+                "edgeWidth": 3,
+                "weight": 0,
+                "isWeighted": false
+            },
             "((1, 11), (1, 15))": {
                 "nodeStart": "(1, 11)",
                 "nodeEnd": "(1, 15)",
@@ -392,6 +386,14 @@
             "((16, 10), (17, 8))": {
                 "nodeStart": "(17, 8)",
                 "nodeEnd": "(16, 10)",
+                "edgeColor": "(0, 0, 0)",
+                "edgeWidth": 3,
+                "weight": 0,
+                "isWeighted": false
+            },
+            "((10, 8), (16, 6))": {
+                "nodeStart": "(10, 8)",
+                "nodeEnd": "(16, 6)",
                 "edgeColor": "(0, 0, 0)",
                 "edgeWidth": 3,
                 "weight": 0,
@@ -424,7 +426,7 @@
             "((16, 6), (17, 8))": {
                 "nodeStart": "(16, 6)",
                 "nodeEnd": "(17, 8)",
-                "edgeColor": "(136, 137, 219)",
+                "edgeColor": "(0, 0, 0)",
                 "edgeWidth": 3,
                 "weight": 0,
                 "isWeighted": false
@@ -461,46 +463,6 @@
                 "weight": 0,
                 "isWeighted": false
             },
-            "((4, 7), (7, 6))": {
-                "nodeStart": "(4, 7)",
-                "nodeEnd": "(7, 6)",
-                "edgeColor": "(0, 0, 0)",
-                "edgeWidth": 3,
-                "weight": 0,
-                "isWeighted": false
-            },
-            "((7, 6), (18, 3))": {
-                "nodeStart": "(7, 6)",
-                "nodeEnd": "(18, 3)",
-                "edgeColor": "(0, 0, 0)",
-                "edgeWidth": 3,
-                "weight": 0,
-                "isWeighted": false
-            },
-            "((9, 11), (10, 8))": {
-                "nodeStart": "(10, 8)",
-                "nodeEnd": "(9, 11)",
-                "edgeColor": "(0, 0, 0)",
-                "edgeWidth": 3,
-                "weight": 0,
-                "isWeighted": false
-            },
-            "((7, 6), (10, 8))": {
-                "nodeStart": "(7, 6)",
-                "nodeEnd": "(10, 8)",
-                "edgeColor": "(0, 0, 0)",
-                "edgeWidth": 3,
-                "weight": 0,
-                "isWeighted": false
-            },
-            "((10, 8), (16, 6))": {
-                "nodeStart": "(10, 8)",
-                "nodeEnd": "(16, 6)",
-                "edgeColor": "(136, 137, 219)",
-                "edgeWidth": 3,
-                "weight": 0,
-                "isWeighted": false
-            },
             "((7, 11), (10, 8))": {
                 "nodeStart": "(10, 8)",
                 "nodeEnd": "(7, 11)",
@@ -509,33 +471,9 @@
                 "weight": 0,
                 "isWeighted": false
             },
-            "((10, 8), (18, 3))": {
-                "nodeStart": "(18, 3)",
-                "nodeEnd": "(10, 8)",
-                "edgeColor": "(0, 0, 0)",
-                "edgeWidth": 3,
-                "weight": 0,
-                "isWeighted": false
-            },
-            "((1, 11), (10, 8))": {
-                "nodeStart": "(1, 11)",
-                "nodeEnd": "(10, 8)",
-                "edgeColor": "(136, 137, 219)",
-                "edgeWidth": 3,
-                "weight": 0,
-                "isWeighted": false
-            },
-            "((1, 15), (8, 17))": {
-                "nodeStart": "(1, 15)",
-                "nodeEnd": "(8, 17)",
-                "edgeColor": "(0, 0, 0)",
-                "edgeWidth": 3,
-                "weight": 0,
-                "isWeighted": false
-            },
-            "((14, 19), (18, 18))": {
-                "nodeStart": "(14, 19)",
-                "nodeEnd": "(18, 18)",
+            "((9, 11), (10, 8))": {
+                "nodeStart": "(10, 8)",
+                "nodeEnd": "(9, 11)",
                 "edgeColor": "(0, 0, 0)",
                 "edgeWidth": 3,
                 "weight": 0,
