@@ -605,7 +605,9 @@ class PlayGround:
         Start the playground to play with
         """
         clock = pygame.time.Clock()
-        icon = pygame.image.load('img/icon.png')
+        cwd = os.path.dirname(os.path.realpath(__file__))
+        icon_path = os.path.join(cwd,'img/icon.png')
+        icon = pygame.image.load(icon_path)
         pygame.display.set_icon(icon)
         self.__running = True
         print("Search Algorithm PlayGround Tool created by Sritabh Priyadarshi using pygame.\nVisit https://github.com/SobyDamn/SearchAlgorithmPlayground for more info.")
