@@ -1,4 +1,4 @@
-from Node import *
+from SearchAlgoPlayground import Node
 
 def MoveGen(N:Node,AvailableNodes:list)->list:
     """

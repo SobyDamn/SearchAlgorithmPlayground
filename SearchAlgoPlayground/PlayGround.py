@@ -18,12 +18,12 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 import pygame 
 import json
-from World import World
-from Blocks import *
-from Node import *
-from Edge import *
-from config import *
-from UI import *
+from .World import World
+from .Blocks import Block
+from .Node import Node
+from .Edge import Edge
+from .config import *
+from .UI import *
 
 
 class PlayGround:

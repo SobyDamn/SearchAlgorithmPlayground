@@ -1,7 +1,7 @@
 import pygame
-from Blocks import *
-from Node import *
-from Edge import *
+from .Blocks import Block
+from .Node import Node
+from .Edge import Edge
 
 
 class World:

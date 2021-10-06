@@ -5,6 +5,8 @@ Search Algorithm Playground is a python package to work with graph related algor
 The tool provides an user interface to work with the graphs and visualise the effect of algorithm on the graph while giving the freedom to programmer to make adjustments in the way they wants.
 It also provides a way to save the graph in json format hence enabling the programmers to share the files and use different algorithm on same graph with ease.
 
+```Add GIF```
+
 > Currently supports only undirected graphs 
 
 <br>

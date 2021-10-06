@@ -1,4 +1,4 @@
-from Node import *
+from .Node import *
 import pygame
 import math
 

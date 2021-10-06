@@ -1,7 +1,7 @@
 import pygame
-from config import NODE_BORDER_COLOR,SELECTED_NODE_COLOR
+from .config import NODE_BORDER_COLOR,SELECTED_NODE_COLOR
 import math
-from Blocks import Block
+from .Blocks import Block
 
 
 COLOR_ACTIVE = pygame.Color('dodgerblue2')
