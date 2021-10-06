@@ -36,7 +36,7 @@ It also provides a way to save the graph in json format hence enabling the progr
 - [World](#world)
 - [Block](#block)
 - [Node](#node)
-- [Edge](#node)
+- [Edge](#edge)
 
 ## PlayGround
 ---
