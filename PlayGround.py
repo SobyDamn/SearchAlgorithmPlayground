@@ -5,11 +5,11 @@ Search Algorithm Playground
 Developer - Sritabh Priyadarshi(sobydanny@gmail.com)
 
 About
-Search Algorithm Playground is a python library to work with graph related algorithm, mainly dealing with different Artificial Intelligence Search alorithms.
+Search Algorithm Playground is a python package to work with graph related algorithm, mainly dealing with different Artificial Intelligence Search alorithms.
 The tool provides an user interface to work with the graphs and visualise the effect of algorithm on the graph while giving the freedom to programmer to make adjustments in the way they wants.
 It also provides a way to save the graph in json format hence enabling the programmers to share the files and use different algorithm on same graph with ease.
 
-Current Support - Only undirected graphs
+Currently supports only undirected graphs
 """
 
 
@@ -103,6 +103,7 @@ class PlayGround:
 
     to_dict()->dict
         Returns Playrgound attributes as dictionary
+        
     setTitle(title:str)
         Sets the title of the playground window
     
