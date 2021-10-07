@@ -115,7 +115,7 @@ class PlayGround:
 
 
     """
-    def __init__(self,world:World=None,saveToFile:str=None,weighted = False,startNode:Node=None,goalNode:Node=None,blocks_dimension = BLOCKS_DIMENSION,block_size = BLOCK_SIZE):
+    def __init__(self,world:World=None,saveToFile:str=None,weighted = False,startNode:Node=None,goalNode:Node=None,blocks_dimension = config["BLOCKS_DIMENSION"],block_size = config["BLOCK_SIZE"]):
         """
         Parameter
         ---------
@@ -147,14 +147,14 @@ class PlayGround:
             size of each block i.e. one side of the squared block (default 30)
         """
         pygame.init() #Initialise the pygame
-        pygame.display.set_caption(TITLE) #set the title
-        self.world = World(blocks_dimension,block_size,BOTTOM_PANEL_HEIGHT,GRID_WIDTH,BACKGROUND_COLOR,GRID_COLOR,MARGIN) if world is None else world
+        pygame.display.set_caption(config["TITLE"]) #set the title
+        self.world = World(blocks_dimension,block_size,config["BOTTOM_PANEL_HEIGHT"],config["GRID_WIDTH"],config["BACKGROUND_COLOR"],config["GRID_COLOR"],config["MARGIN"]) if world is None else world
         self._isClicked = False
         self._running = False
         self._selectedNode = None #This is the node which is selected, will help in moving the nodes around
         #A Playground consist of a start node and a goal node always
-        self._startNode = Node(self.world.getBlock((0,0)),'S',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True) if startNode is None else startNode
-        self._goalNode = Node(self.world.getBlock((len(self.world.getBlocks())-1,len(self.world.getBlocks()[0])-1)),'G',SPECIAL_NODE_BORDER_COLOR,SPECIAL_NODE_COLOR,3,True) if goalNode is None else goalNode
+        self._startNode = Node(self.world.getBlock((0,0)),'S',config["SPECIAL_NODE_BORDER_COLOR"],config["SPECIAL_NODE_COLOR"],3,True) if startNode is None else startNode
+        self._goalNode = Node(self.world.getBlock((len(self.world.getBlocks())-1,len(self.world.getBlocks()[0])-1)),'G',config["SPECIAL_NODE_BORDER_COLOR"],config["SPECIAL_NODE_COLOR"],3,True) if goalNode is None else goalNode
         #Start and goal nodes are special nodes
         self._startNode._specialNodeStatus = True
         self._goalNode._specialNodeStatus = True
@@ -182,7 +182,7 @@ class PlayGround:
 
         Returns a playground object initialised from the values given in filename
         """
-        file = MY_WORK_DIR+filename
+        file = config["MY_WORK_DIR"]+filename
         pygame.init()
         try:
             with open(file,'r') as f:
@@ -201,19 +201,19 @@ class PlayGround:
         """
         Generates UI elements for the controlls and info
         """
-        height = int(BOTTOM_PANEL_HEIGHT/3)
+        height = int(config["BOTTOM_PANEL_HEIGHT"]/3)
         width = int(height*2)
         pos_x = int((self.world.win.get_size()[0]-width)/2)
-        pos_y = (self.world.win.get_size()[1]-int((BOTTOM_PANEL_HEIGHT)/2))
-        self.startButton = Button((pos_x,pos_y),(width,height),BUTTON_COLOR_PRIMARY,GRAY,"Start")
+        pos_y = (self.world.win.get_size()[1]-int((config["BOTTOM_PANEL_HEIGHT"])/2))
+        self.startButton = Button((pos_x,pos_y),(width,height),config["BUTTON_COLOR_PRIMARY"],GRAY,"Start")
         label_size = 15
         pos_x += int(width/2)
-        self._infoLabel = Label(INFO_LABEL_COLOR,label_size,(pos_x,int(pos_y-label_size*1.5)))
+        self._infoLabel = Label(config["INFO_LABEL_COLOR"],label_size,(pos_x,int(pos_y-label_size*1.5)))
         ##Secondary buttons
-        height = int(BOTTOM_PANEL_HEIGHT/5.5)
+        height = int(config["BOTTOM_PANEL_HEIGHT"]/5.5)
         width = int(height*3)
         pos_x = int((width)/2)
-        self._saveWorkButton = Button((pos_x,pos_y),(width,height),BUTTON_COLOR_SECONDARY,GRAY,"Save work",0.7,0)
+        self._saveWorkButton = Button((pos_x,pos_y),(width,height),config["BUTTON_COLOR_SECONDARY"],GRAY,"Save work",0.7,0)
 
 
 
@@ -359,7 +359,7 @@ class PlayGround:
                     if self._selectedBlock is not None:
                         self._selectedBlock.highlight(False) #Remove previous highlighted block
                         if block == self._selectedBlock:
-                            self._selectedNode = Node(block,self._genLabel(),NODE_BORDER_COLOR,NODE_COLOR)
+                            self._selectedNode = Node(block,self._genLabel(),config["NODE_BORDER_COLOR"],config["NODE_COLOR"])
                             self.world.add_node(self._selectedNode) #Add the new node to world
                             self._selectedNode.selected(False)
                             self._selectedBlock = None
@@ -560,7 +560,7 @@ class PlayGround:
             filename = "Graph "+now.strftime("%d-%m-%Y %H:%M:%S")+".json" #Save data with current date and time
         elif filename is None:
             filename = self._saveToFile
-        location = os.path.join(os.getcwd(),MY_WORK_DIR)
+        location = os.path.join(os.getcwd(),config["MY_WORK_DIR"])
         file = os.path.join(location, filename)
         try:
             with open(file,'w') as f:

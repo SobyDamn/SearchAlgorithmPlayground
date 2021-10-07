@@ -1,10 +1,9 @@
 import pygame
-from .config import NODE_BORDER_COLOR,SELECTED_NODE_COLOR
-import math
+from .config import *
 from .Blocks import Block
 
 
-COLOR_ACTIVE = pygame.Color('dodgerblue2')
+COLOR_ACTIVE = config["ELEMENT_ACTIVE_COLOR"]
 class Node(Block):
     """
     A node is a type of block that is important to the world 
@@ -135,7 +134,7 @@ class Node(Block):
         Draws the node on the screen
         """
         pygame.draw.circle(screen, self._colorNode, self.pos,int(self.size/2))
-        outlineColor = SELECTED_NODE_COLOR if self._isSelected and not self._active else self._colorOutline
+        outlineColor = config["SELECTED_NODE_COLOR"] if self._isSelected and not self._active else self._colorOutline
         self.pgObj = pygame.draw.circle(screen, outlineColor, self.pos,int(self.size/2),self._outlineWidth)
         self.set_label(self._label,screen)
     def set_label(self,label:str,screen):

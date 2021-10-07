@@ -1,8 +1,9 @@
 from .Node import *
 import pygame
+from .config import config
 import math
 
-COLOR_ACTIVE = pygame.Color('dodgerblue2')
+COLOR_ACTIVE = config["ELEMENT_ACTIVE_COLOR"]
 class Edge:
     """
     An edge class represents an edge between 2 nodes
@@ -39,7 +40,7 @@ class Edge:
         Returns the object details its attributes and value as dictionary
 
     """
-    def __init__(self,nodeStart:Node,nodeEnd:Node,isWeighted:bool = False,weight = 0,edgeColor = NODE_BORDER_COLOR,edgeWidth = 3):
+    def __init__(self,nodeStart:Node,nodeEnd:Node,isWeighted:bool = False,weight = 0,edgeColor = config["NODE_BORDER_COLOR"],edgeWidth = 3):
         """
         Parameters
         ----------
@@ -56,7 +57,7 @@ class Edge:
             Wieght of the edge, default 0
 
         edgeColor:tuple
-            A rgb value of the form (r,g,b) which represents the color of the edge, default value _NODE_BORDER_COLOR_
+            A rgb value of the form (r,g,b) which represents the color of the edge, default value `NODE_BORDER_COLOR`
         
         edgeWidth:int
             Width of the edge, default 3

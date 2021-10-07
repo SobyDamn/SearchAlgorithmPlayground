@@ -4,3 +4,4 @@ from .Node import Node
 from .PlayGround import PlayGround
 from .World import World
 from .UI import *
+from .config import config

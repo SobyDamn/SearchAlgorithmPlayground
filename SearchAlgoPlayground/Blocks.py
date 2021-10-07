@@ -1,6 +1,4 @@
 import pygame
-from .config import NODE_BORDER_COLOR,SELECTED_NODE_COLOR
-import math
 class Block:
     """
     Block defines the world tiles. Blocks represents the world in 2-Dimensional array format.
