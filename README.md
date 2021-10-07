@@ -11,7 +11,8 @@ It also provides a way to save the graph in json format hence enabling the progr
 
 <br>
 
-[![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0) [![Generic badge](https://img.shields.io/badge/python-3.6+-<COLOR>.svg)](https://www.python.org/downloads/)
+[![License: MPL 2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0) [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+
 
 <br>
 
@@ -40,122 +41,148 @@ It also provides a way to save the graph in json format hence enabling the progr
 - [Node](#node)
 - [Edge](#edge)
 
+<br>
+
 ## PlayGround
----
+
 PlayGround class represents the ground which which consists of the world of blocks on which the graph is displayed or modified. 
 PlayGround class provide controls on the elements in the world like Edge and Nodes.
 
-    Attribute
-    ---------
-    world: World
-        World class object on which playground is available
 
-    Parameter
-    ---------
-    world : World
-        a World class object on which the nodes/edges are drawn
-        The screen size of the world determines the screensize of the playground window (default None).
+### Parameters
+[world](#world--world), [saveToFile](#savetofile--str), [weighted](#weighted--bool), [startNode](#startnode--node), [goalNode](#goalnode--node), [block_dimensions](#blocks_dimension--tuple), [block_size](#block_size--int)
+<br>
 
-    saveToFile : str
-        name of the file with which the world(or graph) will be saved(file will be saved in json format) when the 'Save Work' button is pressed (default None).
+#### **_world : World_**
+A World class object on which the nodes/edges are drawn
+The screen size of the world determines the screensize of the playground window (default None).
 
-    weighted : bool
-        whether the edges that will be drawn on playround is weighted or not (default False).
+#### **_saveToFile : str_**
+name of the file with which the world(or graph) will be saved(file will be saved in json format) when the 'Save Work' button is pressed (default None).
 
-    startNode : Node
-        a node object of Node class which will be set as start node for the graph.
-        NOTE: startNode is a special node which cannot be deleted from the playground(default None)
-        if no value is provided then top left block contains the start node 'S'
+#### **_weighted : bool_**
+whether the edges that will be drawn on playround is weighted or not (default False).
 
-    goalNode : Node
-        a node object of Node class which will be set as start node for the graph.
-        NOTE: goalNode is a special node which cannot be deleted from the playground(default None)
-        if no value is provided then bottom right block contains the goal node 'G'
+#### **_startNode : Node_**
+a node object of Node class which will be set as start node for the graph.
+if no value is provided then top left block contains the start node 'S'
+<br>
+```NOTE: startNode is a special node which cannot be deleted from the playground(default None)```
 
-    blocks_dimension : tuple
-        blocks_dimension represents number of blocks that will be generated in the world if world object is given as None(default (23,21))
-        e.g (23,21) represents 23 rows and 21 columns
+#### **_goalNode : Node_**
+a node object of Node class which will be set as start node for the graph.
+if no value is provided then bottom right block contains the goal node 'G'<br>
+```NOTE: goalNode is a special node which cannot be deleted from the playground(default None)```
 
-    block_size : int
-        size of each block i.e. one side of the squared block (default 30)
+#### **_blocks_dimension : tuple_**
+blocks_dimension represents number of blocks that will be generated in the world if world object is given as None(default (23,21))
+<br>
+e.g (23,21) represents 23 rows and 21 columns
+
+#### **_block_size : int_**
+size of each block i.e. one side of the squared block (default 30)
+
+### Attribute
+[world](#world-world)
+
+#### **_world: World_**
+World class object on which playground is available
         
-    Methods
-    -------
-    fromfilename(filename:str)
-        a classmethod which returns PlayGround class object initialised from values given in filename and returns the object
-        filename: a json file name to which previously a playround is saved into
+### Methods
+[fromfilename()](#fromfilenamefilenamestr), [onStart()](#onstartfunc), [delay()](#delaymillisecondint), [MoveGen()](#movegennodenode-list), [get_edge()](#get_edgenodestartnodenodeendnode-edge), [getGoalNode](#getgoalnode-node), [getStartNode()](#getsartnode-node), [setGoalNode()](#setgoalnodenodenode), [setStartNode()](#setstartnodenodenode), [getScreen()](#getscreen), [add_node()](#add_nodenode-node), [add_edge()](#add_edgeedge-edge), [remove_edge()](#remove_edgeedgeedge), [remove_node()](#remove_nodenodenode), [saveWork()](#saveworkfilenamestrnone), [showInfoText()](#showinfotexttextstr), [to_dict()](#to_dict-dict), [setTitle()](#settitletitlestr), [run()](#run)
+<br>
 
-    onStart(func)
-        Sets function to be executed when the start button is clicked
-        func: function which will be executed when start is pressed
-    
-    delay(millisecond:int)
-        Delays the program for given milliseconds
-        Uses pygame.time.delay method
-        Once the controls are taken away no other control would work on playground except exit
-        NOTE: Using this delay function would allow to reflect changes on playground in delay mode better than instantaneous
+#### **_fromfilename(filename:str)_**
+a classmethod which returns PlayGround class object initialised from values given in filename and returns the object
+<br>
+_filename_: a json file name to which previously a playround is saved into
 
-    MoveGen(node:Node)
-        Returns all the neighbours(in sorted order according to the label) of a node i.e. all the nodes which has edge between the given node
-        node: A Node class object
+#### **_onStart(func)_**
+Sets function to be executed when the start button is clicked
+<br>
+_func_: function which will be executed when start is pressed
 
-    get_edge(nodeStart:Node,nodeEnd:Node)->Edge
-        Returns an Edge class object between the node nodeStart and nodeEnd, if no edge exists returns None
-        nodeStart: A Node class object
-        nodeEnd: A Node class object
+#### **_delay(millisecond:int)_**
+Delays the program for given milliseconds
+<br>
+Uses pygame.time.delay method
+<br>
+Once the controls are taken away no other control would work on playground except exit
+<br>
+```NOTE: Using this delay function would allow to reflect changes on playground in delay mode better than instantaneous```
 
-    getGoalNode()->Node
-        Returns Node class object which is currenty set as a goal node for the playground
+#### **_MoveGen(node:Node)->list_**
+Returns all the neighbours(in sorted order according to the label) of a node i.e. all the nodes which has edge between the given node
+<br>
+_node_: A Node class object
 
-    getSartNode()->Node
-        Returns Node class object which is currenty set as a start node for the playground
+#### **_get_edge(nodeStart:Node,nodeEnd:Node)->Edge_**
+Returns an Edge class object between the node nodeStart and nodeEnd, if no edge exists returns None
+_nodeStart_: A Node class object
+<br>
+_nodeEnd_: A Node class object
+<br>
 
-    setGoalNode(node:Node)
-        Sets the given node as goal node for the PlayGround
-        node: A Node class object
+#### **_getGoalNode()->Node_**
+Returns Node class object which is currenty set as a goal node for the playground
 
-    setStartNode(node:Node)
-        Sets the given node as goal node for the PlayGround
-        node: A Node class object
-    
-    getScreen()
-        Returns a pygame window object which is the surface on which the elements are being drawn
-        Useful in case more extra elements are needed to be drawn on the playground
-    
-    add_node(node: Node)
-        Adds node to the world
-        NOTE: node available in the world will be displayed on the playground screen
+#### **_getSartNode()->Node_**
+Returns Node class object which is currenty set as a start node for the playground
 
-    add_edge(edge: Edge)
-        Adds edge to the world
-        NOTE: edge available in the world will be displayed on the playground screen
-    
-    remove_edge(edge:Edge)
-        Removes edge from the world
-    
-    remove_node(node:Node)
-        Removed node from the world
-        
-    saveWork(filename:str=None)
-        Saves the playground with the given filename
-        if no filename is provided, then playground will be saved with arbitrary filename
+#### **_setGoalNode(node:Node)_**
+Sets the given node as goal node for the PlayGround
+_node_: A Node class object
 
-    showInfoText(text:str)
-        To display informational texts on the playground right above the start button
-        text: text to be displayed on the playground infoText area
+#### **_setStartNode(node:Node)_**
+Sets the given node as goal node for the PlayGround
+<br>
+_node_: A Node class object
 
-    to_dict()->dict
-        Returns Playrgound attributes as dictionary
+#### **_getScreen()_**
+Returns a pygame window object which is the surface on which the elements are being drawn
+<br>
+Useful in case more extra elements are needed to be drawn on the playground
 
-    setTitle(title:str)
-        Sets the title of the playground window
-    
-    run()
-        runs the playground as an active window on which the frames are drawn
+#### **_add_node(node: Node)_**
+Adds node to the world
+<br>
+```NOTE: node available in the world will be displayed on the playground screen```
+
+#### **_add_edge(edge: Edge)_**
+Adds edge to the world
+<br>
+```NOTE: edge available in the world will be displayed on the playground screen```
+
+#### **_remove_edge(edge:Edge)_**
+Removes edge from the world
+
+#### **_remove_node(node:Node)_**
+Removed node from the world
+
+#### **_saveWork(filename:str=None)_**
+Saves the playground with the given filename.
+if no filename is provided, then playground will be saved with arbitrary filename
+
+#### **_showInfoText(text:str)_**
+To display informational texts on the playground right above the start button
+<br>
+_text_: text to be displayed on the playground infoText area
+
+#### **_to_dict()->dict_**
+Returns Playrgound attributes as dictionary
+
+#### **_setTitle(title:str)_**
+Sets the title of the playground window
+<br>
+_title_: a string value
+
+#### **_run()_**
+runs the playground as an active window on which the frames are drawn
+
+---
 
 ## World
 
----
 A World class represents the world for the playground which is responsible for Maintaining Node,Edge and Block of the playground
 
     Parameters
@@ -237,9 +264,10 @@ A World class represents the world for the playground which is responsible for M
     to_dict()->dict
         returns the object details with all attribute and values as dictionary
 
+---
 
 ## Block
----
+
 Block defines the world tiles. Blocks represents the world in 2-Dimensional array format.
 
 
@@ -305,8 +333,9 @@ Block defines the world tiles. Blocks represents the world in 2-Dimensional arra
     to_dict()->dict
         returns the object details with all attribute and values as dictionary
 
-## Node
 ---
+## Node
+
 A node is a type of block that is important to the world 
 Node class inherits the Block class.
 
@@ -408,9 +437,10 @@ Node class inherits the Block class.
     get_neighbour()->list
         Returns list of neighbouring nodes(Node class objects) which is sorted in order with their label
 
+---
 
 ## Edge
----
+
 
 An edge class represents an edge between 2 nodes
 
@@ -463,3 +493,5 @@ An edge class represents an edge between 2 nodes
 
     to_dict()->dict
         Returns the object details its attributes and value as dictionary
+
+---
