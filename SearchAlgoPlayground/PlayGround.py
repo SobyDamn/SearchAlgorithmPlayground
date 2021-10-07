@@ -297,6 +297,8 @@ class PlayGround:
         Handles any click made on the screen
         """
         if self.startButton.isClicked(event.pos) and self._isClicked:
+            #No more event monitoring till startMethod is finished
+            self._isClicked = False
             self._start()
             return
         if self._saveWorkButton.isClicked(event.pos) and self._isClicked:
