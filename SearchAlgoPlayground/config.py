@@ -25,7 +25,7 @@ config = {
     "GRID_COLOR":GRAY,                       #Block boundary color
     "HIGHLIGHT_COLOR":DARK_GRAY,             #Highlighting color
     "BUTTON_COLOR_PRIMARY":BROWN,             #Color for the button larger
-    "BUTTON_COLOR_SECONDARY": BLUE,          #color for the smaller button
+    "BUTTON_COLOR_SECONDARY": PURPLE,          #color for the smaller button
     "INFO_LABEL_COLOR":DARK_GRAY,            #color for the info text
     "NODE_COLOR":GRAY,
     "NODE_BORDER_COLOR":BLACK,
