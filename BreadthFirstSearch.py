@@ -20,7 +20,7 @@ def bfs():
             return
         else:
             N.set_color(CYAN)
-            PG.delay(1000)
+            PG.delay(100)
             CLOSED = [nodePair] + CLOSED
             neighbours = PG.MoveGen(N)
             newNodes = RemoveSeen(neighbours,OPEN,CLOSED)
@@ -41,7 +41,7 @@ def highlightPath(nodes):
         edge = PG.get_edge(nodeS,nodeE)
         nodeS.set_color(PURPLE)
         edge.set_color(PURPLE)
-        PG.delay(1000)
+        PG.delay(100)
     nodes[0].set_color(PURPLE)
 
 PG.onStart(bfs)
