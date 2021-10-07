@@ -1,3 +1,5 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 from .Blocks import Block
 from .Edge import Edge
 from .Node import Node

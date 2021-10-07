@@ -14,8 +14,6 @@ Currently supports only undirected graphs
 
 
 import os
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-
 import pygame 
 import json
 from .World import World
@@ -298,10 +296,10 @@ class PlayGround:
         """
         Handles any click made on the screen
         """
-        if self.startButton.isClicked(event.pos):
+        if self.startButton.isClicked(event.pos) and self._isClicked:
             self._start()
             return
-        if self._saveWorkButton.isClicked(event.pos):
+        if self._saveWorkButton.isClicked(event.pos) and self._isClicked:
             self.saveWork(self._saveToFile)
             return
         
@@ -393,8 +391,8 @@ class PlayGround:
             if not self._selectedEdge.handle_event(self.world,event,self._infoLabel):
                 self._selectedEdge = None
         if event.type == pygame.MOUSEBUTTONDOWN:
-            self._handleClicks(event)
             self._isClicked = True
+            self._handleClicks(event)
         elif event.type == pygame.MOUSEBUTTONUP:
             self._isClicked = False
             self._isDragging = False
