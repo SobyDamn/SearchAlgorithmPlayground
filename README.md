@@ -185,84 +185,87 @@ runs the playground as an active window on which the frames are drawn
 
 A World class represents the world for the playground which is responsible for Maintaining Node,Edge and Block of the playground
 
-    Parameters
-    ----------
-    blocks_dimension : tuple
-        blocks_dimension represents number of blocks that will be generated in the world
-        e.g (23,21) represents 23 rows and 21 columns
+### Parameters
+#### _**blocks_dimension : tuple**_
+blocks_dimension represents number of blocks that will be generated in the world
+e.g (23,21) represents 23 rows and 21 columns
 
-    block_size : int
-        size of each block i.e. one side of the squared block
-    
-    bottom_panel_size:int
-        height of the bottom panel on which buttons and other UI element will be drawn
-        min allowed 180
+#### _**block_size : int**_
+size of each block i.e. one side of the squared block
 
-    grid_width:int
-        Width of the grids
+#### _**bottom_panel_size:int**_
+height of the bottom panel on which buttons and other UI element will be drawn
+min allowed 180
 
-    background_color:tuple
-        A rgb value type of the form (r,g,b) to set color for the background of the world default (255,255,255)
-        
-    gird_color:tuple
-        A rgb value type of the form (r,g,b) to set color for the blocks border of the world default (232, 232, 232)
+#### _**grid_width:int**_
+Width of the grids
 
-    margin:int
-        Margin from the edges of the playground window, minimum value allowed is 10, default 10
+#### _**background_color:tuple**_
+A rgb value type of the form (r,g,b) to set color for the background of the world default (255,255,255)
 
-    Methods
-    -------
-    fromdict(datadict:dict)
-        A classmethod to create World class object from a dictionary
-        NOTE:The dictionary must be of the same form returned by to_dict() method of the class
+#### _**gird_color:tuple**_
+A rgb value type of the form (r,g,b) to set color for the blocks border of the world default (232, 232, 232)
 
-    create_grids()
-        Generates grids if not generated in the world, if the gird is already availbale then it redraws them
+#### _**margin:int**_
+Margin from the edges of the playground window, minimum value allowed is 10, default 10
 
-    add_node(node:Node)
-        Adds nodes to the world
-        NOTE: To make the node visible on playground window it must be include in the world
+### Methods
+#### _**fromdict(datadict:dict)**_
+A classmethod to create World class object from a dictionary
+<br>
+```NOTE:The dictionary must be of the same form returned by to_dict() method of the class```
 
-    remove_node(node:Node)
-        Removes nodes from the world
-        NOTE: If nodes are not available in the world it will no longer visible on playground window
+#### _**create_grids()**_
+Generates grids if not generated in the world, if the gird is already availbale then it redraws them
 
-    update_node_loc(node:Node,newBlock:Block)
-        Updates the location of the node to newBlock location and removes it from previous block
-        node:Node - A Node class object which needs to be updated
-        newBlock:Block - A Block class object to which the node is require to move to
+#### _**add_node(node:Node)**_
+Adds nodes to the world
+<br>
+```NOTE: To make the node visible on playground window it must be include in the world```
 
-    getEdges()->dict
-        Returns all the available edges in the world as dictionary with key as the node pairs ids
-        e.g ((1,1),(1,5)) is the key for an edge between the node with id (1,1) and (1,5)
-        NOTE: The id represents position in the 2D matrix of the block
+#### _**remove_node(node:Node)**_
+Removes nodes from the world
+<br>
+```NOTE: If nodes are not available in the world it will no longer visible on playground window```
 
-    add_edge(e:Edge)
-        Adds edge to the world, edge added to the world will be visible on Playground window
-        NOTE: Edges are added with the key of the end node ids e.g. ((1,1),(1,5)) is the key for an edge between the node with id (1,1) and (1,5)
+#### _**update_node_loc(node:Node,newBlock:Block)**_
+Updates the location of the node to newBlock location and removes it from previous block.
+_node:Node_ - A Node class object which needs to be updated
+newBlock:Block - A Block class object to which the node is require to move to
 
-    remove_edge(e:Edge)
-        Removes the edge from the world. The edge removed from the world will no longer be visible on the Playground window
+#### _**getEdges()->dict**_
+Returns all the available edges in the world as dictionary with key as the node pairs ids
+e.g ((1,1),(1,5)) is the key for an edge between the node with id (1,1) and (1,5)
+<br>
+```NOTE: The id represents position in the 2D matrix of the block```
 
-    getEdge(startNodeID:tuple,endNodeID:tuple)->Edge
-        Returns edge between startNodeID and endNodeID if there exists an edge else returns None
-        startNodeID:tuple - id of the node which has edge with the other node we're looking for
-        endNodeID:tuple - id of the node which has edge with the other node we're looking for
-    
-    getNodes()->dict
-        Returns the dictionary of all the nodes available in the world
-        Key of is the id of the node
-    
-    getNode(key:tuple)->Node
-        Returns node with given key, returns None if the node doesn't exists
-        key:tuple - id of the node we are looking for,  location in the grid or 2D array.
+#### _**add_edge(e:Edge)**_
+Adds edge to the world, edge added to the world will be visible on Playground window
+<br>
+```NOTE: Edges are added with the key of the end node ids e.g. ((1,1),(1,5)) is the key for an edge between the node with id (1,1) and (1,5)```
 
-    getBlock(id)->Block
-        Returns block at the given id.
-        id:tuple - Index Location in 2D matrix
+#### _**remove_edge(e:Edge)**_
+Removes the edge from the world. The edge removed from the world will no longer be visible on the Playground window
 
-    to_dict()->dict
-        returns the object details with all attribute and values as dictionary
+#### _**getEdge(startNodeID:tuple,endNodeID:tuple)->Edge**_
+Returns edge between startNodeID and endNodeID if there exists an edge else returns None
+_startNodeID:tuple_ - id of the node which has edge with the other node we're looking for
+_endNodeID:tuple_ - id of the node which has edge with the other node we're looking for
+
+#### _**getNodes()->dict**_
+Returns the dictionary of all the nodes available in the world
+Key of is the id of the node
+
+#### _**getNode(key:tuple)->Node**_
+Returns node with given key, returns None if the node doesn't exists
+_key:tuple _- id of the node we are looking for,  location in the grid or 2D array.
+
+#### _**getBlock(id)->Block**_
+Returns block at the given id.
+id:tuple - Index Location in 2D matrix
+
+#### _**to_dict()->dict**_
+returns the object details with all attribute and values as dictionary
 
 ---
 
@@ -271,67 +274,66 @@ A World class represents the world for the playground which is responsible for M
 Block defines the world tiles. Blocks represents the world in 2-Dimensional array format.
 
 
-    Attribute
-    ---------
-    x:int
-        x coordinate in the window plane of the block
+### Attribute
+#### _**x:int**_
+x coordinate in the window plane of the block
 
-    y:int
-        y coordinate in the window plane of the block
+#### _**y:int**_
+y coordinate in the window plane of the block
 
-    size:int
-        size of the block, denotes one side of the square block
-    
-    id:tuple
-        id represents position in the 2D matrix of the block
-        (x,y) where x is the row and y is the column
-    
-    pgObj
-        pygame rect object
-    
+#### _**size:int**_
+size of the block, denotes one side of the square block
 
-    Parameters
-    ---------
-    x:int
-        x coordinate in the window plane of the block
+#### _**id:tuple**_
+id represents position in the 2D matrix of the block
+(x,y) where x is the row and y is the column
 
-    y:int
-        y coordinate in the window plane of the block
+#### _**pgObj**_
+pygame rect object
 
-    size:int
-        size of the block, denotes one side of the square block
 
-    id:tuple
-        id represents position in the 2D matrix of the block
-        (x,y) where x is the row and y is the column
+### Parameters
 
-    gird_color:tuple
-        rgb color (r,g,b) value for the block boundary default ((163, 175, 204))
+#### _**x:int**_
+x coordinate in the window plane of the block
 
-    grid_width:int
-        width of the boundary default 1
-        
-    Methods
-    -------
-    draw_block(screen)
-        draws the block on pygame window
-        screen: pygame window
+#### _**y:int**_
+y coordinate in the window plane of the block
 
-    highlight(val:bool)
-        highlights block with highlist color
-        val:bool - true to enable highlight
-    
-    pos() -> tuple
-        returns the coordinate of the centre of the block on the pygame window
-    
-    setHasNode(val:bool)
-        sets the value for the flag _hasNode to represent that a block contains a node
-    
-    hasNode()->bool
-        returns true if block has node over it
+#### _**size:int**_
+size of the block, denotes one side of the square block
 
-    to_dict()->dict
-        returns the object details with all attribute and values as dictionary
+#### _**id:tuple**_
+id represents position in the 2D matrix of the block
+(x,y) where x is the row and y is the column
+
+#### _**gird_color:tuple**_
+rgb color (r,g,b) value for the block boundary default ((163, 175, 204))
+
+grid_width:int
+width of the boundary default 1
+
+### Methods
+
+#### _**draw_block(screen)**_
+draws the block on pygame window
+screen: pygame window
+
+#### _**highlight(val:bool)**_
+highlights block with highlist color
+val:bool - true to enable highlight
+
+#### _**pos() -> tuple**_
+returns the coordinate of the centre of the block on the pygame window
+
+#### _**setHasNode(val:bool)**_
+sets the value for the flag _hasNode to represent that a block contains a node
+
+#### _**hasNode()->bool**_
+returns true if block has node over it
+
+#### _**to_dict()->dict**_
+returns the object details with all attribute and values as dictionary
 
 ---
 ## Node
@@ -339,103 +341,109 @@ Block defines the world tiles. Blocks represents the world in 2-Dimensional arra
 A node is a type of block that is important to the world 
 Node class inherits the Block class.
 
-    Parameters
-    -----------
-    block:Block
-        A Block class object on which the node will be drawn
+### Parameters
 
-    label:str
-        Label of the node
-    
-    colorOutline:tuple
-        A rgb value of the form (r,g,b) represents outline color of the node
+#### _**block:Block**_
+A Block class object on which the node will be drawn
 
-    colorNode:tuple
-        A rgb value of the form (r,g,b) represents color of the node
+#### _**label:str**_
+Label of the node
 
-    outlineWidth:int
-        Width of the outline of the node default 2
+#### _**colorOutline:tuple**_
+A rgb value of the form (r,g,b) represents outline color of the node
 
-    specialNodeStatus:bool
-        sets whether the node is special default is False
-        NOTE: A special node must be present on playground all time, i.e. delete is not allowed
+#### _**colorNode:tuple**_
+A rgb value of the form (r,g,b) represents color of the node
 
-    Attributes
-    ----------
-    x:int
-        x coordinate in the window plane of the block
+#### _**outlineWidth:int**_
+Width of the outline of the node default 2
 
-    y:int
-        y coordinate in the window plane of the block
+#### _**specialNodeStatus:bool**_
+sets whether the node is special default is False
+<br>
+```NOTE: A special node must be present on playground all time, i.e. delete is not allowed```
 
-    size:int
-        size of the block, denotes one side of the square block
-    
-    id:tuple
-        id represents position in the 2D matrix of the block
-        (x,y) where x is the row and y is the column
-    
-    pgObj
-        pygame rect object
-    
-    pos:tuple
-        coordinate in pygame window for center of the node
+### Attributes
+#### _**x:int**_
+x coordinate in the window plane of the block
 
-    Methods
-    -------
-    draw_block(screen)
-        draws the node on pygame window
-        screen: pygame window
+#### _**y:int**_
+y coordinate in the window plane of the block
 
-    highlight(val:bool)
-        highlights block with highlist color
-        val:bool - true to enable highlight
-    
-    pos() -> tuple
-        returns the coordinate of the centre of the block on the pygame window
-    
-    setHasNode(val:bool)
-        sets the value for the flag _hasNode to represent that a block contains a node
-    
-    hasNode()->bool
-        returns true if block has node over it
+#### _**size:int**_
+size of the block, denotes one side of the square block
 
-    to_dict()->dict
-        returns the object details with all attribute and values as dictionary
-    
-    set_label(label:str,screen)
-        sets the label on the node
-        screen - a pygame window
-        label:str - a string value that'll be displayed on node
+#### _**id:tuple**_
+id represents position in the 2D matrix of the block
+(x,y) where x is the row and y is the column
 
-    selected(val:bool)
-        sets isSelected flag value
+#### _**pgObj**_
+pygame rect object
 
-    set_color(color:tuple)
-        sets the color of the node
-        color:tuple - A rgb value in the form (r,g,b)
-    
-    get_label()->str
-        returns value of label of the node
+#### _**pos:tuple**_
+coordinate in pygame window for center of the node
 
-    setLocation(block:Block)
-        sets the location to the new block
-        block:Block - A Block class object
-        NOTE: Location for nodes are defined by the block they resides on
+### Methods
+[draw_block(screen)](#draw_blockscreen), [highlight(val:bool)](#highlightvalbool), [pos()](#pos---tuple), [setHasNode()](#sethasnodevalbool), [hasNode()](#hasnode-bool), [to_dict()](#to_dict-dict), [set_label()](#set_labellabelstrscreen), [selected()](#selectedvalbool), [set_color()](#set_colorcolortuple), [get_label()](#get_label-str), [setLocation()](#setlocationblockblock), [handle_event()](#handle_eventworldworldeventinfolabel), [add_neighbour()](#add_neighbournodenode), [remove_neighbour()](#remove_neighbournodenode), [get_neighbours()](#get_neighbour-list)
 
-    handle_event(world:World,event,infoLabel)
-        Internal method to handle the pygame events
-    
-    add_neighbour(node:Node)
-        Adds the given node as neighbouring node if it's not already a neighbouring node, should be used when it has an edge with the given node
-        node:Node - A Node class object
+#### _**draw_block(screen)**_
+draws the node on pygame window
+screen: pygame window
 
-    remove_neighbour(node:Node)
-        Removes the given node from neighbouring node if it's in neighbouring node
-        node:Node - A Node class object
-    
-    get_neighbour()->list
-        Returns list of neighbouring nodes(Node class objects) which is sorted in order with their label
+#### _**highlight(val:bool)**_
+highlights block with highlist color
+val:bool - true to enable highlight
+
+#### _**pos() -> tuple**_
+returns the coordinate of the centre of the block on the pygame window
+
+#### _**setHasNode(val:bool)**_
+sets the value for the flag _hasNode to represent that a block contains a node
+
+#### _**hasNode()->bool**_
+returns true if block has node over it
+
+#### _**to_dict()->dict**_
+returns the object details with all attribute and values as dictionary
+
+#### _**set_label(label:str,screen)**_
+sets the label on the node
+_screen_ - a pygame window
+<br>
+_label:str_ - a string value that'll be displayed on node
+
+#### _**selected(val:bool)**_
+sets isSelected flag value
+
+
+#### _**set_color(color:tuple)**_
+sets the color of the node
+<br>
+_color:tuple_ - A rgb value in the form (r,g,b)
+
+#### _**get_label()->str**_
+returns value of label of the node
+
+#### _**setLocation(block:Block)**_
+sets the location to the new block
+block:Block - A Block class object
+<br>
+```NOTE: Location for nodes are defined by the block they resides on```
+
+#### _**handle_event(world:World,event,infoLabel)**_
+Internal method to handle the pygame events
+
+#### _**add_neighbour(node:Node)**_
+Adds the given node as neighbouring node if it's not already a neighbouring node, should be used when it has an edge with the given node
+<br>
+_node:Node_ - A Node class object
+
+#### _**remove_neighbour(node:Node)**_
+Removes the given node from neighbouring node if it's in neighbouring node
+_node:Node_ - A Node class object
+
+#### _**get_neighbour()->list**_
+Returns list of neighbouring nodes(Node class objects) which is sorted in order with their label
 
 ---
 
@@ -444,54 +452,54 @@ Node class inherits the Block class.
 
 An edge class represents an edge between 2 nodes
 
-    Parameters
-    ----------
-    nodeStart:Node
-        A Node class object which represents the starting node of the edge
+### Parameters
 
-    nodeEnd:Node
-        A Node class object which represents the ending node of the edge
+#### _**nodeStart:Node**_
+A Node class object which represents the starting node of the edge
 
-    isWeighted:bool
-        Whether the edge drawn between the node has weight or not, default False
+#### _**nodeEnd:Node**_
+A Node class object which represents the ending node of the edge
 
-    weight:int
-        Wieght of the edge, default 0
+#### _**isWeighted:bool**_
+Whether the edge drawn between the node has weight or not, default False
 
-    edgeColor:tuple
-        A rgb value of the form (r,g,b) which represents the color of the edge, default value _NODE_BORDER_COLOR_
-    
-    edgeWidth:int
-        Width of the edge, default 3
+#### _**weight:int**_
+Wieght of the edge, default 0
 
-    Attribute
-    ---------
-    pgObj
-        A pygame rect object
-    
-    Methods
-    -------
-    handle_event(world:World,event,infoLabel)
-        Internal method to handle the pygame events
+#### _**edgeColor:tuple**_
+A rgb value of the form (r,g,b) which represents the color of the edge, default value _NODE_BORDER_COLOR_
+<br>
+_edgeWidth:int_
+Width of the edge, default 3
 
-    set_color(color:tuple)
-        Sets color of the edge
-        color:tuple - A rgb value of the form (r,g,b)
-    
-    collidePoint(clickPoint,offeset=5)
-        Returns true if the given click point is inside the offset value on edge
+### Attribute
+#### _**pgObj**_
+A pygame rect object
 
-    draw_edge(screen)
-        Draws edge on the screen
-        screen - A pygame window
+### Methods
+[handle_event()](#handle_eventworldworldeventinfolabel), [set_color()](#set_colorcolortuple), [collidePoint()](#collidepointclickpointoffeset5), [draw_edge()](#draw_edgescreen), [getNodes()](#getnodekeytuple-node), [get_weight()](#get_weight-int), [to_dict()](#to_dict-dict)
 
-    getNodes()->tuple
-        Returns the pair of node which the edge is connecting
+#### _**handle_event(world:World,event,infoLabel)**_
+Internal method to handle the pygame events
 
-    get_weight()->int
-        Returns the weight of the edge
+#### _**set_color(color:tuple)**_
+Sets color of the edge
+color:tuple - A rgb value of the form (r,g,b)
 
-    to_dict()->dict
-        Returns the object details its attributes and value as dictionary
+#### _**collidePoint(clickPoint,offeset=5)**_
+Returns true if the given click point is inside the offset value on edge
+
+#### _**draw_edge(screen)**_
+Draws edge on the screen
+screen - A pygame window
+
+#### _**getNodes()->tuple**_
+Returns the pair of node which the edge is connecting
+
+#### _**get_weight()->int**_
+Returns the weight of the edge
+
+#### _**to_dict()->dict**_
+Returns the object details its attributes and value as dictionary
 
 ---
