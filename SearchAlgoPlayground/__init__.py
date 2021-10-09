@@ -5,5 +5,5 @@ from .Edge import Edge
 from .Node import Node
 from .PlayGround import PlayGround
 from .World import World
-from .UI import *
 from .config import config
+from .UI import *

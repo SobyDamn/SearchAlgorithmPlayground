@@ -1,5 +1,4 @@
 from SearchAlgoPlayground import Node
-
 def MoveGen(N:Node,AvailableNodes:list)->list:
     """
     Returns list of possible move from a given node
