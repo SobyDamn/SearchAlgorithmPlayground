@@ -1,8 +1,8 @@
 from SearchAlgoPlayground import PlayGround
 from SearchAlgoUtlis import *
 from SearchAlgoPlayground.config import CYAN,YELLOW,PURPLE
-from SearchAlgoPlayground import config
-config.config["BACKGROUND_COLOR"] = YELLOW
+from SearchAlgoPlayground import config,UI
+config["BACKGROUND_COLOR"] = YELLOW
 PG:PlayGround = PlayGround()
 def dfs():
     ALGORITHM_TITLE = "Depth First Search Algorithm"

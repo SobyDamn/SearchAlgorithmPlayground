@@ -8,6 +8,7 @@ setuptools.setup(
     version="1.0.0",
     author="Sritabh Priyadarshi",
     author_email="sobydanny@gmail.com",
+    license_files = ('LICENSE',),
     description="""
                 Search Algorithm Playground is a python package to work with graph related algorithm, mainly dealing with different Artificial Intelligence Search alorithms.
                 The tool provides an user interface to work with the graphs and visualise the effect of algorithm on the graph while giving the freedom to programmer to make adjustments in the way they wants.
