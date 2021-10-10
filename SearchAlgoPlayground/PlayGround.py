@@ -42,6 +42,13 @@ class PlayGround:
         a classmethod which returns PlayGround class object initialised from values given in filename and returns the object
         filename: a json file name to which previously a playround is saved into
 
+    addUIElement(element)
+        Adds UI element to the playground
+        NOTE: any UI element must contain draw() method which takes pygame screen as a parameter, the method will be called each time frame is drawn
+
+    removeUIElement(element)
+        Removes UI element from the playground
+
     onStart(func)
         Sets function to be executed when the start button is clicked
         func: function which will be executed when start is pressed
@@ -169,6 +176,7 @@ class PlayGround:
         self._isWeighted = weighted #Tells whether the playground will have weighted edge or not
         self._saveToFile = saveToFile
         self._createControlUI()
+        self._UIElements = []
     
     @classmethod
     def fromfilename(cls,filename:str):
@@ -214,14 +222,29 @@ class PlayGround:
         self._saveWorkButton = Button((pos_x,pos_y),(width,height),config["BUTTON_COLOR_SECONDARY"],GRAY,"Save work",0.7,0)
 
 
+    def addUIElement(self,element):
+        """
+        Method adds UI element on the playground
+        NOTE: any UI element must contain draw() method which takes pygame screen as a parameter
+        """
+        self._UIElements.append(element)
+    def removeUIElement(self,element):
+        """
+        Removes UI element from the playground
+        """
+        if element in self._UIElements:
+            self._UIElements.remove(element)
 
     def _drawUIElements(self):
         """
         Draws the frame for UI elements
         """
-        self.startButton.draw_button(self.world.win)
-        self._saveWorkButton.draw_button(self.world.win)
-        self._infoLabel.draw_label(self.world.win)
+        self.startButton.draw(self.world.win)
+        self._saveWorkButton.draw(self.world.win)
+        self._infoLabel.draw(self.world.win)
+        #Draw remaining UI elements
+        for elements in self._UIElements:
+            elements.draw(self.world.win)
 
     def _genLabel(self):
         """
