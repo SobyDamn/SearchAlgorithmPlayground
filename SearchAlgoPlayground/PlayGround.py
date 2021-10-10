@@ -79,7 +79,13 @@ class PlayGround:
     setStartNode(node:Node)
         Sets the given node as goal node for the PlayGround
         node: A Node class object
-    
+
+    getAllNodes()->list
+        Returns all nodes available in the world as a list
+
+    getAllEdges()->list
+        Returns list of all edges available in world
+
     getScreen()
         Returns a pygame window object which is the surface on which the elements are being drawn
         Useful in case more extra elements are needed to be drawn on the playground
@@ -493,6 +499,18 @@ class PlayGround:
             A Node class object
         """
         return self.world.getEdge(nodeStart.id,nodeEnd.id)
+    def getAllNodes(self)->list:
+        """
+        Returns all node available in the world in sorted order of their labels
+        """
+        return sorted(list(self.world.getNodes().values()))
+
+    def getAllEdges(self)->list:
+        """
+        Returns list of all edges available in world
+        """
+        return list(self.world.getEdges().values())
+
     def remove_edge(self, edge:Edge):
         """
         Remove edge from the world
