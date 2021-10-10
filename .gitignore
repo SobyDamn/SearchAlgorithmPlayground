@@ -1,3 +1,5 @@
 /__pycache__
 *.ipynb
 *.pyc
+/dist
+/SearchAlgoPlayground/SearchAlgoPlayground.egg-info
