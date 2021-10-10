@@ -89,7 +89,7 @@ size of each block i.e. one side of the squared block (default 30)
 World class object on which playground is available
         
 ### Methods
-[fromfilename()](#fromfilenamefilenamestr), [addUIElement()](#adduielementelement), [removeUIElement()](#removeuielementelement), [onStart()](#onstartfunc), [delay()](#delaymillisecondint), [MoveGen()](#movegennodenode-list), [get_edge()](#get_edgenodestartnodenodeendnode-edge), [getGoalNode](#getgoalnode-node), [getStartNode()](#getsartnode-node), [setGoalNode()](#setgoalnodenodenode), [setStartNode()](#setstartnodenodenode), [getScreen()](#getscreen), [add_node()](#add_nodenode-node), [add_edge()](#add_edgeedge-edge), [remove_edge()](#remove_edgeedgeedge), [remove_node()](#remove_nodenodenode), [saveWork()](#saveworkfilenamestrnone), [showInfoText()](#showinfotexttextstr), [to_dict()](#to_dict-dict), [setTitle()](#settitletitlestr), [run()](#run)
+[fromfilename()](#fromfilenamefilenamestr), [addUIElement()](#adduielementelement), [removeUIElement()](#removeuielementelement), [onStart()](#onstartfunc), [delay()](#delaymillisecondint),[getAllNodes()](#getallnodes-list),[getAllEges()](#getalledges-list), [MoveGen()](#movegennodenode-list), [get_edge()](#get_edgenodestartnodenodeendnode-edge), [getGoalNode](#getgoalnode-node), [getStartNode()](#getsartnode-node), [setGoalNode()](#setgoalnodenodenode), [setStartNode()](#setstartnodenodenode), [getScreen()](#getscreen), [add_node()](#add_nodenode-node), [add_edge()](#add_edgeedge-edge), [remove_edge()](#remove_edgeedgeedge), [remove_node()](#remove_nodenodenode), [saveWork()](#saveworkfilenamestrnone), [showInfoText()](#showinfotexttextstr),[get_dimension()](#get_dimension-tuple), [to_dict()](#to_dict-dict)
 <br>
 
 #### **_fromfilename(filename:str)_**
@@ -129,7 +129,12 @@ Returns an Edge class object between the node nodeStart and nodeEnd, if no edge 
 _nodeStart_: A Node class object
 <br>
 _nodeEnd_: A Node class object
-<br>
+
+#### _**getAllNodes()->list**_
+Returns all nodes available in the world as a list
+
+#### _**getAllEdges()->list**_
+Returns list of all edges available in world
 
 #### **_getGoalNode()->Node_**
 Returns Node class object which is currenty set as a goal node for the playground
@@ -271,6 +276,9 @@ _key:tuple _- id of the node we are looking for,  location in the grid or 2D arr
 #### _**getBlock(id)->Block**_
 Returns block at the given id.
 id:tuple - Index Location in 2D matrix
+
+#### _**get_dimension()->tuple**_
+Returns dimension of the world as tuple of (rows,col)
 
 #### _**to_dict()->dict**_
 returns the object details with all attribute and values as dictionary
