@@ -89,13 +89,21 @@ size of each block i.e. one side of the squared block (default 30)
 World class object on which playground is available
         
 ### Methods
-[fromfilename()](#fromfilenamefilenamestr), [onStart()](#onstartfunc), [delay()](#delaymillisecondint), [MoveGen()](#movegennodenode-list), [get_edge()](#get_edgenodestartnodenodeendnode-edge), [getGoalNode](#getgoalnode-node), [getStartNode()](#getsartnode-node), [setGoalNode()](#setgoalnodenodenode), [setStartNode()](#setstartnodenodenode), [getScreen()](#getscreen), [add_node()](#add_nodenode-node), [add_edge()](#add_edgeedge-edge), [remove_edge()](#remove_edgeedgeedge), [remove_node()](#remove_nodenodenode), [saveWork()](#saveworkfilenamestrnone), [showInfoText()](#showinfotexttextstr), [to_dict()](#to_dict-dict), [setTitle()](#settitletitlestr), [run()](#run)
+[fromfilename()](#fromfilenamefilenamestr), [addUIElement()](#adduielementelement), [removeUIElement()](#removeuielementelement), [onStart()](#onstartfunc), [delay()](#delaymillisecondint), [MoveGen()](#movegennodenode-list), [get_edge()](#get_edgenodestartnodenodeendnode-edge), [getGoalNode](#getgoalnode-node), [getStartNode()](#getsartnode-node), [setGoalNode()](#setgoalnodenodenode), [setStartNode()](#setstartnodenodenode), [getScreen()](#getscreen), [add_node()](#add_nodenode-node), [add_edge()](#add_edgeedge-edge), [remove_edge()](#remove_edgeedgeedge), [remove_node()](#remove_nodenodenode), [saveWork()](#saveworkfilenamestrnone), [showInfoText()](#showinfotexttextstr), [to_dict()](#to_dict-dict), [setTitle()](#settitletitlestr), [run()](#run)
 <br>
 
 #### **_fromfilename(filename:str)_**
 a classmethod which returns PlayGround class object initialised from values given in filename and returns the object
 <br>
 _filename_: a json file name to which previously a playround is saved into
+
+#### _**addUIElement(element)**_
+Adds UI element to the playground
+<br>
+```NOTE: any UI element must contain draw() method which takes pygame screen as a parameter, the method will be called each time frame is drawn```
+
+#### _**removeUIElement(element)**_
+Removes UI element from the playground
 
 #### **_onStart(func)_**
 Sets function to be executed when the start button is clicked
