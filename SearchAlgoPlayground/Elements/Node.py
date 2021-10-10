@@ -1,5 +1,5 @@
 import pygame
-from .config import *
+from SearchAlgoPlayground.config import *
 from .Blocks import Block
 
 

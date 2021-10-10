@@ -2,4 +2,4 @@
 *.ipynb
 *.pyc
 /dist
-/SearchAlgoPlayground/SearchAlgoPlayground.egg-info
+SearchAlgoPlayground.egg-info

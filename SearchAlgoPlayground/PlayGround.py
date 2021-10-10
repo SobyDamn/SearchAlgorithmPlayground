@@ -17,9 +17,7 @@ import os
 import pygame 
 import json
 from .World import World
-from .Blocks import Block
-from .Node import Node
-from .Edge import Edge
+from .Elements import Block,Node,Edge
 from .config import *
 from .UI import *
 

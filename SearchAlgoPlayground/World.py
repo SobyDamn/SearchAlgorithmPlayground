@@ -1,7 +1,5 @@
 import pygame
-from .Blocks import Block
-from .Node import Node
-from .Edge import Edge
+from .Elements import Block,Node,Edge
 
 
 class World:

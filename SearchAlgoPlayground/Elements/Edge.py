@@ -1,6 +1,6 @@
 from .Node import *
 import pygame
-from .config import config
+from SearchAlgoPlayground.config import config
 import math
 
 COLOR_ACTIVE = config["ELEMENT_ACTIVE_COLOR"]
