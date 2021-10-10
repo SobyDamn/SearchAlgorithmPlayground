@@ -447,9 +447,9 @@ class PlayGround:
         """
         if self._onStartMethod is not None:
             self.saveWork("cached.json")
-            self._infoLabel.setValue("Running Algorithm...") # info text
+            #self._infoLabel.setValue("Running Algorithm...") # info text
             self._onStartMethod()
-            self._infoLabel.setValue("Finished Running") # info text
+            #self._infoLabel.setValue("Finished Running") # info text
         else:
             self._infoLabel.setValue("No start function is set")
     def delay(self,millisecond:int):
