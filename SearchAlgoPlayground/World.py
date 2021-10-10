@@ -56,6 +56,9 @@ class World:
     getBlock(id)->Block
         Returns block at the given id.
         id:tuple - Index Location in 2D matrix
+    
+    get_dimension()->tuple
+        Returns dimension of the world as tuple of (rows,col)
 
     to_dict()->dict
         returns the object details with all attribute and values as dictionary
@@ -319,6 +322,13 @@ class World:
         if self._available_blocks is None:
             self._available_blocks = []
         self._available_blocks.append(col)
+    
+    def get_dimension(self)->tuple:
+        """
+        Returns dimension of the world as tuple of form (rows,cols)
+        """
+        return (self._rows,self._cols)
+
     def to_dict(self)->dict:
         """
         Returns world information as dictionary
