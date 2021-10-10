@@ -4,7 +4,7 @@ class Label:
     """
     Label to add on pygame screens
     """
-    def __init__(self,color:tuple,size:int,pos:tuple):
+    def __init__(self,color:tuple,size:int,pos:tuple,text:str=""):
         """
         color:tuple
             color of the label in (r,g,b) format
@@ -17,8 +17,8 @@ class Label:
         self._size = size
         self._font = pygame.font.SysFont("Arial", self._size)
         self._pos = pos
-        self._text = ""
-    def draw_label(self,screen):
+        self._text = text
+    def draw(self,screen):
         """
         Draws the label on the pygame screen
         """
@@ -72,7 +72,7 @@ class Button:
         self._fill_value = fill_value
         
 
-    def draw_button(self,screen):
+    def draw(self,screen):
         """
         Draws the button on pygame screen
         """
