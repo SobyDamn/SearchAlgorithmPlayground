@@ -38,6 +38,8 @@ pip install SearchAgoPlayground
 ```
 ## Manually install it
 
+Copy the [repository](https://github.com/SobyDamn/SearchAlgorithmPlayground) in your system then do
+
 ```
 python setup.py install
 ```
