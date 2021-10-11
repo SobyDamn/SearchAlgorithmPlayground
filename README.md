@@ -76,7 +76,7 @@ To delete an edge double click on it and then press _DELETE_
 ![EdgeDelete](/static/edge_delete.gif)
 
 
-To edit an edge weight double click and use keyboard to modify it's value.
+To edit an edge weight double click and use keyboard to modify it's value, once done hit _ENTER_ or click anywhere else.
 
 ![EdgeWeightEdit](/static/edge_weight_edit.gif)
 
@@ -86,7 +86,7 @@ To delete a node double click on it and then hit _DELETE_ on keyboard
 ![DeleteNodeWithEdge](/static/delete_node_with_edge.gif)
 
 
-To edit node label double click on a node and use keyboard to modify the label.
+To edit node label double click on a node and use keyboard to modify the label, once done hit _ENTER_ or click anywhere else.
 
 > NOTE: Label of a node must be unique
 
