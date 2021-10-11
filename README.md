@@ -5,9 +5,12 @@ Search Algorithm Playground is a python package to work with graph related algor
 The tool provides an user interface to work with the graphs and visualise the effect of algorithm on the graph while giving the freedom to programmer to make adjustments in the way they wants.
 It also provides a way to save the graph in json format hence enabling the programmers to share the files and use different algorithm on same graph with ease.
 
-```Add GIF```
 
 > Currently supports only undirected graphs 
+
+<br>
+
+![AStarAlgoResult](/static/AStar_Sample_output.png)
 
 <br>
 
@@ -19,21 +22,144 @@ It also provides a way to save the graph in json format hence enabling the progr
 ## Table of Contents
 
 - [Installation](#installation)
-- [How to use?](#how-to-use)
+- [Controls](#controls)
+- [Basic Use](#playground-object)
 - [Documentation](#documentation)
 
 <br>
 
 
-## Installation
+# Installation
 ```Some Installation steps```
 
-## How to use?
-```Basic example with screenshot```
 
-## Documentation
+# Controls
 
-### Classes
+## **Creating a node**
+Double click on any empty block will create a node on it.
+
+> NOTE: Single click highlights the selected block and info label area will display it's location in 2D Matrix.
+<br>
+
+![NodeCreate](/static/node_creator.gif)
+
+<br>
+
+## **Creating an edge between two nodes**
+Clicking on a node single time selects the node for creating an edge with that.
+<br>
+Select one node, once selected select another node to create an edge between them.
+
+![EdgeCreate](/static/edge_creator.gif)
+
+<br>
+
+## **Modify element mode**
+
+Double click on any element makes it go in modify mode which allows the element to be deleted or edited.
+
+To delete an edge double click on it and then press _DELTE_
+
+![EdgeDelete](/static/edge_delete.gif)
+
+
+To edit an edge weight double click and use keyboard to modify it's value.
+
+![EdgeWeightEdit](/static/edge_weight_edit.gif)
+
+
+To delete a node double click on it and then hit _ENTER_ on keyboard
+
+![DeleteNodeWithEdge](/static/delete_node_with_edge.gif)
+
+
+To edit node label double click on a node and use keyboard to modify the label.
+
+> NOTE: Label of a node must be unique
+
+![EditNodeLabel](/static/edit_node_label.gif)
+
+<br>
+
+## **Move nodes in the playground**
+
+![NodeDrag](/static/node_drag.gif)
+
+
+<br>
+
+# Basic Use:
+
+## simple PlayGround:
+Creates PlayGround object with default values
+
+```python
+from SearchAlgoPlayground import PlayGround
+
+pg = PlayGround() #Creating a playground object
+pg.run() #run the playground
+```
+
+## Loading graph from file:
+
+Method Used: [fromfilename()](#fromfilenamefilenamestr)
+
+> NOTE: The graph file here in below example _Graph.json_ must have been saved by the playground, i.e. saved by clicking **_Save Work_** button.
+
+```python
+from SearchAlgoPlayground import PlayGround
+
+Method used: 
+
+pg = PlayGround.fromfilename("Graph.json") #loading a playground from a file
+pg.run() #run the playground
+```
+
+## Set filename to save your work into:
+
+Parameter used: [saveToFile](#savetofile--str)
+
+```python
+from SearchAlgoPlayground import PlayGround
+
+pg = PlayGround(saveToFile = "MyWork.json") #Creating a playground object with name of the file provided where the work will be saved
+pg.run() #run the playground
+```
+
+## PlayGround with weighted edge:
+
+Parameter used: [weighted](#weighted--bool)
+
+```python
+from SearchAlgoPlayground import PlayGround
+
+pg = PlayGround(weighted=True) #Weighted playground
+pg.run() #run the playground
+```
+
+
+## Setting up dimension for the world in playground:
+
+Parameter used: [saveToFile](#savetofile--str), [weighted](#weighted--bool), [block_dimensions](#PlayGround.parameter.blocks_dimension)
+
+```python
+from SearchAlgoPlayground import PlayGround
+
+#A weighted playground with a name of the file where work need to be saved given as MyWork.json
+#block_dimension is dimension of 2D matrix (rows,cols) here both are 20
+pg = PlayGround(saveToFile = "MyWork.json",weighted=True,blocks_dimension=(20,20))
+pg.run() #run the playground
+```
+
+<br>
+
+> Check more implemented examples [here](#Link).
+
+<br>
+
+# Documentation
+
+## Classes
 
 - [PlayGround](#playground)
 - [World](#world)
@@ -50,7 +176,7 @@ PlayGround class provide controls on the elements in the world like Edge and Nod
 
 
 ### Parameters
-[world](#world--world), [saveToFile](#savetofile--str), [weighted](#weighted--bool), [startNode](#startnode--node), [goalNode](#goalnode--node), [block_dimensions](#blocks_dimension--tuple), [block_size](#block_size--int)
+[world](#world--world), [saveToFile](#savetofile--str), [weighted](#weighted--bool), [startNode](#startnode--node), [goalNode](#goalnode--node), [block_dimensions](#PlayGround.parameter.blocks_dimension), [block_size](#PlayGround.parameter.block_size)
 <br>
 
 #### **_world : World_**
@@ -74,12 +200,12 @@ a node object of Node class which will be set as start node for the graph.
 if no value is provided then bottom right block contains the goal node 'G'<br>
 ```NOTE: goalNode is a special node which cannot be deleted from the playground(default None)```
 
-#### **_blocks_dimension : tuple_**
+_**<h4 id="PlayGround.parameter.blocks_dimension">blocks_dimension : tuple</h4>**_
 blocks_dimension represents number of blocks that will be generated in the world if world object is given as None(default (23,21))
 <br>
 e.g (23,21) represents 23 rows and 21 columns
 
-#### **_block_size : int_**
+**_<h4 id="PlayGround.parameter.block_size">block_size : int</h4>_**
 size of each block i.e. one side of the squared block (default 30)
 
 ### Attribute
@@ -223,6 +349,8 @@ A rgb value type of the form (r,g,b) to set color for the blocks border of the w
 Margin from the edges of the playground window, minimum value allowed is 10, default 10
 
 ### Methods
+[fromdict()](#fromdictdatadictdict), [create_grids()](#create_grids), [add_node()](#add_nodenode-node), [remove_node()](#remove_nodenodenode), [update_node_loc()](#update_node_locnodenodenewblockblock), [getEdges()](#getedges-dict), [add_edge()](#add_edgeedge-edge), [remove_edge()](#remove_edgeedgeedge), [getNodes()](#getnodes-dict), [getNode()](#getnodekeytuple-node), [getBlock()](#getblockid-block), [get_dimension()](#get_dimension-tuple), [to_dict()](#to_dict-dict)
+
 #### _**fromdict(datadict:dict)**_
 A classmethod to create World class object from a dictionary
 <br>
