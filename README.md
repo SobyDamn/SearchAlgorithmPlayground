@@ -81,7 +81,7 @@ To edit an edge weight double click and use keyboard to modify it's value.
 ![EdgeWeightEdit](/static/edge_weight_edit.gif)
 
 
-To delete a node double click on it and then hit _ENTER_ on keyboard
+To delete a node double click on it and then hit _DELETE_ on keyboard
 
 ![DeleteNodeWithEdge](/static/delete_node_with_edge.gif)
 
