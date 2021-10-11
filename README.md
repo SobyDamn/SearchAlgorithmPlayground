@@ -30,8 +30,21 @@ It also provides a way to save the graph in json format hence enabling the progr
 
 
 # Installation
-```Some Installation steps```
 
+## Install from pip
+
+```
+pip install SearchAgoPlayground
+```
+## Manually install it
+
+```
+python setup.py install
+```
+
+You can also copy/paste the SearchAlgoPlayground folder into your project
+
+<br>
 
 # Controls
 
@@ -230,6 +243,7 @@ config = {
 - [Block](#block)
 - [Node](#node)
 - [Edge](#edge)
+- [Examples](#)
 
 <br>
 
