@@ -176,26 +176,26 @@ PlayGround class provide controls on the elements in the world like Edge and Nod
 
 
 ### Parameters
-[world](#world--world), [saveToFile](#savetofile--str), [weighted](#weighted--bool), [startNode](#startnode--node), [goalNode](#goalnode--node), [block_dimensions](#PlayGround.parameter.blocks_dimension), [block_size](#PlayGround.parameter.block_size)
+[world](#PlayGround.parameter.world), [saveToFile](#PlayGround.parameter.saveToFile), [weighted](#PlayGround.parameter.weighted), [startNode](#PlayGround.parameter.startNode), [goalNode](#PlayGround.parameter.goalNode), [block_dimensions](#PlayGround.parameter.blocks_dimension), [block_size](#PlayGround.parameter.block_size)
 <br>
 
-#### **_world : World_**
+_**<h4 id="PlayGround.parameter.world">world : World</h4>**_
 A World class object on which the nodes/edges are drawn
 The screen size of the world determines the screensize of the playground window (default None).
 
-#### **_saveToFile : str_**
+_**<h4 id="PlayGround.parameter.saveToFile">saveToFile : str</h4>**_
 name of the file with which the world(or graph) will be saved(file will be saved in json format) when the 'Save Work' button is pressed (default None).
 
-#### **_weighted : bool_**
+_**<h4 id="PlayGround.parameter.weighted">weighted : bool</h4>**_
 whether the edges that will be drawn on playround is weighted or not (default False).
 
-#### **_startNode : Node_**
+_**<h4 id="PlayGround.parameter.startNode">startNode : Node</h4>**_
 a node object of Node class which will be set as start node for the graph.
 if no value is provided then top left block contains the start node 'S'
 <br>
 ```NOTE: startNode is a special node which cannot be deleted from the playground(default None)```
 
-#### **_goalNode : Node_**
+_**<h4 id="PlayGround.parameter.goalNode">goalNode : Node</h4>**_
 a node object of Node class which will be set as start node for the graph.
 if no value is provided then bottom right block contains the goal node 'G'<br>
 ```NOTE: goalNode is a special node which cannot be deleted from the playground(default None)```
@@ -209,34 +209,34 @@ e.g (23,21) represents 23 rows and 21 columns
 size of each block i.e. one side of the squared block (default 30)
 
 ### Attribute
-[world](#world-world)
+[world](#PlayGround.attribute.world)
 
-#### **_world: World_**
+_**<h4 id="PlayGround.attribute.world">world: World</h4>**_
 World class object on which playground is available
         
 ### Methods
-[fromfilename()](#fromfilenamefilenamestr), [addUIElement()](#adduielementelement), [removeUIElement()](#removeuielementelement), [onStart()](#onstartfunc), [delay()](#delaymillisecondint),[getAllNodes()](#getallnodes-list),[getAllEges()](#getalledges-list), [MoveGen()](#movegennodenode-list), [get_edge()](#get_edgenodestartnodenodeendnode-edge), [getGoalNode](#getgoalnode-node), [getStartNode()](#getsartnode-node), [setGoalNode()](#setgoalnodenodenode), [setStartNode()](#setstartnodenodenode), [getScreen()](#getscreen), [add_node()](#add_nodenode-node), [add_edge()](#add_edgeedge-edge), [remove_edge()](#remove_edgeedgeedge), [remove_node()](#remove_nodenodenode), [saveWork()](#saveworkfilenamestrnone), [showInfoText()](#showinfotexttextstr),[get_dimension()](#get_dimension-tuple), [to_dict()](#to_dict-dict)
+[fromfilename()](#PlayGround.method.fromfilename), [addUIElement()](#PlayGround.method.addUIElement), [removeUIElement()](#PlayGround.method.removeUIElement), [onStart()](#PlayGround.method.onStart), [delay()](#PlayGround.method.delay),[getAllNodes()](#PlayGround.method.getAllNodes),[getAllEges()](#PlayGround.method.getAllEges), [MoveGen()](#PlayGround.method.MoveGen), [get_edge()](#PlayGround.method.get_edge), [getGoalNode()](#PlayGround.method.getGoalNode), [getStartNode()](#PlayGround.method.getStartNode), [setGoalNode()](#PlayGround.method.setGoalNode), [setStartNode()](#PlayGround.method.setStartNode), [getScreen()](#PlayGround.method.getScreen), [add_node()](#PlayGround.method.MoveGen), [add_edge()](#PlayGround.method.add_edge), [remove_edge()](#PlayGround.method.remove_edge), [remove_node()](#PlayGround.method.remove_node), [saveWork()](#PlayGround.method.saveWork), [showInfoText()](#PlayGround.method.showInfoText),[get_dimension()](#PlayGround.method.get_dimension), [to_dict()](#PlayGround.method.to_dict)
 <br>
 
-#### **_fromfilename(filename:str)_**
+_**<h4 id="PlayGround.method.fromfilename">fromfilename(filename:str)</h4>**_
 a classmethod which returns PlayGround class object initialised from values given in filename and returns the object
 <br>
 _filename_: a json file name to which previously a playround is saved into
 
-#### _**addUIElement(element)**_
+_**<h4 id="PlayGround.method.addUIElement">addUIElement(element)</h4>**_
 Adds UI element to the playground
 <br>
 ```NOTE: any UI element must contain draw() method which takes pygame screen as a parameter, the method will be called each time frame is drawn```
 
-#### _**removeUIElement(element)**_
+_**<h4 id="PlayGround.method.removeUIElement">removeUIElement(element)</h4>**_
 Removes UI element from the playground
 
-#### **_onStart(func)_**
+_**<h4 id="PlayGround.method.onStart">onStart(func)</h4>**_
 Sets function to be executed when the start button is clicked
 <br>
 _func_: function which will be executed when start is pressed
 
-#### **_delay(millisecond:int)_**
+_**<h4 id="PlayGround.method.delay">delay(millisecond:int)</h4>**_
 Delays the program for given milliseconds
 <br>
 Uses pygame.time.delay method
@@ -245,77 +245,77 @@ Once the controls are taken away no other control would work on playground excep
 <br>
 ```NOTE: Using this delay function would allow to reflect changes on playground in delay mode better than instantaneous```
 
-#### **_MoveGen(node:Node)->list_**
+_**<h4 id="PlayGround.method.MoveGen">MoveGen(node:Node)</h4>**_
 Returns all the neighbours(in sorted order according to the label) of a node i.e. all the nodes which has edge between the given node
 <br>
 _node_: A Node class object
 
-#### **_get_edge(nodeStart:Node,nodeEnd:Node)->Edge_**
+_**<h4 id="PlayGround.method.get_edge">get_edge(nodeStart:Node,nodeEnd:Node)->Edge</h4>**_
 Returns an Edge class object between the node nodeStart and nodeEnd, if no edge exists returns None
 _nodeStart_: A Node class object
 <br>
 _nodeEnd_: A Node class object
 
-#### _**getAllNodes()->list**_
+_**<h4 id="PlayGround.method.getAllNodes">getAllNodes()->list</h4>**_
 Returns all nodes available in the world as a list
 
-#### _**getAllEdges()->list**_
+_**<h4 id="PlayGround.method.getAllEdges">getAllEdges()->list</h4>**_
 Returns list of all edges available in world
 
-#### **_getGoalNode()->Node_**
+_**<h4 id="PlayGround.method.getGoalNode">getGoalNode()->Node</h4>**_
 Returns Node class object which is currenty set as a goal node for the playground
 
-#### **_getSartNode()->Node_**
+_**<h4 id="PlayGround.method.getSartNode">getSartNode()->Node</h4>**_
 Returns Node class object which is currenty set as a start node for the playground
 
-#### **_setGoalNode(node:Node)_**
+_**<h4 id="PlayGround.method.setGoalNode">setGoalNode(node:Node)</h4>**_
 Sets the given node as goal node for the PlayGround
 _node_: A Node class object
 
-#### **_setStartNode(node:Node)_**
+_**<h4 id="PlayGround.method.setStartNode">setStartNode(node:Node)</h4>**_
 Sets the given node as goal node for the PlayGround
 <br>
 _node_: A Node class object
 
-#### **_getScreen()_**
+_**<h4 id="PlayGround.method.getScreen">getScreen()</h4>**_
 Returns a pygame window object which is the surface on which the elements are being drawn
 <br>
 Useful in case more extra elements are needed to be drawn on the playground
 
-#### **_add_node(node: Node)_**
+_**<h4 id="PlayGround.method.add_node">add_node(node: Node)</h4>**_
 Adds node to the world
 <br>
 ```NOTE: node available in the world will be displayed on the playground screen```
 
-#### **_add_edge(edge: Edge)_**
+_**<h4 id="PlayGround.method.add_edge">add_edge(edge: Edge)</h4>**_
 Adds edge to the world
 <br>
 ```NOTE: edge available in the world will be displayed on the playground screen```
 
-#### **_remove_edge(edge:Edge)_**
+_**<h4 id="PlayGround.method.remove_edge">remove_edge(edge:Edge)</h4>**_
 Removes edge from the world
 
-#### **_remove_node(node:Node)_**
+_**<h4 id="PlayGround.method.remove_node">remove_node(node:Node)</h4>**_
 Removed node from the world
 
-#### **_saveWork(filename:str=None)_**
+_**<h4 id="PlayGround.method.saveWork">saveWork(filename:str=None)</h4>**_
 Saves the playground with the given filename.
 if no filename is provided, then playground will be saved with arbitrary filename
 
-#### **_showInfoText(text:str)_**
+_**<h4 id="PlayGround.method.showInfoText">showInfoText(text:str)</h4>**_
 To display informational texts on the playground right above the start button
 <br>
 _text_: text to be displayed on the playground infoText area
 
-#### **_to_dict()->dict_**
+_**<h4 id="PlayGround.method.to_dict">to_dict()->dict</h4>**_
 Returns Playrgound attributes as dictionary
 
-#### **_setTitle(title:str)_**
+_**<h4 id="PlayGround.method.setTitle">setTitle(title:str)</h4>**_
 Sets the title of the playground window
 <br>
 _title_: a string value
 
-#### **_run()_**
+_**<h4 id="PlayGround.method.run">run()</h4>**_
 runs the playground as an active window on which the frames are drawn
 
 ---
@@ -528,7 +528,7 @@ pygame rect object
 coordinate in pygame window for center of the node
 
 ### Methods
-[draw_block(screen)](#draw_blockscreen), [highlight(val:bool)](#highlightvalbool), [pos()](#pos---tuple), [setHasNode()](#sethasnodevalbool), [hasNode()](#hasnode-bool), [to_dict()](#to_dict-dict), [set_label()](#set_labellabelstrscreen), [selected()](#selectedvalbool), [set_color()](#set_colorcolortuple), [get_label()](#get_label-str), [setLocation()](#setlocationblockblock), [handle_event()](#handle_eventworldworldeventinfolabel), [add_neighbour()](#add_neighbournodenode), [remove_neighbour()](#remove_neighbournodenode), [get_neighbours()](#get_neighbour-list)
+[draw_block()](#draw_blockscreen), [highlight()](#highlightvalbool), [pos()](#pos---tuple), [setHasNode()](#sethasnodevalbool), [hasNode()](#hasnode-bool), [to_dict()](#to_dict-dict), [set_label()](#set_labellabelstrscreen), [selected()](#selectedvalbool), [set_color()](#set_colorcolortuple), [get_label()](#get_label-str), [setLocation()](#setlocationblockblock), [handle_event()](#handle_eventworldworldeventinfolabel), [add_neighbour()](#add_neighbournodenode), [remove_neighbour()](#remove_neighbournodenode), [get_neighbours()](#get_neighbour-list)
 
 #### _**draw_block(screen)**_
 draws the node on pygame window
