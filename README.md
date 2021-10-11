@@ -102,14 +102,12 @@ pg.run() #run the playground
 
 ## Loading graph from file:
 
-Method Used: [fromfilename()](#fromfilenamefilenamestr)
+Method Used: [fromfilename()](#PlayGround.method.fromfilename)
 
 > NOTE: The graph file here in below example _Graph.json_ must have been saved by the playground, i.e. saved by clicking **_Save Work_** button.
 
 ```python
 from SearchAlgoPlayground import PlayGround
-
-Method used: 
 
 pg = PlayGround.fromfilename("Graph.json") #loading a playground from a file
 pg.run() #run the playground
@@ -117,7 +115,7 @@ pg.run() #run the playground
 
 ## Set filename to save your work into:
 
-Parameter used: [saveToFile](#savetofile--str)
+Parameter used: [saveToFile](#PlayGround.parameter.saveToFile)
 
 ```python
 from SearchAlgoPlayground import PlayGround
@@ -128,7 +126,7 @@ pg.run() #run the playground
 
 ## PlayGround with weighted edge:
 
-Parameter used: [weighted](#weighted--bool)
+Parameter used: [weighted](#PlayGround.parameter.weighted)
 
 ```python
 from SearchAlgoPlayground import PlayGround
@@ -140,7 +138,7 @@ pg.run() #run the playground
 
 ## Setting up dimension for the world in playground:
 
-Parameter used: [saveToFile](#savetofile--str), [weighted](#weighted--bool), [block_dimensions](#PlayGround.parameter.blocks_dimension)
+Parameter used: [saveToFile](#PlayGround.parameter.saveToFile), [weighted](#PlayGround.parameter.weighted), [block_dimensions](#PlayGround.parameter.blocks_dimension)
 
 ```python
 from SearchAlgoPlayground import PlayGround
