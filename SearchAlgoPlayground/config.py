@@ -15,7 +15,7 @@ YELLOW = (217, 210, 74)
 
 
 config = {
-    "TITLE":"Algo PlayGround",
+    "TITLE":"Algo PlayGround",               #Title of the playground window
     "BLOCKS_DIMENSION":(21,23),              #ROWS,COLUMNS
     "BLOCK_SIZE":30,                         #Size of each block i.e. sides
     "BOTTOM_PANEL_HEIGHT":200,               #Size of bottom panel for control
@@ -24,14 +24,14 @@ config = {
     "BACKGROUND_COLOR":WHITE,                #Color of the background of the world
     "GRID_COLOR":GRAY,                       #Block boundary color
     "HIGHLIGHT_COLOR":DARK_GRAY,             #Highlighting color
-    "BUTTON_COLOR_PRIMARY":BROWN,             #Color for the button larger
-    "BUTTON_COLOR_SECONDARY": PURPLE,          #color for the smaller button
+    "BUTTON_COLOR_PRIMARY":BROWN,            #Color for the button larger
+    "BUTTON_COLOR_SECONDARY": PURPLE,        #color for the smaller button
     "INFO_LABEL_COLOR":DARK_GRAY,            #color for the info text
-    "NODE_COLOR":GRAY,
-    "NODE_BORDER_COLOR":BLACK,
+    "NODE_COLOR":GRAY,                       #color of the node
+    "NODE_BORDER_COLOR":BLACK,               #color of the border of node
     "SPECIAL_NODE_BORDER_COLOR": DARK_PURPLE,#Special node border color
     "SPECIAL_NODE_COLOR":GREEN,              #special node color
-    "SELECTED_NODE_COLOR" : RED,
+    "SELECTED_NODE_COLOR" : RED,             #color of the node selected
     "ELEMENT_ACTIVE_COLOR":BLUE,             #Element selected by user is considered as active to the playground
     "MY_WORK_DIR": "MyGraph/"                #Directory in which the work is saved
 }

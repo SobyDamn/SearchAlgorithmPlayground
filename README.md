@@ -149,9 +149,75 @@ pg = PlayGround(saveToFile = "MyWork.json",weighted=True,blocks_dimension=(20,20
 pg.run() #run the playground
 ```
 
+## Setting onStart event:
+Method set as onStart will be executed once the Start button is clicked shown on playground.
+
+Parameter used: [saveToFile](#PlayGround.parameter.saveToFile), [weighted](#PlayGround.parameter.weighted), [block_dimensions](#PlayGround.parameter.blocks_dimension)
+
+Method used: [onStart()](#PlayGround.method.onStart)
+
+```python
+from SearchAlgoPlayground import PlayGround
+
+#A weighted playground with a name of the file where work need to be saved given as MyWork.json
+#block_dimension is dimension of 2D matrix (rows,cols) here both are 20
+pg = PlayGround(saveToFile = "MyWork.json",weighted=True,blocks_dimension=(20,20))
+
+##Sample function to be put as start for playground
+def sayHello():
+    print("Hello From Playground!")
+
+
+pg.onStart(sayHello) #Setting method for on start click
+pg.run() #run the playground
+```
+
+## Changing configuration for playground:
+Changing values in configuration can modify the default values for PlayGround and world related to it.
+
+```python
+from SearchAlgoPlayground import PlayGround
+from SearchAlgoPlayground import config
+from SearchAlgoPlayground.config import YELLOW,PURPLE
+
+config["BACKGROUND_COLOR"] = YELLOW #set background color as yellow
+config["NODE_COLOR"] = PURPLE #set node color as purple
+
+#A weighted playground with a name of the file where work need to be saved given as MyWork.json
+#block_dimension is dimension of 2D matrix (rows,cols) here both are 20
+pg = PlayGround(saveToFile = "MyWork.json",weighted=True,blocks_dimension=(20,20))
+
+pg.run() #run the playground
+```
+
+Below are the given default values, or look into the file [config.py](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/SearchAlgoPlayground/config.py)
+
+```python
+config = {
+    "TITLE":"Algo PlayGround",               #Title of the playground window
+    "BLOCKS_DIMENSION":(21,23),              #ROWS,COLUMNS
+    "BLOCK_SIZE":30,                         #Size of each block i.e. sides
+    "BOTTOM_PANEL_HEIGHT":200,               #Size of bottom panel for control
+    "MARGIN":15,                             #Margin between sides and the grid 
+    "GRID_WIDTH":1,                          #Width of the boundary of the block
+    "BACKGROUND_COLOR":WHITE,                #Color of the background of the world
+    "GRID_COLOR":GRAY,                       #Block boundary color
+    "HIGHLIGHT_COLOR":DARK_GRAY,             #Highlighting color
+    "BUTTON_COLOR_PRIMARY":BROWN,            #Color for the button larger
+    "BUTTON_COLOR_SECONDARY": PURPLE,        #color for the smaller button
+    "INFO_LABEL_COLOR":DARK_GRAY,            #color for the info text
+    "NODE_COLOR":GRAY,                       #color of the node
+    "NODE_BORDER_COLOR":BLACK,               #color of the border of node
+    "SPECIAL_NODE_BORDER_COLOR": DARK_PURPLE,#Special node border color
+    "SPECIAL_NODE_COLOR":GREEN,              #special node color
+    "SELECTED_NODE_COLOR" : RED,             #color of the node selected
+    "ELEMENT_ACTIVE_COLOR":BLUE,             #Element selected by user is considered as active to the playground
+    "MY_WORK_DIR": "MyGraph/"                #Directory in which the work is saved
+}
+```
 <br>
 
-> Check more implemented examples [here](#Link).
+> ## Check more implemented examples [here](#Link).
 
 <br>
 
