@@ -23,7 +23,7 @@ It also provides a way to save the graph in json format hence enabling the progr
 
 - [Installation](#installation)
 - [Controls](#controls)
-- [Basic Use](#playground-object)
+- [Basic Use](#basic-use)
 - [Documentation](#documentation)
 
 <br>
