@@ -71,7 +71,7 @@ Select one node, once selected select another node to create an edge between the
 
 Double click on any element makes it go in modify mode which allows the element to be deleted or edited.
 
-To delete an edge double click on it and then press _DELTE_
+To delete an edge double click on it and then press _DELETE_
 
 ![EdgeDelete](/static/edge_delete.gif)
 
