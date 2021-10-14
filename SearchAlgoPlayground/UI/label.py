@@ -3,6 +3,17 @@ import pygame
 class Label:
     """
     Label to add on pygame screens
+
+    Method
+    ------
+    draw(screen):
+        Draws the label on the pygame screen
+        screen: pygame screen
+    
+    setValue(text:str):
+        Set the value for label
+
+
     """
     def __init__(self,color:tuple,size:int,pos:tuple,text:str=""):
         """

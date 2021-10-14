@@ -28,7 +28,6 @@ class Button:
             size of the label
         fill_value:int
             fill value for pygame rect
-        size:
 
         """
         self._pos = pos
