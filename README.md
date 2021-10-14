@@ -11,7 +11,7 @@ The package is made using [pygame](https://www.pygame.org/) module.
 
 <br>
 
-![AStarAlgoResult](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/static/AStar_Sample_output.png)
+![AStarAlgoResult](https://github.com/SobyDamn/SearchAlgorithmPlayground/raw/master/static/AStar_Sample_output.png)
 
 <br>
 
@@ -60,7 +60,7 @@ Double click on any empty block will create a node on it.
 > NOTE: Single click highlights the selected block and info label area will display it's location in 2D Matrix.
 <br>
 
-![NodeCreate](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/static/node_creator.gif)
+![NodeCreate](https://github.com/SobyDamn/SearchAlgorithmPlayground/raw/master/static/node_creator.gif)
 
 <br>
 
@@ -69,7 +69,7 @@ Clicking on a node single time selects the node for creating an edge with that.
 <br>
 Select one node, once selected select another node to create an edge between them.
 
-![EdgeCreate](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/static/edge_creator.gif)
+![EdgeCreate](https://github.com/SobyDamn/SearchAlgorithmPlayground/raw/master/static/edge_creator.gif)
 
 <br>
 
@@ -79,31 +79,31 @@ Double click on any element makes it go in modify mode which allows the element 
 
 To delete an edge double click on it and then press _DELETE_
 
-![EdgeDelete](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/static/edge_delete.gif)
+![EdgeDelete](https://github.com/SobyDamn/SearchAlgorithmPlayground/raw/master/static/edge_delete.gif)
 
 
 To edit an edge weight double click and use keyboard to modify it's value, once done hit _ENTER_ or click anywhere else.
 
-![EdgeWeightEdit](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/static/edge_weight_edit.gif)
+![EdgeWeightEdit](https://github.com/SobyDamn/SearchAlgorithmPlayground/raw/master/static/edge_weight_edit.gif)
 
 
 To delete a node double click on it and then hit _DELETE_ on keyboard
 
-![DeleteNodeWithEdge](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/static/delete_node_with_edge.gif)
+![DeleteNodeWithEdge](https://github.com/SobyDamn/SearchAlgorithmPlayground/raw/master/static/delete_node_with_edge.gif)
 
 
 To edit node label double click on a node and use keyboard to modify the label, once done hit _ENTER_ or click anywhere else.
 
 > NOTE: Label of a node must be unique
 
-![EditNodeLabel](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/static/edit_node_label.gif)
+![EditNodeLabel](https://github.com/SobyDamn/SearchAlgorithmPlayground/raw/master/static/edit_node_label.gif)
 
 <br>
 
 ## **Move nodes on the playground**
 Click on the node and drag it on the playground.
 
-![NodeDrag](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/static/node_drag.gif)
+![NodeDrag](https://github.com/SobyDamn/SearchAlgorithmPlayground/raw/master/static/node_drag.gif)
 
 
 <br>
@@ -220,7 +220,7 @@ pg = PlayGround(saveToFile = "MyWork.json",weighted=True,blocks_dimension=(20,20
 pg.run() #run the playground
 ```
 
-Below are the given default values, or look into the file [config.py](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/SearchAlgoPlayground/config.py)
+Below are the given default values, or look into the file [config.py](https://github.com/SobyDamn/SearchAlgorithmPlayground/raw/master/SearchAlgoPlayground/config.py)
 
 ```python
 config = {
@@ -282,7 +282,7 @@ pg.run() #run the playground
 
 **Above prints value for the following graph**
 
-![GRAPH](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/static/MoveGenExample.png)
+![GRAPH](https://github.com/SobyDamn/SearchAlgorithmPlayground/raw/master/static/MoveGenExample.png)
 
 ```bash
 Edge: S - A, Weight: 17
