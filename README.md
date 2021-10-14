@@ -809,7 +809,7 @@ Returns the object details its attributes and value as dictionary
 Label to add on pygame screens
 
 ### Methods
-[draw](#UI.Label.method.draw), [setValue](#UI.Label.method.setValue)
+[draw()](#UI.Label.method.draw), [setValue()](#UI.Label.method.setValue)
 
 _**<h4 id="UI.Label.method.draw">draw(screen)</h4>**_
 Draws the label on the pygame screen
@@ -836,7 +836,7 @@ _**<h4 id="UI.Label.parameter.pos">pos:tuple</h4>**_
 Button elements for pygame screen
 
 ### Method
-[draw_button](#UI.Button.method.draw_button), [isClicked](#UI.Button.method.isClicked)
+[draw_button()](#UI.Button.method.draw_button), [isClicked()](#UI.Button.method.isClicked)
 
 _**<h4 id="UI.Button.method.draw_button">draw_button(screen)</h4>**_
 draws button element on pygame screen
