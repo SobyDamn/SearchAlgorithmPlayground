@@ -10,7 +10,7 @@ It also provides a way to save the graph in json format hence enabling the progr
 
 <br>
 
-![AStarAlgoResult](/static/AStar_Sample_output.png)
+![AStarAlgoResult](https://github.com/SobyDamn/SearchAlgorithmPlayground/blob/master/static/AStar_Sample_output.png)
 
 <br>
 
