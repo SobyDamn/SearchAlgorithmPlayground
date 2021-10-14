@@ -38,6 +38,8 @@ The package is made using [pygame](https://www.pygame.org/) module.
 ```
 pip install SearchAlgoPlayground
 ```
+
+
 ## Manually install it
 
 Copy the [repository](https://github.com/SobyDamn/SearchAlgorithmPlayground) in your system then do
