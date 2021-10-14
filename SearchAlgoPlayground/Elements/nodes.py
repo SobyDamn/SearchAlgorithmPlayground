@@ -1,6 +1,6 @@
 import pygame
 from SearchAlgoPlayground.config import *
-from .Blocks import Block
+from .blocks import Block
 
 
 COLOR_ACTIVE = config["ELEMENT_ACTIVE_COLOR"]

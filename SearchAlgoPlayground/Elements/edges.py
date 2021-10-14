@@ -1,4 +1,4 @@
-from .Node import *
+from .nodes import *
 import pygame
 from SearchAlgoPlayground.config import config
 import math

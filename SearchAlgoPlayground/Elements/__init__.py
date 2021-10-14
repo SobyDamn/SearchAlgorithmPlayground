@@ -1,3 +1,3 @@
-from .Blocks import Block
-from .Node import Node
-from .Edge import Edge
+from .blocks import Block
+from .nodes import Node
+from .edges import Edge

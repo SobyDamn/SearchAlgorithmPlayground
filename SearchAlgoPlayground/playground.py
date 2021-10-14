@@ -16,7 +16,7 @@ Currently supports only undirected graphs
 import os
 import pygame 
 import json
-from .World import World
+from .world import World
 from .Elements import Block,Node,Edge
 from .config import *
 from .UI import *
