@@ -369,7 +369,7 @@ class PlayGround:
                         self._selectedNode.selected(False) #Remove any selected node, probably help in creating no further edges without knowing
                         #If the nodes are not same then create an edge
                         if self.world.getNode(block.id) not in self._selectedNode.get_neighbours():
-                            edge = Edge(self._selectedNode,self.world.getNode(block.id),isWeighted=self._isWeighted)
+                            edge = Edge(self._selectedNode,self.world.getNode(block.id),edgeColor=config["NODE_BORDER_COLOR"],isWeighted=self._isWeighted)
                             ##Add new edge to the world
                             self.world.add_edge(edge)
                         self._selectedNode = None
