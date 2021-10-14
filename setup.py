@@ -19,6 +19,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
         "Operating System :: OS Independent",
+        "Topic :: Software Development :: Libraries :: pygame",
     ],
     include_package_data=True,
     package_data={"":[".png"]},
