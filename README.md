@@ -34,7 +34,7 @@ It also provides a way to save the graph in json format hence enabling the progr
 ## Install from pip
 
 ```
-pip install SearchAgoPlayground
+pip install SearchAlgoPlayground
 ```
 ## Manually install it
 
@@ -96,7 +96,8 @@ To edit node label double click on a node and use keyboard to modify the label, 
 
 <br>
 
-## **Move nodes in the playground**
+## **Move nodes on the playground**
+Click on the node and drag it on the playground.
 
 ![NodeDrag](/static/node_drag.gif)
 
@@ -104,6 +105,15 @@ To edit node label double click on a node and use keyboard to modify the label, 
 <br>
 
 # Basic Use:
+
+- [simple PlayGround](#simple-playground)
+- [Loading graph from file](#loading-graph-from-file)
+- [Set filename to save your work into](#set-filename-to-save-your-work-into)
+- [PlayGround with weighted edge](#playground-with-weighted-edge)
+- [Setting up dimension for the world in playground](#setting-up-dimension-for-the-world-in-playground)
+- [Setting onStart event](#setting-onstart-event)
+- [Changing configuration for playground](#changing-configuration-for-playground)
+- [Working with neighbouring nodes](#working-with-neighbouring-nodes)
 
 ## simple PlayGround:
 Creates PlayGround object with default values
@@ -187,6 +197,7 @@ pg.onStart(sayHello) #Setting method for on start click
 pg.run() #run the playground
 ```
 
+
 ## Changing configuration for playground:
 Changing values in configuration can modify the default values for PlayGround and world related to it.
 
@@ -232,6 +243,48 @@ config = {
 ```
 <br>
 
+## Working with neighbouring nodes:
+Parameter used: [saveToFile](#PlayGround.parameter.saveToFile), [weighted](#PlayGround.parameter.weighted), [block_dimensions](#PlayGround.parameter.blocks_dimension)
+
+Method used: [onStart()](#PlayGround.method.onStart), [getStartNode()](#PlayGround.method.getStartNode), [MoveGen()](#PlayGround.method.MoveGen), [get_edge()](#PlayGround.method.get_edge),[get_weight()](#get_weight-int), [get_label()](#get_label-str)
+
+```python
+from SearchAlgoPlayground import PlayGround
+
+#A weighted playground with a name of the file where work need to be saved given as MyWork.json
+#block_dimension is dimension of 2D matrix (rows,cols) here both are 20
+pg = PlayGround(saveToFile = "MyWork.json",weighted=True,blocks_dimension=(20,20))
+
+#Function prints all the neighbouring nodes of the start node in the playground and the weight of the edge connecteding them
+def printNeighbours():
+    S = pg.getStartNode() #get start node from playground
+
+    #MoveGen method returns the neighbouring nodes
+    neighbours = pg.MoveGen(S) #Generating the neighbouring nodes
+
+    #print details of the node
+    for node in neighbours:
+        #get weight of the edge between S and node
+        edge = pg.get_edge(S,node) #method will return Edge class object
+        weight = edge.get_weight() #method in Edge class will return weight of the edge
+
+        #Display the details
+        print("Edge: {} - {}, Weight: {}".format(S.get_label(),node.get_label(),weight))
+
+
+pg.onStart(printNeighbours) #Setting method for on start click
+pg.run() #run the playground
+```
+
+**Above prints value for the following graph**
+
+![GRAPH](/static/MoveGenExample.png)
+
+```bash
+Edge: S - A, Weight: 17
+Edge: S - B, Weight: 34
+Edge: S - C, Weight: 10
+```
 > ## Check more implemented examples [here](#Link).
 
 <br>

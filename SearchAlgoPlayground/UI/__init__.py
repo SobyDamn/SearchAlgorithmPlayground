@@ -1,2 +1,2 @@
-from .Button import Button
-from .Label import Label
+from .button import Button
+from .label import Label
